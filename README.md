@@ -4,7 +4,7 @@ A Multi-domain Smart Ecosystem centred around intelligent campus activities  int
 ---
 
 ## What is this Repo about?
-Corporate-Structured Modular Monorepo Scaled for a student
+Corporate-Structured Modular Monorepo Scaled for a student capstone project
 
 ---
 ## License

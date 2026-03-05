@@ -1,0 +1,36 @@
+# Code ownership for BC_Smart_Ecosystem
+
+# Apps subsystem
+/apps/ @synetrix
+
+# Core subsystem  
+/core/ @synetrix
+
+# Security subsystem
+/security/ @synetrix
+
+# Robotics subsystem
+/robotics/ @RapaxAgrum
+
+# Simulation subsystem
+/simulation/ @RapaxAgrum
+
+# Analytics subsystem
+/analytics/ @synetrix
+
+# Shared utilities
+/shared/ @synetrix @RapaxAgrum
+
+# Infrastructure
+/infrastructure/ @synetrix @RapaxAgrum
+
+# CI/CD and workflows
+/.github/workflows/ @synetrix
+
+# Documentation
+/docs/ @synetrix
+
+# Root configuration files
+/CONTRIBUTING.md @synetrix
+/README.md @synetrix
+CODEOWNERS @synetrix

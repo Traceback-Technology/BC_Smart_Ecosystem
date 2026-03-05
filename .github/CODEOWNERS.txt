@@ -1,4 +1,6 @@
-asdfeasdfasd asdfasd
+
+=======
+
 # Code ownership for BC_Smart_Ecosystem
 
 # Apps subsystem
@@ -23,7 +25,7 @@ asdfeasdfasd asdfasd
 /shared/ @synetrix @RapaxAgrum
 
 # Infrastructure
-/infrastructure/ @synetrix @RapaxAgrum
+/infrastructure/ @synetrix 
 
 # CI/CD and workflows
 /.github/workflows/ @synetrix
@@ -35,3 +37,4 @@ asdfeasdfasd asdfasd
 /CONTRIBUTING.md @synetrix
 /README.md @synetrix
 CODEOWNERS @synetrix
+>>>>>>> 62a9976aa8406dda873b77dc3585aae771db31d4

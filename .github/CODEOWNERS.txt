@@ -1,3 +1,4 @@
+asdfeasdfasd asdfasd
 # Code ownership for BC_Smart_Ecosystem
 
 # Apps subsystem

@@ -1,0 +1,111 @@
+# ==================================================
+# BC Smart Ecosystem – CODEOWNERS
+# Individual ownership per subsystem
+# ==================================================
+
+# Default owner (repository maintainer)
+* @yourusername
+
+
+# --------------------------------------------------
+# Documentation
+# --------------------------------------------------
+
+/docs/ @student_architect
+
+
+# --------------------------------------------------
+# Platform Interfaces
+# --------------------------------------------------
+
+/platform/ @student_platform
+
+/platform/mobile-interface/ @student_mobile
+/platform/web-platform/ @student_web
+
+
+# --------------------------------------------------
+# Core Campus Services
+# --------------------------------------------------
+
+/core/ @student_backend
+
+/core/activity-tracking/ @student_activity
+/core/advertising/ @student_advertising
+/core/communication/ @student_communication
+/core/QR-access/ @student_qr
+/core/students/ @student_students
+
+
+# --------------------------------------------------
+# Robotics Systems
+# --------------------------------------------------
+
+/robotics/ @student_robotics
+
+/robotics/drone-system/ @student_drone
+/robotics/rover-system/ @student_rover
+/robotics/delivery-coordination/ @student_robotics
+
+
+# --------------------------------------------------
+# Simulation
+# --------------------------------------------------
+
+/simulation/ @student_simulation
+/simulation/navigation-engine/ @student_navigation
+/simulation/drone-system/ @student_drone_sim
+
+
+# --------------------------------------------------
+# Analytics / AI
+# --------------------------------------------------
+
+/analytics/ @student_ai
+
+/analytics/anomaly-detection/ @student_ai
+/analytics/prediction-engine/ @student_ml
+/analytics/reporting/ @student_data
+
+
+# --------------------------------------------------
+# Security
+# --------------------------------------------------
+
+/security/ @student_security
+
+/security/authentication/ @student_security
+/security/Authorisation/ @student_security
+/security/monitoring-integration/ @student_security
+
+
+# --------------------------------------------------
+# Shared Libraries
+# --------------------------------------------------
+
+/shared/ @student_architect
+
+
+# --------------------------------------------------
+# Infrastructure / DevOps
+# --------------------------------------------------
+
+/infrastructure/ @student_devops
+
+/infrastructure/configs/ @student_devops
+/infrastructure/database/ @student_database
+/infrastructure/docker/ @student_devops
+
+
+# --------------------------------------------------
+# Diagrams
+# --------------------------------------------------
+
+/diagrams/ @student_architect
+
+
+# --------------------------------------------------
+# GitHub System Files
+# --------------------------------------------------
+
+/.github/ @yourusername

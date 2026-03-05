@@ -1,0 +1,26 @@
+name: Integration Issue
+description: Report or propose cross-subsystem integration work
+title: "[Integration]: "
+labels: ["integration"]
+body:
+  - type: textarea
+    id: subsystems
+    attributes:
+      label: Subsystems Involved
+      description: List all affected subsystems.
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Integration Impact
+      description: Describe architectural or data contract impact.
+    validations:
+      required: true
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks
+      description: What could break?

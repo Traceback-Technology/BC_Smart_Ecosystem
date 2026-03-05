@@ -20,7 +20,8 @@ Closes #
 
 ## 📝 Description
 
-Provide a clear and concise description of the changes introduced in this PR .
+Provide a clear and concise description of the changes introduced in this PR (Pull Request).
+Included in the description should be reasins for the changes.
 
 What does this implement or fix?
 

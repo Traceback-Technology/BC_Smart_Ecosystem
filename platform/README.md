@@ -5,3 +5,10 @@ This is the presentation layer.
 
 *** NB : *** NO BUSINESS LOGIC GOES HERE !!!
 
+Responibilities: 
+
+- Student application
+- Campus announcements
+- Advertising
+- Activity tracking
+- QR scanning

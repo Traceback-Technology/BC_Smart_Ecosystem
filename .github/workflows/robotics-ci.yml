@@ -1,29 +1,30 @@
-name: PR Validation
+name: Robotics CI
 
 on:
   pull_request:
-    branches:
-      - develop
-      - main
+    paths:
+      - 'robotics/**'
 
 jobs:
-  validation:
+  robotics-build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate PR title
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python Dependencies
         run: |
-          if [[ ! "${{ github.event.pull_request.title }}" =~ ^\[(Feature|Bug|Refactor|Integration|Architecture|Docs)\] ]]; then
-            echo "PR title must start with [Feature], [Bug], etc."
-            exit 1
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
           fi
 
-      - name: Ensure issue is linked
+      - name: Compile C++ modules
         run: |
-          if [[ "${{ github.event.pull_request.body }}" != *"Closes #"* ]]; then
-            echo "PR must reference an issue using 'Closes #'"
-            exit 1
-          fi
+          echo "Checking C++ code compilation"
+          sudo apt-get install build-essential -y

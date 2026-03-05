@@ -10,3 +10,9 @@ This is the file that should not get updated by each version.
 - environment configs
 
 *** NEVER MIX INFRASTRUCTURE WITH BUSINESS LAYER ***
+
+Responsibilities
+- Database schemas
+- Deployment configurations
+- System containers
+- environment setup

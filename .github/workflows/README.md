@@ -30,3 +30,21 @@ why we use substem pipelines, if not:
 
 Instead we create *** monorepo selective CI ***
 
+---
+## when will it run
+
+configured to run at different triggers:
+
+| Pipeline      | Role                 |
+| ------------- | -------------------- |
+| core-ci       | campus service logic |
+| platform-ci   | web + mobile         |
+| robotics-ci   | drones + rover       |
+| security-ci   | auth + monitoring    |
+| analytics-ci  | AI modules           |
+| infra-ci      | docker + deployment  |
+| monorepo-ci   | global checks        |
+| pr-validation | pull request rules   |
+| lint-check    | code quality         |
+
+

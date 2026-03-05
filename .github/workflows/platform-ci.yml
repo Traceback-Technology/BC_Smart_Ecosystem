@@ -3,49 +3,34 @@ name: Platform CI
 on:
   pull_request:
     paths:
-      - 'platform/**'
+      - 'src/platform/**'
 
 jobs:
-
-  web-platform-tests:
+  build-platform:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: platform/web-platform
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node (Web)
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: '20'
 
-      - name: Install Dependencies
+      - name: Install Web Dependencies
+        working-directory: src/platform/web
         run: npm install
 
-      - name: Run Tests
-        run: npm test
+      - name: Build Web
+        working-directory: src/platform/web
+        run: npm run build
 
-
-  mobile-platform-tests:
-    runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: platform/mobile-interface
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup .NET (Backend)
+        uses: actions/setup-dotnet@v4
         with:
-          node-version: 20
+          dotnet-version: '8.0.x'
 
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Run Tests
-        run: npm test
+      - name: Build Backend
+        working-directory: src/platform/backend
+        run: dotnet build

@@ -5,4 +5,9 @@ This is our hardware environment
     
 *** NB : INTEGRATION SHOULD HAPPEN VIA ` CONTRACTS ` ***
 
+Responsibilities
+- Food transport drones and rover
+- navigation
+- delivery schedule and coordination
+- campus terrain forms and campus logistics
 

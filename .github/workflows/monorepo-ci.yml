@@ -1,0 +1,69 @@
+name: Monorepo CI Orchestrator
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+
+jobs:
+
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      core: ${{ steps.filter.outputs.core }}
+      platform: ${{ steps.filter.outputs.platform }}
+      robotics: ${{ steps.filter.outputs.robotics }}
+      analytics: ${{ steps.filter.outputs.analytics }}
+      security: ${{ steps.filter.outputs.security }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            core:
+              - 'core/**'
+
+            platform:
+              - 'platform/**'
+
+            robotics:
+              - 'robotics/**'
+
+            analytics:
+              - 'analytics/**'
+
+            security:
+              - 'security/**'
+
+  core-ci:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.core == 'true'
+    uses: ./.github/workflows/core-ci.yml
+
+  platform-ci:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.platform == 'true'
+    uses: ./.github/workflows/platform-ci.yml
+
+  robotics-ci:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.robotics == 'true'
+    uses: ./.github/workflows/robotics-ci.yml
+
+  analytics-ci:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.analytics == 'true'
+    uses: ./.github/workflows/analytics-ci.yml
+
+  security-ci:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.security == 'true'
+    uses: ./.github/workflows/security-ci.yml
+
+shared:
+  - 'shared/**'
+if: needs.detect-changes.outputs.platform == 'true' || needs.detect-changes.outputs.shared == 'true'

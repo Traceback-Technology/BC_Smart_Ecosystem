@@ -1,1 +1,29 @@
-temporary file
+name: Core CI
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+    paths: 'Core/**'
+
+jobs:
+  repo-validation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate repo structure
+        run: |
+          echo "Validating repository structure..."
+
+          if [ ! -d "src" ]; then
+            echo "ERROR: src directory missing"
+            exit 1
+          fi
+
+          if [ ! -d "docs" ]; then
+            echo "WARNING: docs directory missing"
+          fi
+
+          echo "Repository structure looks valid."

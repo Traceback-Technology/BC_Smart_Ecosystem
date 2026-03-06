@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Engineering Discussion
+    url: https://github.com/Traceback-Technology/BC_Smart_Ecosystem/discussions
+    about: Please use Discussions for general questions.

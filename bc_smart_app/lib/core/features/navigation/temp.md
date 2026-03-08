@@ -1,0 +1,1 @@
+Map aidgets, path finding logic

@@ -1,0 +1,1 @@
+All logic for Bulletin module goes here

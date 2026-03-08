@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-
+//These are improts of all modules of the application. For the features to execute, all methods in the respective core/feature directories need to be called here.
+import 'package:bc_smart_ecosystem/core/features/bc_eats/bc_eats_UI_logic.dart';
+import 'package:bc_smart_ecosystem/core/features/bulletin_boards/bulletin_boards.dart';
+import 'package:bc_smart_ecosystem/core/features/navigation/campus_ways_UI_logic.dart';
+import 'package:bc_smart_ecosystem/core/features/safety/bc_security.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -120,3 +124,4 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+

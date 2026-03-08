@@ -15,7 +15,7 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
-**Description**
+# Description
 
 This is where all features live. All module logic and UI must be included in this folder. 
 
@@ -34,4 +34,5 @@ Select Device: Ensure your Android emulator or physical device is connected, the
 
 # PLEASE DO NOT DELETE OR EDIT THE FILE STRUCTURE WITHOUT KNOWLEDGE OF THE REPO ADMIN. 
 # IF THE IS ANY CLARIFICATION NEEDED, PLEASE SPEAK TO THE GROUP LEADER OR SQUAD LEADER.
-# IF THERE ANY ERRORS EXPRIENCED WITH THIS FILE, CONTACT THE REPO ADMIN FOR ASSISTANCE. DO NOT ATTEMPT TO FIX THE ERROR ON YOUR OWN (EVEN IF YOU KNOW HOW TO FIX IT)
+# IF THERE ARE ANY ERRORS EXPRIENCED WITH THIS FILE, CONTACT THE REPO ADMIN FOR ASSISTANCE. DO NOT ATTEMPT TO FIX THE ERROR ON YOUR OWN (EVEN IF YOU KNOW HOW TO FIX IT)
+

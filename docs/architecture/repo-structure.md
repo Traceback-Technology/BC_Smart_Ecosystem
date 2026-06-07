@@ -1,17 +1,16 @@
 # BC smart Ecosystem project
 
 ```
-BC-SmartCampus-System/
+BC-SmartLifestyle/
 │
 ├── .github/
 │   │
 │   ├── workflows/
-│   │   ├── core-ci.yml
-│   │   ├── platform-ci.yml
-│   │   ├── robotics-ci.yml
+│   │   ├── frontend-ci.yml
+│   │   ├── backend-ci.yml
+│   │   ├── drone-ci.yml
 │   │   ├── security-ci.yml
-│   │   ├── analytics-ci.yml
-│   │   ├── infra-ci.yml
+│   │   ├── integration-ci.yml
 │   │   ├── monorepo-ci.yml
 │   │   ├── pr-validation-ci.yml
 │   │   └── lint-check.yml
@@ -20,152 +19,206 @@ BC-SmartCampus-System/
 │   │   ├── bug_report.yml
 │   │   ├── feature_request.yml
 │   │   ├── architecture_change.yml
-│   │   ├── config.yml
-│   │   ├── Integration_issue.yml
-│   │   └── research_request.yml
+│   │   ├── integration_issue.yml
+│   │   ├── research_request.yml
+│   │   └── config.yml
 │   │
 │   ├── pull_request_template.md
-│   │
 │   └── CODEOWNERS
 │
 ├── docs/
 │   │
 │   ├── architecture/
 │   │   ├── system-architecture.md
+│   │   ├── communication-flow.md
+│   │   ├── database-design.md
 │   │   ├── repo-structure.md
 │   │   └── README.md
 │   │
 │   ├── adr/
 │   │   ├── 0001-monorepo-structure.md
 │   │   ├── 0002-backend-architecture.md
-│   │   ├── 0003-drone-communication-protocol.md
+│   │   ├── 0003-navigation-algorithm.md
+│   │   ├── 0004-drone-delivery-architecture.md
+│   │   ├── 0005-realtime-communication.md
 │   │   ├── 0000-template.md
 │   │   └── README.md
 │   │
-│   └──API-specification-docs/
+│   ├── api-specifications/
+│   │   ├── auth-api.md
+│   │   ├── bc-ways-api.md
+│   │   ├── bc-eats-api.md
+│   │   ├── drone-api.md
+│   │   └── README.md
+│   │
+│   └── testing/
+│       ├── test-strategy.md
+│       ├── integration-tests.md
 │       └── README.md
 │
 ├── platform/
-│   |
-│   ├── mobile-interface/
-│   │   ├── backend
-│   │   |   └── README.md
-|   |   |
-│   │   ├── fronend
-│   │   |   └── README.md
-|   |   |
+│   │
+│   ├── mobile-app/
+│   │   ├── bc-ways/
+│   │   │   └── README.md
+│   │   │
+│   │   ├── bc-eats/
+│   │   │   └── README.md
+│   │   │
+│   │   ├── shared-ui/
+│   │   │   └── README.md
+│   │   │
 │   │   └── README.md
-|   |
-│   ├── web-platform/
+│   │
+│   ├── web-dashboard/
+│   │   ├── admin-dashboard/
+│   │   │   └── README.md
+│   │   │
+│   │   ├── tuckshop-dashboard/
+│   │   │   └── README.md
+│   │   │
 │   │   └── README.md
-|   | 
+│   │
+│   ├── visitor-access/
+│   │   ├── qr-navigation/
+│   │   │   └── README.md
+│   │   │
+│   │   └── README.md
+│   │
 │   └── README.md
-|
+│
 ├── core/
-│   |
-│   ├── activity-tracking/
+│   │
+│   ├── bc-ways/
+│   │   ├── pathfinding-engine/
+│   │   │   └── README.md
+│   │   │
+│   │   ├── navigation-service/
+│   │   │   └── README.md
+│   │   │
+│   │   ├── gps-tracking/
+│   │   │   └── README.md
+│   │   │
 │   │   └── README.md
-|   |
-│   ├── advertising/
+│   │
+│   ├── bc-eats/
+│   │   ├── menu-management/
+│   │   │   └── README.md
+│   │   │
+│   │   ├── order-management/
+│   │   │   └── README.md
+│   │   │
+│   │   ├── payment-processing/
+│   │   │   └── README.md
+│   │   │
+│   │   ├── delivery-management/
+│   │   │   └── README.md
+│   │   │
 │   │   └── README.md
-|   | 
-│   ├── communication/
+│   │
+│   ├── authentication/
 │   │   └── README.md
-|   | 
-│   ├── QR-access/
+│   │
+│   ├── notifications/
 │   │   └── README.md
-|   | 
-│   ├── students/
-│   │   └── README.md
-|   | 
+│   │
+│   └── README.md
+│
+├── backend/
+│   │
+│   ├── routes/
+│   ├── controllers/
+│   ├── services/
+│   ├── models/
+│   ├── sockets/
+│   ├── middleware/
+│   ├── config/
+│   ├── tests/
 │   └── README.md
 │
 ├── robotics/
 │   │
+│   ├── drone-system/
+│   │   ├── firmware/
+│   │   ├── navigation/
+│   │   ├── telemetry/
+│   │   ├── simulations/
+│   │   ├── tests/
+│   │   └── README.md
+│   │
 │   ├── control-api/
 │   │   └── README.md
 │   │
-│   ├── drone-system/
-│   │   ├── docs/
-│   │   ├── src/
-│   │   ├── tests/
+│   └── README.md
+│
+├── analytics/
+│   │
+│   ├── order-analytics/
 │   │   └── README.md
 │   │
-│   ├── rover-system/
-│   │   ├── docs/
-│   │   ├── src/
-│   │   ├── tests/
+│   ├── navigation-analytics/
 │   │   └── README.md
-|   |
+│   │
+│   ├── system-monitoring/
+│   │   └── README.md
+│   │
 │   └── README.md
-|   
-├── simulation/
-│   |
-│   ├── navigation-engine/
-│   │   └── README.md
-|   |
-│   ├── real-time-visuliser/
-│   │   └── README.md
-|   | 
-│   └── README.md
-|   
-├── analytics/
-│   |
-│   ├── anomaly-detection/
-│   │   └── README.md
-|   |
-│   ├── prediction-engine/
-│   │   └── README.md
-|   |
-│   ├── reports/
-│   │   └── README.md
-|   | 
-│   └── README.md
-|   
+│
 ├── security/
 │   │
 │   ├── access-control/
 │   │   └── README.md
-|   | 
-│   ├── QR-auth-system/
+│   │
+│   ├── qr-auth-system/
 │   │   └── README.md
-|   | 
+│   │
 │   ├── monitoring/
 │   │   └── README.md
-|   | 
+│   │
 │   └── README.md
 │
 ├── shared/
 │   │
 │   ├── contracts/
 │   │   └── README.md
-|   | 
-│   ├── contracts/
+│   │
+│   ├── dto/
 │   │   └── README.md
-|   | 
+│   │
 │   ├── utilities/
 │   │   └── README.md
-|   | 
+│   │
+│   ├── constants/
+│   │   └── README.md
+│   │
 │   └── README.md
 │
 ├── infrastructure/
 │   │
+│   ├── database/
+│   │   ├── mongodb/
+│   │   └── README.md
+│   │
+│   ├── websocket/
+│   │   └── README.md
+│   │
+│   ├── mqtt/
+│   │   └── README.md
+│   │
 │   ├── configs/
 │   │   └── README.md
-|   | 
-│   ├── database/
-│   │   └── README.md
-|   | 
-│   ├── database/
-│   │   └── README.md
-|   | 
+│   │
 │   └── README.md
 │
 ├── diagrams/
+│   ├── architecture/
+│   ├── flowcharts/
+│   ├── erd/
 │   └── README.md
 │
 ├── .gitignore
 ├── CONTRIBUTING.md
 ├── LICENSE
 └── README.md
+
  ```

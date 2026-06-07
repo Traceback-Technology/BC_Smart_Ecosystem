@@ -1,8 +1,6 @@
 # BC smart Ecosystem project
 
----
-*** Repository structure ***
-
+```
 BC-SmartCampus-System/
 │
 ├── .github/
@@ -170,4 +168,4 @@ BC-SmartCampus-System/
 ├── CONTRIBUTING.md
 ├── LICENSE
 └── README.md
- 
+ ```

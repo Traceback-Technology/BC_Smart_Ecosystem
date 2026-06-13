@@ -1,63 +1,53 @@
 # ADR XXXX: Title
 
-## Status
-Proposed | Accepted | Rejected | Deprecated | Superseded
+**Status:** Proposed
+**Date:** YYYY-MM-DD
 
 ---
 
 ## Context
 
-Describe the problem and background.
+Describe the technical problem or decision that must be made.
 
-What is happening in the system that requires this decision?
-
-Include:
-- Constraints
-- Business requirements
-- Technical requirements
-- Risks
+Example:
+The system requires a way to support real-time communication between the frontend and backend.
 
 ---
 
 ## Decision
 
-State clearly what decision has been made.
-
-Be explicit.
-
-Example:
-"We will use a monorepo architecture with domain-based folder separation."
+Describe the chosen approach.
 
 ---
 
 ## Alternatives Considered
 
-1. Option A – Description
-   - Pros
-   - Cons
+### Option 1
 
-2. Option B – Description
-   - Pros
-   - Cons
+## Pros:
 
-Explain why they were not chosen.
+## Cons:
+
+### Option 2
+
+## Pros:
+
+## Cons:
 
 ---
 
 ## Consequences
 
-Describe the impact:
-
 ### Positive
-- Benefit 1
-- Benefit 2
+
+*
 
 ### Negative
-- Tradeoff 1
-- Tradeoff 2
+
+*
 
 ---
 
 ## References
 
-Link related issues, PRs, research, or documentation.
+Add references or supporting documents.

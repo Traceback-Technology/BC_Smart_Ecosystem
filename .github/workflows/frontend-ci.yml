@@ -1,0 +1,48 @@
+name: Frontend CI
+
+on:
+push:
+branches: [main, develop]
+paths:
+- 'platform/**'
+- '.github/workflows/frontend-ci.yml'
+
+pull_request:
+branches: [main, develop]
+paths:
+- 'platform/**'
+
+jobs:
+flutter-build:
+runs-on: ubuntu-latest
+
+```
+steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+
+  - name: Setup Flutter
+    uses: subosito/flutter-action@v2
+    with:
+      channel: stable
+
+  - name: Install dependencies
+    run: |
+      cd platform/mobile-app
+      flutter pub get
+
+  - name: Analyze code
+    run: |
+      cd platform/mobile-app
+      flutter analyze
+
+  - name: Run tests
+    run: |
+      cd platform/mobile-app
+      flutter test
+
+  - name: Build Web
+    run: |
+      cd platform/mobile-app
+      flutter build web --release
+```

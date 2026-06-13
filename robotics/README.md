@@ -1,13 +1,47 @@
-# robotics/
+# Robotics
 
-This is our hardware environment
-    - Drone and rover code must be seperate from business logic for the application
-    
-*** NB : INTEGRATION SHOULD HAPPEN VIA ` CONTRACTS ` ***
+This directory contains the robotics systems used in BC Smart Lifestyle.
 
-Responsibilities
-- Food transport drones and rover
-- navigation
-- delivery schedule and coordination
-- campus terrain forms and campus logistics
+## Purpose
 
+The robotics layer enables autonomous delivery for BC Eats using drone technology.
+
+The system supports:
+
+* Autonomous food delivery
+* GPS navigation
+* Drone telemetry
+* Delivery simulations
+* Real-time monitoring
+
+---
+
+## Directory Structure
+
+| Folder        | Purpose                         |
+| ------------- | ------------------------------- |
+| drone-system/ | Drone delivery implementation   |
+| control-api/  | Backend communication interface |
+
+---
+
+## Robotics Goals
+
+The robotics module aims to:
+
+* Reduce tuckshop delivery times
+* Improve convenience for students
+* Demonstrate smart-campus automation
+* Integrate IoT systems into campus life
+
+---
+
+## Core Technologies
+
+Examples:
+
+* Pixhawk Flight Controller
+* GPS Navigation
+* MQTT Messaging
+* Real-Time Telemetry
+* Autonomous Routing

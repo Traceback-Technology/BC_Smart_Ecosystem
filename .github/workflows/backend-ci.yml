@@ -1,0 +1,59 @@
+name: Backend CI
+
+on:
+push:
+branches: [main, develop]
+paths:
+- 'backend/**'
+- '.github/workflows/backend-ci.yml'
+
+pull_request:
+branches: [main, develop]
+paths:
+- 'backend/**'
+
+jobs:
+backend-test:
+runs-on: ubuntu-latest
+
+```
+strategy:
+  matrix:
+    node-version: [20.x]
+
+services:
+  mongodb:
+    image: mongo:7
+    ports:
+      - 27017:27017
+
+steps:
+  - name: Checkout code
+    uses: actions/checkout@v4
+
+  - name: Setup Node.js
+    uses: actions/setup-node@v4
+    with:
+      node-version: ${{ matrix.node-version }}
+      cache: npm
+
+  - name: Install dependencies
+    run: |
+      cd backend
+      npm install
+
+  - name: Lint
+    run: |
+      cd backend
+      npm run lint
+
+  - name: Type Check
+    run: |
+      cd backend
+      npm run build
+
+  - name: Run Tests
+    run: |
+      cd backend
+      npm test
+```

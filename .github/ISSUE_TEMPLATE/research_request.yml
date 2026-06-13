@@ -1,29 +1,30 @@
 name: Research Request
-description: Investigate technology or feasibility
-title: "[Research]: "
-labels: ["research"]
+description: Request technical research
+title: "[RESEARCH] "
+labels:
+
+* research
+
 body:
-  - type: textarea
-    id: topic
-    attributes:
-      label: Research Topic
-      description: What needs investigation?
-    validations:
-      required: true
 
-  - type: textarea
-    id: objectives
-    attributes:
-      label: Objectives
-      description: What should the research deliver?
-    validations:
-      required: true
+* type: input
+  id: topic
+  attributes:
+  label: Research Topic
+  placeholder: MQTT vs WebSocket for drone telemetry
+  validations:
+  required: true
 
-  - type: textarea
-    id: deliverables
-    attributes:
-      label: Expected Deliverables
-      placeholder: |
-        - Feasibility report
-        - Prototype
-        - Risk summary
+* type: textarea
+  id: objective
+  attributes:
+  label: Objective
+  description: What are we trying to learn?
+  validations:
+  required: true
+
+* type: textarea
+  id: expected
+  attributes:
+  label: Expected Deliverable
+  placeholder: Comparison document, prototype, recommendation...

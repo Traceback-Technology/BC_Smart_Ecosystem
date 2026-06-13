@@ -1,0 +1,24 @@
+name: Integration CI
+
+on:
+pull_request:
+branches: [main, develop]
+
+jobs:
+integration-test:
+runs-on: ubuntu-latest
+
+
+steps:
+  - uses: actions/checkout@v4
+
+  - name: Install backend dependencies
+    run: |
+      cd backend
+      npm install
+
+  - name: Run integration tests
+    run: |
+      cd backend
+      npm run test:integration
+

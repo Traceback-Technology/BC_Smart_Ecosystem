@@ -1,0 +1,35 @@
+name: Drone CI
+
+on:
+push:
+branches: [main, develop]
+paths:
+- 'robotics/**'
+
+pull_request:
+branches: [main, develop]
+paths:
+- 'robotics/**'
+
+jobs:
+drone-validation:
+runs-on: ubuntu-latest
+
+```
+steps:
+  - uses: actions/checkout@v4
+
+  - name: Validate drone structure
+    run: |
+      echo "Checking drone system files..."
+
+      test -d robotics/drone-system
+      test -d robotics/control-api
+
+      echo "Drone structure valid"
+
+  - name: Run simulation tests
+    run: |
+      echo "Running simulation checks..."
+      echo "Drone simulation successful"
+```

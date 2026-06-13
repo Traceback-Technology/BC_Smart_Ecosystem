@@ -30,11 +30,10 @@ jobs:
             platform:
               - 'platform/**'
 
-            robotics:
-              - 'robotics/**'
+            drone:
+              - 'drone/**'
 
-            analytics:
-              - 'analytics/**'
+        
 
             security:
               - 'security/**'

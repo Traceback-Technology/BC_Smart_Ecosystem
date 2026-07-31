@@ -30,3 +30,8 @@ Create an order: `POST /api/orders` with `{ "items":[{"foodId":"...","quantity":
 Preview navigation: `POST /api/navigation/preview` with `{ "origin":"Current Location", "destination":"Central Station" }`.
 
 Note: route estimates are placeholder backend logic. Connect Google Maps, Mapbox, or another routing provider for real distance, ETA, and live map coordinates.
+
+
+
+
+##jUST A SIMPLE TEXT

@@ -1,0 +1,1 @@
+const router=require('express').Router(); const c=require('../controllers/activityController'); const {identifier}=require('../middlewares/identification'); router.get('/',identifier,c.getActivities); module.exports=router;

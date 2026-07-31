@@ -1,0 +1,2 @@
+const router=require('express').Router(); const c=require('../controllers/orderController'); const {identifier}=require('../middlewares/identification');
+router.use(identifier); router.get('/',c.getOrders); router.post('/',c.createOrder); router.get('/:id',c.getOrder); router.patch('/:id/notes',c.updateNotes); router.patch('/:id/cancel',c.cancelOrder); router.patch('/:id/status',c.updateStatus); router.get('/:id/tracking',c.getTracking); router.patch('/:id/tracking',c.updateTracking); module.exports=router;

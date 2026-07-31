@@ -1,0 +1,1 @@
+const router=require('express').Router(); const c=require('../controllers/navigationController'); const {identifier}=require('../middlewares/identification'); router.use(identifier); router.post('/preview',c.preview); router.patch('/:id/start',c.start); router.get('/:id',c.getRoute); module.exports=router;

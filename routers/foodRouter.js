@@ -1,0 +1,2 @@
+const router=require('express').Router(); const c=require('../controllers/foodController'); const {identifier}=require('../middlewares/identification');
+router.get('/',c.getFoods); router.get('/search',c.getFoods); router.get('/:id',c.getFood); router.post('/',identifier,c.createFood); router.put('/:id',identifier,c.updateFood); router.delete('/:id',identifier,c.deleteFood); module.exports=router;

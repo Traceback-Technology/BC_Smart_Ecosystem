@@ -1,0 +1,3007 @@
+[
+    {
+        "nodeA": "N316",
+        "nodeB": "N333",
+        "distance": 6.52
+    },
+    {
+        "nodeA": "N315",
+        "nodeB": "N316",
+        "distance": 6.01
+    },
+    {
+        "nodeA": "N316",
+        "nodeB": "iota-phi_entrance",
+        "distance": 1.77
+    },
+    {
+        "nodeA": "N314",
+        "nodeB": "N315",
+        "distance": 13.84
+    },
+    {
+        "nodeA": "N311",
+        "nodeB": "N314",
+        "distance": 15.27
+    },
+    {
+        "nodeA": "N312",
+        "nodeB": "N314",
+        "distance": 15.95
+    },
+    {
+        "nodeA": "N311",
+        "nodeB": "N312",
+        "distance": 10.28
+    },
+    {
+        "nodeA": "N312",
+        "nodeB": "N313",
+        "distance": 10.98
+    },
+    {
+        "nodeA": "N313",
+        "nodeB": "psi-classroom-toilets_entrance",
+        "distance": 5.22
+    },
+    {
+        "nodeA": "N310",
+        "nodeB": "N311",
+        "distance": 15.52
+    },
+    {
+        "nodeA": "N310",
+        "nodeB": "psi_entrance",
+        "distance": 2.76
+    },
+    {
+        "nodeA": "N309",
+        "nodeB": "N310",
+        "distance": 17.75
+    },
+    {
+        "nodeA": "N308",
+        "nodeB": "N309",
+        "distance": 11.54
+    },
+    {
+        "nodeA": "N307",
+        "nodeB": "N308",
+        "distance": 8.31
+    },
+    {
+        "nodeA": "N306",
+        "nodeB": "N307",
+        "distance": 8.81
+    },
+    {
+        "nodeA": "N305",
+        "nodeB": "N306",
+        "distance": 14.71
+    },
+    {
+        "nodeA": "N304",
+        "nodeB": "N305",
+        "distance": 7.85
+    },
+    {
+        "nodeA": "N303",
+        "nodeB": "N304",
+        "distance": 8.25
+    },
+    {
+        "nodeA": "N303",
+        "nodeB": "turnhout_entrance",
+        "distance": 9.51
+    },
+    {
+        "nodeA": "N303",
+        "nodeB": "N338",
+        "distance": 8.94
+    },
+    {
+        "nodeA": "N302",
+        "nodeB": "N303",
+        "distance": 11.54
+    },
+    {
+        "nodeA": "N303",
+        "nodeB": "tienen_entrance",
+        "distance": 15.5
+    },
+    {
+        "nodeA": "N303",
+        "nodeB": "N339",
+        "distance": 15.51
+    },
+    {
+        "nodeA": "N339",
+        "nodeB": "turnhout_entrance",
+        "distance": 14.56
+    },
+    {
+        "nodeA": "N302",
+        "nodeB": "turnhout_entrance",
+        "distance": 16.71
+    },
+    {
+        "nodeA": "N302",
+        "nodeB": "N339",
+        "distance": 9.66
+    },
+    {
+        "nodeA": "N296",
+        "nodeB": "N302",
+        "distance": 11.25
+    },
+    {
+        "nodeA": "N295",
+        "nodeB": "N296",
+        "distance": 11.86
+    },
+    {
+        "nodeA": "N296",
+        "nodeB": "N297",
+        "distance": 6.82
+    },
+    {
+        "nodeA": "N297",
+        "nodeB": "N298",
+        "distance": 14.75
+    },
+    {
+        "nodeA": "N298",
+        "nodeB": "N299",
+        "distance": 9.01
+    },
+    {
+        "nodeA": "N299",
+        "nodeB": "N300",
+        "distance": 11.67
+    },
+    {
+        "nodeA": "N300",
+        "nodeB": "N301",
+        "distance": 11.75
+    },
+    {
+        "nodeA": "N286",
+        "nodeB": "N301",
+        "distance": 14.88
+    },
+    {
+        "nodeA": "N284",
+        "nodeB": "N286",
+        "distance": 6.02
+    },
+    {
+        "nodeA": "N284",
+        "nodeB": "N285",
+        "distance": 13.66
+    },
+    {
+        "nodeA": "N283",
+        "nodeB": "N285",
+        "distance": 17.39
+    },
+    {
+        "nodeA": "N250",
+        "nodeB": "N283",
+        "distance": 10.61
+    },
+    {
+        "nodeA": "N248",
+        "nodeB": "N283",
+        "distance": 11.43
+    },
+    {
+        "nodeA": "N248",
+        "nodeB": "N250",
+        "distance": 10.21
+    },
+    {
+        "nodeA": "N248",
+        "nodeB": "N249",
+        "distance": 13.04
+    },
+    {
+        "nodeA": "N246",
+        "nodeB": "N249",
+        "distance": 16.3
+    },
+    {
+        "nodeA": "N246",
+        "nodeB": "N247",
+        "distance": 16.22
+    },
+    {
+        "nodeA": "N040",
+        "nodeB": "N247",
+        "distance": 17.5
+    },
+    {
+        "nodeA": "N250",
+        "nodeB": "namur_entrance",
+        "distance": 5.3
+    },
+    {
+        "nodeA": "N250",
+        "nodeB": "N282",
+        "distance": 11.76
+    },
+    {
+        "nodeA": "N286",
+        "nodeB": "N287",
+        "distance": 9.39
+    },
+    {
+        "nodeA": "N287",
+        "nodeB": "N288",
+        "distance": 7.81
+    },
+    {
+        "nodeA": "N288",
+        "nodeB": "N289",
+        "distance": 16.13
+    },
+    {
+        "nodeA": "N289",
+        "nodeB": "N290",
+        "distance": 15.11
+    },
+    {
+        "nodeA": "N290",
+        "nodeB": "N292",
+        "distance": 5.41
+    },
+    {
+        "nodeA": "N292",
+        "nodeB": "it-department_entrance",
+        "distance": 3.05
+    },
+    {
+        "nodeA": "N291",
+        "nodeB": "N292",
+        "distance": 8.19
+    },
+    {
+        "nodeA": "N291",
+        "nodeB": "N293",
+        "distance": 9.75
+    },
+    {
+        "nodeA": "N294",
+        "nodeB": "N295",
+        "distance": 7.6
+    },
+    {
+        "nodeA": "N293",
+        "nodeB": "N347",
+        "distance": 7.67
+    },
+    {
+        "nodeA": "N293",
+        "nodeB": "N294",
+        "distance": 7.25
+    },
+    {
+        "nodeA": "N294",
+        "nodeB": "N348",
+        "distance": 11.0
+    },
+    {
+        "nodeA": "N294",
+        "nodeB": "N347",
+        "distance": 8.07
+    },
+    {
+        "nodeA": "N293",
+        "nodeB": "N348",
+        "distance": 7.79
+    },
+    {
+        "nodeA": "N347",
+        "nodeB": "N349",
+        "distance": 10.3
+    },
+    {
+        "nodeA": "N349",
+        "nodeB": "N350",
+        "distance": 17.08
+    },
+    {
+        "nodeA": "N350",
+        "nodeB": "N351",
+        "distance": 9.5
+    },
+    {
+        "nodeA": "N350",
+        "nodeB": "N354",
+        "distance": 19.98
+    },
+    {
+        "nodeA": "N354",
+        "nodeB": "N356",
+        "distance": 11.75
+    },
+    {
+        "nodeA": "N355",
+        "nodeB": "N356",
+        "distance": 10.4
+    },
+    {
+        "nodeA": "N355",
+        "nodeB": "chi-classroom-toilets_entrance",
+        "distance": 11.1
+    },
+    {
+        "nodeA": "N351",
+        "nodeB": "N352",
+        "distance": 10.31
+    },
+    {
+        "nodeA": "N352",
+        "nodeB": "N353",
+        "distance": 15.95
+    },
+    {
+        "nodeA": "N353",
+        "nodeB": "chi-study_entrance",
+        "distance": 8.92
+    },
+    {
+        "nodeA": "N353",
+        "nodeB": "chi_entrance",
+        "distance": 9.17
+    },
+    {
+        "nodeA": "N347",
+        "nodeB": "N348",
+        "distance": 3.82
+    },
+    {
+        "nodeA": "N343",
+        "nodeB": "N348",
+        "distance": 6.5
+    },
+    {
+        "nodeA": "N343",
+        "nodeB": "N344",
+        "distance": 7.54
+    },
+    {
+        "nodeA": "N344",
+        "nodeB": "N345",
+        "distance": 16.38
+    },
+    {
+        "nodeA": "N345",
+        "nodeB": "N346",
+        "distance": 13.87
+    },
+    {
+        "nodeA": "N346",
+        "nodeB": "lier_entrance",
+        "distance": 7.85
+    },
+    {
+        "nodeA": "N290",
+        "nodeB": "N291",
+        "distance": 11.34
+    },
+    {
+        "nodeA": "N339",
+        "nodeB": "tienen_entrance",
+        "distance": 4.59
+    },
+    {
+        "nodeA": "N339",
+        "nodeB": "N340",
+        "distance": 10.12
+    },
+    {
+        "nodeA": "N340",
+        "nodeB": "N341",
+        "distance": 10.69
+    },
+    {
+        "nodeA": "N341",
+        "nodeB": "N342",
+        "distance": 7.07
+    },
+    {
+        "nodeA": "N342",
+        "nodeB": "kappa_entrance",
+        "distance": 5.71
+    },
+    {
+        "nodeA": "N280",
+        "nodeB": "N342",
+        "distance": 10.74
+    },
+    {
+        "nodeA": "N280",
+        "nodeB": "kappa_entrance",
+        "distance": 6.91
+    },
+    {
+        "nodeA": "N279",
+        "nodeB": "N280",
+        "distance": 14.72
+    },
+    {
+        "nodeA": "N257",
+        "nodeB": "N280",
+        "distance": 21.77
+    },
+    {
+        "nodeA": "N013",
+        "nodeB": "N257",
+        "distance": 17.37
+    },
+    {
+        "nodeA": "N012",
+        "nodeB": "N013",
+        "distance": 21.54
+    },
+    {
+        "nodeA": "N012",
+        "nodeB": "N014",
+        "distance": 16.3
+    },
+    {
+        "nodeA": "N014",
+        "nodeB": "N261",
+        "distance": 17.34
+    },
+    {
+        "nodeA": "N261",
+        "nodeB": "N262",
+        "distance": 20.92
+    },
+    {
+        "nodeA": "N262",
+        "nodeB": "volleyball_entrance",
+        "distance": 20.8
+    },
+    {
+        "nodeA": "N262",
+        "nodeB": "N267",
+        "distance": 21.87
+    },
+    {
+        "nodeA": "N263",
+        "nodeB": "N267",
+        "distance": 22.2
+    },
+    {
+        "nodeA": "N263",
+        "nodeB": "N264",
+        "distance": 23.34
+    },
+    {
+        "nodeA": "N264",
+        "nodeB": "N265",
+        "distance": 25.84
+    },
+    {
+        "nodeA": "N034",
+        "nodeB": "N265",
+        "distance": 26.51
+    },
+    {
+        "nodeA": "N265",
+        "nodeB": "N266",
+        "distance": 16.66
+    },
+    {
+        "nodeA": "N033",
+        "nodeB": "N266",
+        "distance": 13.17
+    },
+    {
+        "nodeA": "N014",
+        "nodeB": "volleyball_entrance",
+        "distance": 23.5
+    },
+    {
+        "nodeA": "N261",
+        "nodeB": "N330",
+        "distance": 17.12
+    },
+    {
+        "nodeA": "N259",
+        "nodeB": "N261",
+        "distance": 23.23
+    },
+    {
+        "nodeA": "N259",
+        "nodeB": "N281",
+        "distance": 13.0
+    },
+    {
+        "nodeA": "N281",
+        "nodeB": "N321",
+        "distance": 11.41
+    },
+    {
+        "nodeA": "N268",
+        "nodeB": "N281",
+        "distance": 13.89
+    },
+    {
+        "nodeA": "N268",
+        "nodeB": "N322",
+        "distance": 18.67
+    },
+    {
+        "nodeA": "N258",
+        "nodeB": "N268",
+        "distance": 11.67
+    },
+    {
+        "nodeA": "N268",
+        "nodeB": "N332",
+        "distance": 12.02
+    },
+    {
+        "nodeA": "N331",
+        "nodeB": "N332",
+        "distance": 11.63
+    },
+    {
+        "nodeA": "N329",
+        "nodeB": "N330",
+        "distance": 16.62
+    },
+    {
+        "nodeA": "N262",
+        "nodeB": "N330",
+        "distance": 36.15
+    },
+    {
+        "nodeA": "N320",
+        "nodeB": "N329",
+        "distance": 18.21
+    },
+    {
+        "nodeA": "N320",
+        "nodeB": "N321",
+        "distance": 11.78
+    },
+    {
+        "nodeA": "N320",
+        "nodeB": "N328",
+        "distance": 10.31
+    },
+    {
+        "nodeA": "N321",
+        "nodeB": "N328",
+        "distance": 16.39
+    },
+    {
+        "nodeA": "N327",
+        "nodeB": "N328",
+        "distance": 8.25
+    },
+    {
+        "nodeA": "N326",
+        "nodeB": "N327",
+        "distance": 10.0
+    },
+    {
+        "nodeA": "N325",
+        "nodeB": "N326",
+        "distance": 16.21
+    },
+    {
+        "nodeA": "N326",
+        "nodeB": "smart-city_entrance",
+        "distance": 11.0
+    },
+    {
+        "nodeA": "N325",
+        "nodeB": "smart-city_entrance",
+        "distance": 6.95
+    },
+    {
+        "nodeA": "N324",
+        "nodeB": "N325",
+        "distance": 7.32
+    },
+    {
+        "nodeA": "N324",
+        "nodeB": "N337",
+        "distance": 7.7
+    },
+    {
+        "nodeA": "N337",
+        "nodeB": "N338",
+        "distance": 12.75
+    },
+    {
+        "nodeA": "N336",
+        "nodeB": "N337",
+        "distance": 9.0
+    },
+    {
+        "nodeA": "N325",
+        "nodeB": "N337",
+        "distance": 8.51
+    },
+    {
+        "nodeA": "N335",
+        "nodeB": "N336",
+        "distance": 9.25
+    },
+    {
+        "nodeA": "N336",
+        "nodeB": "learning-factory_entrance",
+        "distance": 7.94
+    },
+    {
+        "nodeA": "N335",
+        "nodeB": "learning-factory_entrance",
+        "distance": 4.59
+    },
+    {
+        "nodeA": "N333",
+        "nodeB": "N334",
+        "distance": 11.96
+    },
+    {
+        "nodeA": "N334",
+        "nodeB": "N335",
+        "distance": 6.31
+    },
+    {
+        "nodeA": "N323",
+        "nodeB": "N324",
+        "distance": 10.51
+    },
+    {
+        "nodeA": "N269",
+        "nodeB": "N323",
+        "distance": 11.18
+    },
+    {
+        "nodeA": "N269",
+        "nodeB": "N338",
+        "distance": 11.95
+    },
+    {
+        "nodeA": "N319",
+        "nodeB": "N320",
+        "distance": 14.18
+    },
+    {
+        "nodeA": "N319",
+        "nodeB": "N328",
+        "distance": 6.75
+    },
+    {
+        "nodeA": "N318",
+        "nodeB": "N319",
+        "distance": 11.35
+    },
+    {
+        "nodeA": "N317",
+        "nodeB": "N318",
+        "distance": 7.21
+    },
+    {
+        "nodeA": "N318",
+        "nodeB": "iota-phi-classroom-toilets_entrance",
+        "distance": 4.26
+    },
+    {
+        "nodeA": "N317",
+        "nodeB": "N319",
+        "distance": 10.43
+    },
+    {
+        "nodeA": "N316",
+        "nodeB": "N317",
+        "distance": 12.18
+    },
+    {
+        "nodeA": "N321",
+        "nodeB": "N322",
+        "distance": 17.22
+    },
+    {
+        "nodeA": "N322",
+        "nodeB": "N323",
+        "distance": 11.71
+    },
+    {
+        "nodeA": "N330",
+        "nodeB": "volleyball_entrance",
+        "distance": 20.45
+    },
+    {
+        "nodeA": "N011",
+        "nodeB": "N012",
+        "distance": 23.31
+    },
+    {
+        "nodeA": "N009",
+        "nodeB": "N011",
+        "distance": 18.03
+    },
+    {
+        "nodeA": "N008",
+        "nodeB": "N009",
+        "distance": 20.4
+    },
+    {
+        "nodeA": "N008",
+        "nodeB": "N010",
+        "distance": 33.17
+    },
+    {
+        "nodeA": "N257",
+        "nodeB": "N258",
+        "distance": 19.33
+    },
+    {
+        "nodeA": "N257",
+        "nodeB": "N260",
+        "distance": 16.12
+    },
+    {
+        "nodeA": "N260",
+        "nodeB": "N261",
+        "distance": 13.81
+    },
+    {
+        "nodeA": "N261",
+        "nodeB": "volleyball_entrance",
+        "distance": 15.93
+    },
+    {
+        "nodeA": "N257",
+        "nodeB": "N278",
+        "distance": 16.59
+    },
+    {
+        "nodeA": "N278",
+        "nodeB": "N279",
+        "distance": 14.14
+    },
+    {
+        "nodeA": "N277",
+        "nodeB": "N278",
+        "distance": 10.9
+    },
+    {
+        "nodeA": "N276",
+        "nodeB": "N277",
+        "distance": 15.3
+    },
+    {
+        "nodeA": "N276",
+        "nodeB": "north-laundry_entrance",
+        "distance": 17.02
+    },
+    {
+        "nodeA": "N270",
+        "nodeB": "north-laundry_entrance",
+        "distance": 3.81
+    },
+    {
+        "nodeA": "N270",
+        "nodeB": "N276",
+        "distance": 18.7
+    },
+    {
+        "nodeA": "N270",
+        "nodeB": "N271",
+        "distance": 12.58
+    },
+    {
+        "nodeA": "N010",
+        "nodeB": "N271",
+        "distance": 16.99
+    },
+    {
+        "nodeA": "N010",
+        "nodeB": "N011",
+        "distance": 16.36
+    },
+    {
+        "nodeA": "N010",
+        "nodeB": "N016",
+        "distance": 12.44
+    },
+    {
+        "nodeA": "N015",
+        "nodeB": "N016",
+        "distance": 20.22
+    },
+    {
+        "nodeA": "N008",
+        "nodeB": "N015",
+        "distance": 23.48
+    },
+    {
+        "nodeA": "N008",
+        "nodeB": "N030",
+        "distance": 19.76
+    },
+    {
+        "nodeA": "N030",
+        "nodeB": "N031",
+        "distance": 21.9
+    },
+    {
+        "nodeA": "N031",
+        "nodeB": "N033",
+        "distance": 16.36
+    },
+    {
+        "nodeA": "N033",
+        "nodeB": "N034",
+        "distance": 12.02
+    },
+    {
+        "nodeA": "N034",
+        "nodeB": "sports-fields_entrance",
+        "distance": 8.46
+    },
+    {
+        "nodeA": "N007",
+        "nodeB": "N031",
+        "distance": 18.92
+    },
+    {
+        "nodeA": "N007",
+        "nodeB": "N039",
+        "distance": 11.74
+    },
+    {
+        "nodeA": "N007",
+        "nodeB": "N033",
+        "distance": 16.21
+    },
+    {
+        "nodeA": "N017",
+        "nodeB": "N039",
+        "distance": 15.59
+    },
+    {
+        "nodeA": "N007",
+        "nodeB": "N017",
+        "distance": 21.74
+    },
+    {
+        "nodeA": "N017",
+        "nodeB": "N019",
+        "distance": 23.41
+    },
+    {
+        "nodeA": "N017",
+        "nodeB": "N029",
+        "distance": 19.16
+    },
+    {
+        "nodeA": "N028",
+        "nodeB": "N029",
+        "distance": 20.44
+    },
+    {
+        "nodeA": "N015",
+        "nodeB": "N028",
+        "distance": 21.51
+    },
+    {
+        "nodeA": "N015",
+        "nodeB": "N018",
+        "distance": 20.02
+    },
+    {
+        "nodeA": "N018",
+        "nodeB": "N020",
+        "distance": 23.21
+    },
+    {
+        "nodeA": "N018",
+        "nodeB": "N026",
+        "distance": 20.16
+    },
+    {
+        "nodeA": "N026",
+        "nodeB": "N027",
+        "distance": 21.19
+    },
+    {
+        "nodeA": "N019",
+        "nodeB": "N027",
+        "distance": 18.2
+    },
+    {
+        "nodeA": "N019",
+        "nodeB": "N021",
+        "distance": 22.26
+    },
+    {
+        "nodeA": "N005",
+        "nodeB": "N021",
+        "distance": 22.62
+    },
+    {
+        "nodeA": "N021",
+        "nodeB": "N022",
+        "distance": 19.69
+    },
+    {
+        "nodeA": "N022",
+        "nodeB": "N023",
+        "distance": 19.84
+    },
+    {
+        "nodeA": "N020",
+        "nodeB": "N023",
+        "distance": 22.85
+    },
+    {
+        "nodeA": "N004",
+        "nodeB": "N020",
+        "distance": 21.92
+    },
+    {
+        "nodeA": "N004",
+        "nodeB": "N024",
+        "distance": 20.95
+    },
+    {
+        "nodeA": "N024",
+        "nodeB": "N025",
+        "distance": 23.12
+    },
+    {
+        "nodeA": "N005",
+        "nodeB": "N025",
+        "distance": 18.58
+    },
+    {
+        "nodeA": "N005",
+        "nodeB": "N047",
+        "distance": 13.29
+    },
+    {
+        "nodeA": "N006",
+        "nodeB": "N047",
+        "distance": 11.15
+    },
+    {
+        "nodeA": "N006",
+        "nodeB": "denant_entrance",
+        "distance": 8.49
+    },
+    {
+        "nodeA": "N005",
+        "nodeB": "denant_entrance",
+        "distance": 12.98
+    },
+    {
+        "nodeA": "N021",
+        "nodeB": "denant_entrance",
+        "distance": 18.37
+    },
+    {
+        "nodeA": "N001",
+        "nodeB": "N004",
+        "distance": 15.18
+    },
+    {
+        "nodeA": "N004",
+        "nodeB": "N275",
+        "distance": 24.06
+    },
+    {
+        "nodeA": "N251",
+        "nodeB": "N275",
+        "distance": 16.2
+    },
+    {
+        "nodeA": "N251",
+        "nodeB": "N274",
+        "distance": 17.22
+    },
+    {
+        "nodeA": "N004",
+        "nodeB": "N040",
+        "distance": 29.31
+    },
+    {
+        "nodeA": "N038",
+        "nodeB": "N039",
+        "distance": 5.15
+    },
+    {
+        "nodeA": "N037",
+        "nodeB": "N038",
+        "distance": 10.75
+    },
+    {
+        "nodeA": "N036",
+        "nodeB": "N037",
+        "distance": 10.2
+    },
+    {
+        "nodeA": "N037",
+        "nodeB": "cafeteria_entrance",
+        "distance": 4.61
+    },
+    {
+        "nodeA": "N031",
+        "nodeB": "N032",
+        "distance": 19.68
+    },
+    {
+        "nodeA": "N032",
+        "nodeB": "N035",
+        "distance": 5.7
+    },
+    {
+        "nodeA": "N007",
+        "nodeB": "N032",
+        "distance": 13.51
+    },
+    {
+        "nodeA": "N032",
+        "nodeB": "N033",
+        "distance": 5.3
+    },
+    {
+        "nodeA": "N035",
+        "nodeB": "N036",
+        "distance": 10.44
+    },
+    {
+        "nodeA": "N036",
+        "nodeB": "cafeteria_entrance",
+        "distance": 6.25
+    },
+    {
+        "nodeA": "N016",
+        "nodeB": "N271",
+        "distance": 20.4
+    },
+    {
+        "nodeA": "N016",
+        "nodeB": "N272",
+        "distance": 16.51
+    },
+    {
+        "nodeA": "N010",
+        "nodeB": "N272",
+        "distance": 22.75
+    },
+    {
+        "nodeA": "N271",
+        "nodeB": "N272",
+        "distance": 14.98
+    },
+    {
+        "nodeA": "N272",
+        "nodeB": "N273",
+        "distance": 16.94
+    },
+    {
+        "nodeA": "N273",
+        "nodeB": "N274",
+        "distance": 14.8
+    },
+    {
+        "nodeA": "N274",
+        "nodeB": "N275",
+        "distance": 14.56
+    },
+    {
+        "nodeA": "N001",
+        "nodeB": "N275",
+        "distance": 16.1
+    },
+    {
+        "nodeA": "N002",
+        "nodeB": "N275",
+        "distance": 13.22
+    },
+    {
+        "nodeA": "N040",
+        "nodeB": "N275",
+        "distance": 8.9
+    },
+    {
+        "nodeA": "N002",
+        "nodeB": "N040",
+        "distance": 8.05
+    },
+    {
+        "nodeA": "N041",
+        "nodeB": "north_gate",
+        "distance": 7.43
+    },
+    {
+        "nodeA": "N002",
+        "nodeB": "north_gate",
+        "distance": 3.02
+    },
+    {
+        "nodeA": "N002",
+        "nodeB": "N003",
+        "distance": 9.98
+    },
+    {
+        "nodeA": "N003",
+        "nodeB": "N004",
+        "distance": 16.27
+    },
+    {
+        "nodeA": "N001",
+        "nodeB": "N003",
+        "distance": 5.53
+    },
+    {
+        "nodeA": "N002",
+        "nodeB": "N041",
+        "distance": 10.45
+    },
+    {
+        "nodeA": "N041",
+        "nodeB": "N042",
+        "distance": 11.54
+    },
+    {
+        "nodeA": "N042",
+        "nodeB": "N043",
+        "distance": 14.72
+    },
+    {
+        "nodeA": "N043",
+        "nodeB": "N044",
+        "distance": 21.83
+    },
+    {
+        "nodeA": "N044",
+        "nodeB": "N045",
+        "distance": 20.4
+    },
+    {
+        "nodeA": "N045",
+        "nodeB": "N046",
+        "distance": 25.38
+    },
+    {
+        "nodeA": "N046",
+        "nodeB": "student-parking_entrance",
+        "distance": 7.28
+    },
+    {
+        "nodeA": "N047",
+        "nodeB": "student-parking_entrance",
+        "distance": 3.04
+    },
+    {
+        "nodeA": "N046",
+        "nodeB": "N047",
+        "distance": 10.31
+    },
+    {
+        "nodeA": "N041",
+        "nodeB": "main_gate",
+        "distance": 9.92
+    },
+    {
+        "nodeA": "N055",
+        "nodeB": "main_gate",
+        "distance": 4.98
+    },
+    {
+        "nodeA": "N041",
+        "nodeB": "N055",
+        "distance": 14.41
+    },
+    {
+        "nodeA": "N001",
+        "nodeB": "N040",
+        "distance": 16.94
+    },
+    {
+        "nodeA": "N040",
+        "nodeB": "N251",
+        "distance": 16.53
+    },
+    {
+        "nodeA": "N251",
+        "nodeB": "N252",
+        "distance": 15.99
+    },
+    {
+        "nodeA": "N252",
+        "nodeB": "N253",
+        "distance": 12.97
+    },
+    {
+        "nodeA": "N253",
+        "nodeB": "N254",
+        "distance": 11.21
+    },
+    {
+        "nodeA": "N254",
+        "nodeB": "mechelen_entrance",
+        "distance": 3.13
+    },
+    {
+        "nodeA": "N254",
+        "nodeB": "N255",
+        "distance": 14.81
+    },
+    {
+        "nodeA": "N255",
+        "nodeB": "mechelen_entrance",
+        "distance": 14.21
+    },
+    {
+        "nodeA": "N255",
+        "nodeB": "N256",
+        "distance": 16.75
+    },
+    {
+        "nodeA": "N256",
+        "nodeB": "N277",
+        "distance": 11.72
+    },
+    {
+        "nodeA": "N256",
+        "nodeB": "N278",
+        "distance": 14.0
+    },
+    {
+        "nodeA": "N256",
+        "nodeB": "N279",
+        "distance": 25.9
+    },
+    {
+        "nodeA": "N253",
+        "nodeB": "N282",
+        "distance": 19.73
+    },
+    {
+        "nodeA": "N254",
+        "nodeB": "N282",
+        "distance": 13.76
+    },
+    {
+        "nodeA": "N255",
+        "nodeB": "N282",
+        "distance": 22.37
+    },
+    {
+        "nodeA": "N001",
+        "nodeB": "north_entrance",
+        "distance": 4.98
+    },
+    {
+        "nodeA": "N042",
+        "nodeB": "north_entrance",
+        "distance": 7.35
+    },
+    {
+        "nodeA": "N001",
+        "nodeB": "N042",
+        "distance": 12.33
+    },
+    {
+        "nodeA": "N042",
+        "nodeB": "N048",
+        "distance": 13.89
+    },
+    {
+        "nodeA": "N048",
+        "nodeB": "N049",
+        "distance": 8.14
+    },
+    {
+        "nodeA": "N049",
+        "nodeB": "N052",
+        "distance": 6.62
+    },
+    {
+        "nodeA": "N049",
+        "nodeB": "N054",
+        "distance": 7.5
+    },
+    {
+        "nodeA": "N050",
+        "nodeB": "N052",
+        "distance": 6.49
+    },
+    {
+        "nodeA": "N050",
+        "nodeB": "N054",
+        "distance": 5.77
+    },
+    {
+        "nodeA": "N050",
+        "nodeB": "N224",
+        "distance": 6.71
+    },
+    {
+        "nodeA": "N054",
+        "nodeB": "N224",
+        "distance": 7.06
+    },
+    {
+        "nodeA": "N053",
+        "nodeB": "N054",
+        "distance": 7.29
+    },
+    {
+        "nodeA": "N053",
+        "nodeB": "N059",
+        "distance": 9.4
+    },
+    {
+        "nodeA": "N059",
+        "nodeB": "N060",
+        "distance": 10.47
+    },
+    {
+        "nodeA": "N060",
+        "nodeB": "N061",
+        "distance": 10.18
+    },
+    {
+        "nodeA": "N061",
+        "nodeB": "N062",
+        "distance": 10.44
+    },
+    {
+        "nodeA": "N062",
+        "nodeB": "N063",
+        "distance": 10.2
+    },
+    {
+        "nodeA": "N063",
+        "nodeB": "N064",
+        "distance": 9.41
+    },
+    {
+        "nodeA": "N064",
+        "nodeB": "tuck-shop_entrance",
+        "distance": 3.25
+    },
+    {
+        "nodeA": "N064",
+        "nodeB": "N067",
+        "distance": 8.39
+    },
+    {
+        "nodeA": "N067",
+        "nodeB": "tuck-shop_entrance",
+        "distance": 7.52
+    },
+    {
+        "nodeA": "N067",
+        "nodeB": "N068",
+        "distance": 9.18
+    },
+    {
+        "nodeA": "N068",
+        "nodeB": "staff-parking-2_entrance",
+        "distance": 8.75
+    },
+    {
+        "nodeA": "N068",
+        "nodeB": "N069",
+        "distance": 9.95
+    },
+    {
+        "nodeA": "N069",
+        "nodeB": "staff-parking-2_entrance",
+        "distance": 9.71
+    },
+    {
+        "nodeA": "N069",
+        "nodeB": "N070",
+        "distance": 13.7
+    },
+    {
+        "nodeA": "N070",
+        "nodeB": "N079",
+        "distance": 10.51
+    },
+    {
+        "nodeA": "N079",
+        "nodeB": "N140",
+        "distance": 9.33
+    },
+    {
+        "nodeA": "N080",
+        "nodeB": "N140",
+        "distance": 6.66
+    },
+    {
+        "nodeA": "N081",
+        "nodeB": "N140",
+        "distance": 5.84
+    },
+    {
+        "nodeA": "N080",
+        "nodeB": "N081",
+        "distance": 4.92
+    },
+    {
+        "nodeA": "N081",
+        "nodeB": "N082",
+        "distance": 8.22
+    },
+    {
+        "nodeA": "N082",
+        "nodeB": "N083",
+        "distance": 8.46
+    },
+    {
+        "nodeA": "N083",
+        "nodeB": "N084",
+        "distance": 9.72
+    },
+    {
+        "nodeA": "N075",
+        "nodeB": "N083",
+        "distance": 9.92
+    },
+    {
+        "nodeA": "N074",
+        "nodeB": "N075",
+        "distance": 11.1
+    },
+    {
+        "nodeA": "N084",
+        "nodeB": "lambda_entrance",
+        "distance": 4.45
+    },
+    {
+        "nodeA": "N085",
+        "nodeB": "lambda_entrance",
+        "distance": 5.71
+    },
+    {
+        "nodeA": "N084",
+        "nodeB": "N085",
+        "distance": 6.27
+    },
+    {
+        "nodeA": "N085",
+        "nodeB": "N132",
+        "distance": 5.62
+    },
+    {
+        "nodeA": "N132",
+        "nodeB": "N133",
+        "distance": 7.5
+    },
+    {
+        "nodeA": "N133",
+        "nodeB": "N134",
+        "distance": 5.76
+    },
+    {
+        "nodeA": "N134",
+        "nodeB": "omnikron_entrance",
+        "distance": 2.75
+    },
+    {
+        "nodeA": "N135",
+        "nodeB": "omnikron_entrance",
+        "distance": 4.78
+    },
+    {
+        "nodeA": "N096",
+        "nodeB": "omnikron_entrance",
+        "distance": 5.76
+    },
+    {
+        "nodeA": "N096",
+        "nodeB": "N134",
+        "distance": 4.78
+    },
+    {
+        "nodeA": "N134",
+        "nodeB": "N135",
+        "distance": 6.95
+    },
+    {
+        "nodeA": "N135",
+        "nodeB": "N136",
+        "distance": 6.82
+    },
+    {
+        "nodeA": "N136",
+        "nodeB": "N137",
+        "distance": 4.59
+    },
+    {
+        "nodeA": "N100",
+        "nodeB": "N136",
+        "distance": 5.49
+    },
+    {
+        "nodeA": "N099",
+        "nodeB": "N136",
+        "distance": 4.51
+    },
+    {
+        "nodeA": "N096",
+        "nodeB": "N099",
+        "distance": 9.76
+    },
+    {
+        "nodeA": "N096",
+        "nodeB": "N097",
+        "distance": 7.5
+    },
+    {
+        "nodeA": "N097",
+        "nodeB": "N098",
+        "distance": 6.01
+    },
+    {
+        "nodeA": "N098",
+        "nodeB": "academics_entrance",
+        "distance": 6.6
+    },
+    {
+        "nodeA": "N097",
+        "nodeB": "N099",
+        "distance": 4.16
+    },
+    {
+        "nodeA": "N099",
+        "nodeB": "N100",
+        "distance": 8.5
+    },
+    {
+        "nodeA": "N100",
+        "nodeB": "N101",
+        "distance": 9.75
+    },
+    {
+        "nodeA": "N095",
+        "nodeB": "N096",
+        "distance": 7.57
+    },
+    {
+        "nodeA": "N094",
+        "nodeB": "N095",
+        "distance": 8.59
+    },
+    {
+        "nodeA": "N087",
+        "nodeB": "N094",
+        "distance": 5.27
+    },
+    {
+        "nodeA": "N086",
+        "nodeB": "N087",
+        "distance": 8.38
+    },
+    {
+        "nodeA": "N087",
+        "nodeB": "N088",
+        "distance": 8.43
+    },
+    {
+        "nodeA": "N088",
+        "nodeB": "N089",
+        "distance": 8.28
+    },
+    {
+        "nodeA": "N089",
+        "nodeB": "N090",
+        "distance": 3.95
+    },
+    {
+        "nodeA": "N090",
+        "nodeB": "reception_entrance",
+        "distance": 2.8
+    },
+    {
+        "nodeA": "N090",
+        "nodeB": "N093",
+        "distance": 5.15
+    },
+    {
+        "nodeA": "N092",
+        "nodeB": "N093",
+        "distance": 3.01
+    },
+    {
+        "nodeA": "N093",
+        "nodeB": "sales_entrance",
+        "distance": 5.03
+    },
+    {
+        "nodeA": "N092",
+        "nodeB": "sales_entrance",
+        "distance": 4.81
+    },
+    {
+        "nodeA": "N091",
+        "nodeB": "N092",
+        "distance": 6.54
+    },
+    {
+        "nodeA": "N088",
+        "nodeB": "N091",
+        "distance": 9.8
+    },
+    {
+        "nodeA": "N085",
+        "nodeB": "N086",
+        "distance": 7.6
+    },
+    {
+        "nodeA": "N078",
+        "nodeB": "N085",
+        "distance": 6.19
+    },
+    {
+        "nodeA": "N078",
+        "nodeB": "N086",
+        "distance": 11.05
+    },
+    {
+        "nodeA": "N077",
+        "nodeB": "N078",
+        "distance": 9.66
+    },
+    {
+        "nodeA": "N074",
+        "nodeB": "N078",
+        "distance": 10.26
+    },
+    {
+        "nodeA": "N073",
+        "nodeB": "N074",
+        "distance": 10.36
+    },
+    {
+        "nodeA": "N072",
+        "nodeB": "N073",
+        "distance": 7.97
+    },
+    {
+        "nodeA": "N071",
+        "nodeB": "N072",
+        "distance": 12.31
+    },
+    {
+        "nodeA": "N071",
+        "nodeB": "visitors-parking_entrance",
+        "distance": 6.52
+    },
+    {
+        "nodeA": "N071",
+        "nodeB": "N076",
+        "distance": 8.78
+    },
+    {
+        "nodeA": "N076",
+        "nodeB": "visitors-parking_entrance",
+        "distance": 5.35
+    },
+    {
+        "nodeA": "N072",
+        "nodeB": "visitors-parking_entrance",
+        "distance": 5.94
+    },
+    {
+        "nodeA": "N070",
+        "nodeB": "N071",
+        "distance": 12.81
+    },
+    {
+        "nodeA": "N076",
+        "nodeB": "N077",
+        "distance": 9.92
+    },
+    {
+        "nodeA": "N077",
+        "nodeB": "N084",
+        "distance": 11.86
+    },
+    {
+        "nodeA": "N075",
+        "nodeB": "N077",
+        "distance": 6.75
+    },
+    {
+        "nodeA": "N075",
+        "nodeB": "N085",
+        "distance": 8.73
+    },
+    {
+        "nodeA": "N075",
+        "nodeB": "lambda_entrance",
+        "distance": 9.57
+    },
+    {
+        "nodeA": "N074",
+        "nodeB": "administration_entrance",
+        "distance": 13.75
+    },
+    {
+        "nodeA": "N073",
+        "nodeB": "administration_entrance",
+        "distance": 5.48
+    },
+    {
+        "nodeA": "N137",
+        "nodeB": "N139",
+        "distance": 4.67
+    },
+    {
+        "nodeA": "N139",
+        "nodeB": "zeta_entrance",
+        "distance": 3.05
+    },
+    {
+        "nodeA": "N139",
+        "nodeB": "zeta-classroom-toilets_entrance",
+        "distance": 2.47
+    },
+    {
+        "nodeA": "N138",
+        "nodeB": "N139",
+        "distance": 4.16
+    },
+    {
+        "nodeA": "N138",
+        "nodeB": "N205",
+        "distance": 5.51
+    },
+    {
+        "nodeA": "N137",
+        "nodeB": "N138",
+        "distance": 5.26
+    },
+    {
+        "nodeA": "N080",
+        "nodeB": "N216",
+        "distance": 8.78
+    },
+    {
+        "nodeA": "N210",
+        "nodeB": "N216",
+        "distance": 10.85
+    },
+    {
+        "nodeA": "N210",
+        "nodeB": "N211",
+        "distance": 9.06
+    },
+    {
+        "nodeA": "N209",
+        "nodeB": "N210",
+        "distance": 7.95
+    },
+    {
+        "nodeA": "N209",
+        "nodeB": "N211",
+        "distance": 6.01
+    },
+    {
+        "nodeA": "N211",
+        "nodeB": "N212",
+        "distance": 6.86
+    },
+    {
+        "nodeA": "N212",
+        "nodeB": "N215",
+        "distance": 9.75
+    },
+    {
+        "nodeA": "N180",
+        "nodeB": "N215",
+        "distance": 8.02
+    },
+    {
+        "nodeA": "N180",
+        "nodeB": "N181",
+        "distance": 7.4
+    },
+    {
+        "nodeA": "N181",
+        "nodeB": "N182",
+        "distance": 8.08
+    },
+    {
+        "nodeA": "N182",
+        "nodeB": "N183",
+        "distance": 7.49
+    },
+    {
+        "nodeA": "N183",
+        "nodeB": "N227",
+        "distance": 4.14
+    },
+    {
+        "nodeA": "N183",
+        "nodeB": "N184",
+        "distance": 5.1
+    },
+    {
+        "nodeA": "N184",
+        "nodeB": "N185",
+        "distance": 6.25
+    },
+    {
+        "nodeA": "N212",
+        "nodeB": "N213",
+        "distance": 8.62
+    },
+    {
+        "nodeA": "N213",
+        "nodeB": "N214",
+        "distance": 7.28
+    },
+    {
+        "nodeA": "N187",
+        "nodeB": "N214",
+        "distance": 7.22
+    },
+    {
+        "nodeA": "N186",
+        "nodeB": "N187",
+        "distance": 7.02
+    },
+    {
+        "nodeA": "N186",
+        "nodeB": "N189",
+        "distance": 6.0
+    },
+    {
+        "nodeA": "N185",
+        "nodeB": "N186",
+        "distance": 6.17
+    },
+    {
+        "nodeA": "N064",
+        "nodeB": "N065",
+        "distance": 10.5
+    },
+    {
+        "nodeA": "N057",
+        "nodeB": "N060",
+        "distance": 11.63
+    },
+    {
+        "nodeA": "N056",
+        "nodeB": "N057",
+        "distance": 10.06
+    },
+    {
+        "nodeA": "N055",
+        "nodeB": "N056",
+        "distance": 11.07
+    },
+    {
+        "nodeA": "N050",
+        "nodeB": "N144",
+        "distance": 8.98
+    },
+    {
+        "nodeA": "N144",
+        "nodeB": "N224",
+        "distance": 12.41
+    },
+    {
+        "nodeA": "N144",
+        "nodeB": "N145",
+        "distance": 9.62
+    },
+    {
+        "nodeA": "N051",
+        "nodeB": "N144",
+        "distance": 8.17
+    },
+    {
+        "nodeA": "N050",
+        "nodeB": "staff-parking-1_entrance",
+        "distance": 10.51
+    },
+    {
+        "nodeA": "N052",
+        "nodeB": "N058",
+        "distance": 8.36
+    },
+    {
+        "nodeA": "N055",
+        "nodeB": "N058",
+        "distance": 9.96
+    },
+    {
+        "nodeA": "N049",
+        "nodeB": "N224",
+        "distance": 10.91
+    },
+    {
+        "nodeA": "N223",
+        "nodeB": "N224",
+        "distance": 10.3
+    },
+    {
+        "nodeA": "N222",
+        "nodeB": "N223",
+        "distance": 10.36
+    },
+    {
+        "nodeA": "N221",
+        "nodeB": "N222",
+        "distance": 9.25
+    },
+    {
+        "nodeA": "N220",
+        "nodeB": "N221",
+        "distance": 6.09
+    },
+    {
+        "nodeA": "N219",
+        "nodeB": "N220",
+        "distance": 7.72
+    },
+    {
+        "nodeA": "N218",
+        "nodeB": "N219",
+        "distance": 6.73
+    },
+    {
+        "nodeA": "N178",
+        "nodeB": "N218",
+        "distance": 8.53
+    },
+    {
+        "nodeA": "N177",
+        "nodeB": "N178",
+        "distance": 6.82
+    },
+    {
+        "nodeA": "N176",
+        "nodeB": "N177",
+        "distance": 7.27
+    },
+    {
+        "nodeA": "N176",
+        "nodeB": "N225",
+        "distance": 4.51
+    },
+    {
+        "nodeA": "N225",
+        "nodeB": "N226",
+        "distance": 6.26
+    },
+    {
+        "nodeA": "N226",
+        "nodeB": "N227",
+        "distance": 5.62
+    },
+    {
+        "nodeA": "N227",
+        "nodeB": "N228",
+        "distance": 7.39
+    },
+    {
+        "nodeA": "N228",
+        "nodeB": "N229",
+        "distance": 8.19
+    },
+    {
+        "nodeA": "N229",
+        "nodeB": "N233",
+        "distance": 8.19
+    },
+    {
+        "nodeA": "N229",
+        "nodeB": "N234",
+        "distance": 8.51
+    },
+    {
+        "nodeA": "N230",
+        "nodeB": "N233",
+        "distance": 6.82
+    },
+    {
+        "nodeA": "N233",
+        "nodeB": "N234",
+        "distance": 4.04
+    },
+    {
+        "nodeA": "N234",
+        "nodeB": "N235",
+        "distance": 4.67
+    },
+    {
+        "nodeA": "N235",
+        "nodeB": "main-study_entrance",
+        "distance": 3.26
+    },
+    {
+        "nodeA": "N235",
+        "nodeB": "N236",
+        "distance": 4.03
+    },
+    {
+        "nodeA": "N236",
+        "nodeB": "public-toilets_entrance",
+        "distance": 3.34
+    },
+    {
+        "nodeA": "N234",
+        "nodeB": "N236",
+        "distance": 7.25
+    },
+    {
+        "nodeA": "N233",
+        "nodeB": "N237",
+        "distance": 10.5
+    },
+    {
+        "nodeA": "N236",
+        "nodeB": "N237",
+        "distance": 6.43
+    },
+    {
+        "nodeA": "N235",
+        "nodeB": "N237",
+        "distance": 7.96
+    },
+    {
+        "nodeA": "N237",
+        "nodeB": "N238",
+        "distance": 6.96
+    },
+    {
+        "nodeA": "N238",
+        "nodeB": "N239",
+        "distance": 7.2
+    },
+    {
+        "nodeA": "N239",
+        "nodeB": "N240",
+        "distance": 7.75
+    },
+    {
+        "nodeA": "N188",
+        "nodeB": "N240",
+        "distance": 4.61
+    },
+    {
+        "nodeA": "N186",
+        "nodeB": "N188",
+        "distance": 5.7
+    },
+    {
+        "nodeA": "N188",
+        "nodeB": "N191",
+        "distance": 5.71
+    },
+    {
+        "nodeA": "N191",
+        "nodeB": "N240",
+        "distance": 6.64
+    },
+    {
+        "nodeA": "N190",
+        "nodeB": "N191",
+        "distance": 5.06
+    },
+    {
+        "nodeA": "N191",
+        "nodeB": "N192",
+        "distance": 7.94
+    },
+    {
+        "nodeA": "N113",
+        "nodeB": "N191",
+        "distance": 12.81
+    },
+    {
+        "nodeA": "N191",
+        "nodeB": "N217",
+        "distance": 9.5
+    },
+    {
+        "nodeA": "N190",
+        "nodeB": "N217",
+        "distance": 7.98
+    },
+    {
+        "nodeA": "N217",
+        "nodeB": "gamma_entrance",
+        "distance": 3.48
+    },
+    {
+        "nodeA": "N192",
+        "nodeB": "N193",
+        "distance": 5.15
+    },
+    {
+        "nodeA": "N193",
+        "nodeB": "N195",
+        "distance": 8.19
+    },
+    {
+        "nodeA": "N194",
+        "nodeB": "N195",
+        "distance": 4.83
+    },
+    {
+        "nodeA": "N193",
+        "nodeB": "N217",
+        "distance": 7.79
+    },
+    {
+        "nodeA": "N113",
+        "nodeB": "N217",
+        "distance": 4.65
+    },
+    {
+        "nodeA": "N113",
+        "nodeB": "N194",
+        "distance": 7.63
+    },
+    {
+        "nodeA": "N112",
+        "nodeB": "N194",
+        "distance": 4.04
+    },
+    {
+        "nodeA": "N194",
+        "nodeB": "N196",
+        "distance": 6.01
+    },
+    {
+        "nodeA": "N196",
+        "nodeB": "N197",
+        "distance": 4.65
+    },
+    {
+        "nodeA": "N197",
+        "nodeB": "N198",
+        "distance": 6.02
+    },
+    {
+        "nodeA": "N198",
+        "nodeB": "N199",
+        "distance": 6.77
+    },
+    {
+        "nodeA": "N199",
+        "nodeB": "N203",
+        "distance": 5.48
+    },
+    {
+        "nodeA": "N202",
+        "nodeB": "N203",
+        "distance": 5.59
+    },
+    {
+        "nodeA": "N199",
+        "nodeB": "N202",
+        "distance": 3.13
+    },
+    {
+        "nodeA": "N201",
+        "nodeB": "N202",
+        "distance": 6.15
+    },
+    {
+        "nodeA": "N202",
+        "nodeB": "N204",
+        "distance": 4.61
+    },
+    {
+        "nodeA": "N199",
+        "nodeB": "N204",
+        "distance": 7.27
+    },
+    {
+        "nodeA": "N204",
+        "nodeB": "chess_entrance",
+        "distance": 8.84
+    },
+    {
+        "nodeA": "N203",
+        "nodeB": "N204",
+        "distance": 5.7
+    },
+    {
+        "nodeA": "N204",
+        "nodeB": "N205",
+        "distance": 7.85
+    },
+    {
+        "nodeA": "N204",
+        "nodeB": "N206",
+        "distance": 5.75
+    },
+    {
+        "nodeA": "N206",
+        "nodeB": "N208",
+        "distance": 5.27
+    },
+    {
+        "nodeA": "N207",
+        "nodeB": "N208",
+        "distance": 6.4
+    },
+    {
+        "nodeA": "N208",
+        "nodeB": "leuven_entrance",
+        "distance": 7.29
+    },
+    {
+        "nodeA": "N209",
+        "nodeB": "leuven_entrance",
+        "distance": 7.27
+    },
+    {
+        "nodeA": "N208",
+        "nodeB": "N209",
+        "distance": 14.5
+    },
+    {
+        "nodeA": "N206",
+        "nodeB": "N207",
+        "distance": 4.67
+    },
+    {
+        "nodeA": "N207",
+        "nodeB": "basketball_entrance",
+        "distance": 4.43
+    },
+    {
+        "nodeA": "N203",
+        "nodeB": "chess_entrance",
+        "distance": 4.56
+    },
+    {
+        "nodeA": "N203",
+        "nodeB": "procurement_entrance",
+        "distance": 4.12
+    },
+    {
+        "nodeA": "N104",
+        "nodeB": "procurement_entrance",
+        "distance": 3.01
+    },
+    {
+        "nodeA": "N104",
+        "nodeB": "chess_entrance",
+        "distance": 4.53
+    },
+    {
+        "nodeA": "N104",
+        "nodeB": "N203",
+        "distance": 5.48
+    },
+    {
+        "nodeA": "N103",
+        "nodeB": "N104",
+        "distance": 8.55
+    },
+    {
+        "nodeA": "N102",
+        "nodeB": "N103",
+        "distance": 5.34
+    },
+    {
+        "nodeA": "N101",
+        "nodeB": "N103",
+        "distance": 6.71
+    },
+    {
+        "nodeA": "N202",
+        "nodeB": "chess_entrance",
+        "distance": 5.9
+    },
+    {
+        "nodeA": "N199",
+        "nodeB": "chess_entrance",
+        "distance": 3.34
+    },
+    {
+        "nodeA": "N202",
+        "nodeB": "N206",
+        "distance": 6.54
+    },
+    {
+        "nodeA": "N200",
+        "nodeB": "N201",
+        "distance": 6.96
+    },
+    {
+        "nodeA": "N195",
+        "nodeB": "N200",
+        "distance": 7.62
+    },
+    {
+        "nodeA": "N112",
+        "nodeB": "N113",
+        "distance": 6.15
+    },
+    {
+        "nodeA": "N111",
+        "nodeB": "N112",
+        "distance": 8.38
+    },
+    {
+        "nodeA": "N109",
+        "nodeB": "N111",
+        "distance": 8.14
+    },
+    {
+        "nodeA": "N109",
+        "nodeB": "N110",
+        "distance": 8.02
+    },
+    {
+        "nodeA": "N110",
+        "nodeB": "N111",
+        "distance": 9.92
+    },
+    {
+        "nodeA": "N110",
+        "nodeB": "brussels_entrance",
+        "distance": 6.75
+    },
+    {
+        "nodeA": "N108",
+        "nodeB": "N109",
+        "distance": 7.99
+    },
+    {
+        "nodeA": "N107",
+        "nodeB": "N108",
+        "distance": 8.75
+    },
+    {
+        "nodeA": "N106",
+        "nodeB": "N107",
+        "distance": 8.25
+    },
+    {
+        "nodeA": "N106",
+        "nodeB": "main-library_entrance",
+        "distance": 7.25
+    },
+    {
+        "nodeA": "N102",
+        "nodeB": "main-library_entrance",
+        "distance": 3.55
+    },
+    {
+        "nodeA": "N105",
+        "nodeB": "main-library_entrance",
+        "distance": 5.03
+    },
+    {
+        "nodeA": "N102",
+        "nodeB": "N105",
+        "distance": 5.48
+    },
+    {
+        "nodeA": "N105",
+        "nodeB": "N127",
+        "distance": 7.29
+    },
+    {
+        "nodeA": "N106",
+        "nodeB": "N127",
+        "distance": 6.21
+    },
+    {
+        "nodeA": "N114",
+        "nodeB": "N127",
+        "distance": 6.05
+    },
+    {
+        "nodeA": "N114",
+        "nodeB": "N115",
+        "distance": 6.08
+    },
+    {
+        "nodeA": "N107",
+        "nodeB": "N114",
+        "distance": 7.81
+    },
+    {
+        "nodeA": "N114",
+        "nodeB": "N130",
+        "distance": 5.15
+    },
+    {
+        "nodeA": "N115",
+        "nodeB": "N130",
+        "distance": 7.65
+    },
+    {
+        "nodeA": "N130",
+        "nodeB": "delta_entrance",
+        "distance": 1.75
+    },
+    {
+        "nodeA": "N129",
+        "nodeB": "N130",
+        "distance": 5.77
+    },
+    {
+        "nodeA": "N129",
+        "nodeB": "N131",
+        "distance": 6.25
+    },
+    {
+        "nodeA": "N131",
+        "nodeB": "theta_entrance",
+        "distance": 2.3
+    },
+    {
+        "nodeA": "N123",
+        "nodeB": "N131",
+        "distance": 5.55
+    },
+    {
+        "nodeA": "N123",
+        "nodeB": "N129",
+        "distance": 5.62
+    },
+    {
+        "nodeA": "N123",
+        "nodeB": "N124",
+        "distance": 6.75
+    },
+    {
+        "nodeA": "N124",
+        "nodeB": "alpha_entrance",
+        "distance": 4.03
+    },
+    {
+        "nodeA": "N125",
+        "nodeB": "alpha_entrance",
+        "distance": 4.25
+    },
+    {
+        "nodeA": "N124",
+        "nodeB": "N125",
+        "distance": 7.25
+    },
+    {
+        "nodeA": "N125",
+        "nodeB": "N126",
+        "distance": 7.15
+    },
+    {
+        "nodeA": "N122",
+        "nodeB": "N126",
+        "distance": 6.21
+    },
+    {
+        "nodeA": "N122",
+        "nodeB": "antwerp_entrance",
+        "distance": 4.37
+    },
+    {
+        "nodeA": "N121",
+        "nodeB": "N122",
+        "distance": 4.72
+    },
+    {
+        "nodeA": "N121",
+        "nodeB": "N126",
+        "distance": 7.25
+    },
+    {
+        "nodeA": "N120",
+        "nodeB": "N121",
+        "distance": 7.7
+    },
+    {
+        "nodeA": "N120",
+        "nodeB": "hasselt_entrance",
+        "distance": 3.72
+    },
+    {
+        "nodeA": "N119",
+        "nodeB": "N120",
+        "distance": 7.08
+    },
+    {
+        "nodeA": "N118",
+        "nodeB": "N119",
+        "distance": 6.17
+    },
+    {
+        "nodeA": "N117",
+        "nodeB": "N118",
+        "distance": 6.33
+    },
+    {
+        "nodeA": "N116",
+        "nodeB": "N117",
+        "distance": 6.75
+    },
+    {
+        "nodeA": "N117",
+        "nodeB": "N128",
+        "distance": 9.52
+    },
+    {
+        "nodeA": "N105",
+        "nodeB": "N128",
+        "distance": 6.73
+    },
+    {
+        "nodeA": "N127",
+        "nodeB": "N128",
+        "distance": 6.25
+    },
+    {
+        "nodeA": "N107",
+        "nodeB": "N127",
+        "distance": 6.37
+    },
+    {
+        "nodeA": "N115",
+        "nodeB": "N116",
+        "distance": 6.21
+    },
+    {
+        "nodeA": "N119",
+        "nodeB": "beta_entrance",
+        "distance": 4.24
+    },
+    {
+        "nodeA": "N120",
+        "nodeB": "beta_entrance",
+        "distance": 9.03
+    },
+    {
+        "nodeA": "N102",
+        "nodeB": "N106",
+        "distance": 5.83
+    },
+    {
+        "nodeA": "N101",
+        "nodeB": "N102",
+        "distance": 7.35
+    },
+    {
+        "nodeA": "N193",
+        "nodeB": "N194",
+        "distance": 6.5
+    },
+    {
+        "nodeA": "N189",
+        "nodeB": "N190",
+        "distance": 6.04
+    },
+    {
+        "nodeA": "N178",
+        "nodeB": "N179",
+        "distance": 6.43
+    },
+    {
+        "nodeA": "N179",
+        "nodeB": "N180",
+        "distance": 6.18
+    },
+    {
+        "nodeA": "N142",
+        "nodeB": "N221",
+        "distance": 10.25
+    },
+    {
+        "nodeA": "N142",
+        "nodeB": "N143",
+        "distance": 8.08
+    },
+    {
+        "nodeA": "N141",
+        "nodeB": "N143",
+        "distance": 6.41
+    },
+    {
+        "nodeA": "N066",
+        "nodeB": "N141",
+        "distance": 7.5
+    },
+    {
+        "nodeA": "N141",
+        "nodeB": "N142",
+        "distance": 5.46
+    },
+    {
+        "nodeA": "N142",
+        "nodeB": "N219",
+        "distance": 6.04
+    },
+    {
+        "nodeA": "N142",
+        "nodeB": "N168",
+        "distance": 8.62
+    },
+    {
+        "nodeA": "N065",
+        "nodeB": "N066",
+        "distance": 9.78
+    },
+    {
+        "nodeA": "N143",
+        "nodeB": "genk_entrance",
+        "distance": 7.35
+    },
+    {
+        "nodeA": "N168",
+        "nodeB": "N220",
+        "distance": 6.32
+    },
+    {
+        "nodeA": "N167",
+        "nodeB": "N168",
+        "distance": 8.14
+    },
+    {
+        "nodeA": "N166",
+        "nodeB": "N167",
+        "distance": 6.02
+    },
+    {
+        "nodeA": "N153",
+        "nodeB": "N166",
+        "distance": 5.48
+    },
+    {
+        "nodeA": "N153",
+        "nodeB": "private-toilets_entrance",
+        "distance": 2.47
+    },
+    {
+        "nodeA": "N152",
+        "nodeB": "N153",
+        "distance": 3.01
+    },
+    {
+        "nodeA": "N150",
+        "nodeB": "N152",
+        "distance": 6.49
+    },
+    {
+        "nodeA": "N150",
+        "nodeB": "ypsilon_entrance",
+        "distance": 2.3
+    },
+    {
+        "nodeA": "N149",
+        "nodeB": "ypsilon_entrance",
+        "distance": 3.01
+    },
+    {
+        "nodeA": "N149",
+        "nodeB": "N150",
+        "distance": 3.76
+    },
+    {
+        "nodeA": "N148",
+        "nodeB": "N149",
+        "distance": 3.09
+    },
+    {
+        "nodeA": "N148",
+        "nodeB": "counsel-offices_entrance",
+        "distance": 2.85
+    },
+    {
+        "nodeA": "N147",
+        "nodeB": "counsel-offices_entrance",
+        "distance": 3.13
+    },
+    {
+        "nodeA": "N147",
+        "nodeB": "N148",
+        "distance": 4.56
+    },
+    {
+        "nodeA": "N146",
+        "nodeB": "N147",
+        "distance": 7.4
+    },
+    {
+        "nodeA": "N145",
+        "nodeB": "N146",
+        "distance": 9.36
+    },
+    {
+        "nodeA": "N146",
+        "nodeB": "N241",
+        "distance": 7.95
+    },
+    {
+        "nodeA": "N145",
+        "nodeB": "N241",
+        "distance": 13.29
+    },
+    {
+        "nodeA": "N241",
+        "nodeB": "N242",
+        "distance": 11.07
+    },
+    {
+        "nodeA": "N242",
+        "nodeB": "N243",
+        "distance": 8.46
+    },
+    {
+        "nodeA": "N243",
+        "nodeB": "N245",
+        "distance": 7.52
+    },
+    {
+        "nodeA": "N159",
+        "nodeB": "N245",
+        "distance": 7.52
+    },
+    {
+        "nodeA": "N159",
+        "nodeB": "N244",
+        "distance": 6.21
+    },
+    {
+        "nodeA": "N244",
+        "nodeB": "ekklo_entrance",
+        "distance": 3.82
+    },
+    {
+        "nodeA": "N157",
+        "nodeB": "N244",
+        "distance": 5.06
+    },
+    {
+        "nodeA": "N157",
+        "nodeB": "N159",
+        "distance": 7.5
+    },
+    {
+        "nodeA": "N156",
+        "nodeB": "N157",
+        "distance": 7.54
+    },
+    {
+        "nodeA": "N157",
+        "nodeB": "N158",
+        "distance": 6.01
+    },
+    {
+        "nodeA": "N158",
+        "nodeB": "N231",
+        "distance": 6.02
+    },
+    {
+        "nodeA": "N231",
+        "nodeB": "pi_entrance",
+        "distance": 4.28
+    },
+    {
+        "nodeA": "N230",
+        "nodeB": "N231",
+        "distance": 5.1
+    },
+    {
+        "nodeA": "N231",
+        "nodeB": "N232",
+        "distance": 6.82
+    },
+    {
+        "nodeA": "N162",
+        "nodeB": "N232",
+        "distance": 7.4
+    },
+    {
+        "nodeA": "N162",
+        "nodeB": "N171",
+        "distance": 6.18
+    },
+    {
+        "nodeA": "N171",
+        "nodeB": "N172",
+        "distance": 5.15
+    },
+    {
+        "nodeA": "N172",
+        "nodeB": "N173",
+        "distance": 5.71
+    },
+    {
+        "nodeA": "N173",
+        "nodeB": "N174",
+        "distance": 5.71
+    },
+    {
+        "nodeA": "N174",
+        "nodeB": "N175",
+        "distance": 5.3
+    },
+    {
+        "nodeA": "N169",
+        "nodeB": "N175",
+        "distance": 4.16
+    },
+    {
+        "nodeA": "N169",
+        "nodeB": "N170",
+        "distance": 5.4
+    },
+    {
+        "nodeA": "N162",
+        "nodeB": "N170",
+        "distance": 3.64
+    },
+    {
+        "nodeA": "N170",
+        "nodeB": "N171",
+        "distance": 7.07
+    },
+    {
+        "nodeA": "N163",
+        "nodeB": "N170",
+        "distance": 3.89
+    },
+    {
+        "nodeA": "N163",
+        "nodeB": "N164",
+        "distance": 4.27
+    },
+    {
+        "nodeA": "N161",
+        "nodeB": "N163",
+        "distance": 4.19
+    },
+    {
+        "nodeA": "N163",
+        "nodeB": "N169",
+        "distance": 4.72
+    },
+    {
+        "nodeA": "N164",
+        "nodeB": "N169",
+        "distance": 5.7
+    },
+    {
+        "nodeA": "N164",
+        "nodeB": "N165",
+        "distance": 4.81
+    },
+    {
+        "nodeA": "N164",
+        "nodeB": "residence-manager_entrance",
+        "distance": 2.46
+    },
+    {
+        "nodeA": "N165",
+        "nodeB": "residence-manager_entrance",
+        "distance": 3.25
+    },
+    {
+        "nodeA": "N165",
+        "nodeB": "N166",
+        "distance": 5.7
+    },
+    {
+        "nodeA": "N165",
+        "nodeB": "N167",
+        "distance": 9.01
+    },
+    {
+        "nodeA": "N161",
+        "nodeB": "health-and-safety_entrance",
+        "distance": 2.66
+    },
+    {
+        "nodeA": "N160",
+        "nodeB": "health-and-safety_entrance",
+        "distance": 4.45
+    },
+    {
+        "nodeA": "N160",
+        "nodeB": "store-room_entrance",
+        "distance": 3.01
+    },
+    {
+        "nodeA": "N160",
+        "nodeB": "N161",
+        "distance": 4.74
+    },
+    {
+        "nodeA": "N155",
+        "nodeB": "N160",
+        "distance": 4.61
+    },
+    {
+        "nodeA": "N154",
+        "nodeB": "N155",
+        "distance": 5.71
+    },
+    {
+        "nodeA": "N155",
+        "nodeB": "N156",
+        "distance": 7.22
+    },
+    {
+        "nodeA": "N152",
+        "nodeB": "N154",
+        "distance": 6.09
+    },
+    {
+        "nodeA": "N150",
+        "nodeB": "N154",
+        "distance": 9.17
+    },
+    {
+        "nodeA": "N151",
+        "nodeB": "N154",
+        "distance": 7.46
+    },
+    {
+        "nodeA": "N150",
+        "nodeB": "N151",
+        "distance": 5.84
+    },
+    {
+        "nodeA": "N151",
+        "nodeB": "N152",
+        "distance": 9.15
+    },
+    {
+        "nodeA": "N151",
+        "nodeB": "omega_entrance",
+        "distance": 3.09
+    },
+    {
+        "nodeA": "N151",
+        "nodeB": "sigma_entrance",
+        "distance": 2.8
+    },
+    {
+        "nodeA": "N161",
+        "nodeB": "store-room_entrance",
+        "distance": 4.16
+    },
+    {
+        "nodeA": "N161",
+        "nodeB": "N162",
+        "distance": 3.75
+    },
+    {
+        "nodeA": "N048",
+        "nodeB": "N051",
+        "distance": 7.49
+    },
+    {
+        "nodeA": "N051",
+        "nodeB": "staff-parking-1_entrance",
+        "distance": 7.81
+    },
+    {
+        "nodeA": "N280",
+        "nodeB": "N331",
+        "distance": 5.77
+    },
+    {
+        "nodeA": "N304",
+        "nodeB": "N338",
+        "distance": 6.0
+    }
+]

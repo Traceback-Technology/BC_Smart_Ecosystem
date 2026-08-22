@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fontend/features/bc_ways/screens/map_screen.dart';
+//Commented out the import to run the dashboard temporarily to see how it
+//import 'package:fontend/features/bc_ways/screens/map_screen.dart'; 
+import 'features/bc_ways/screens/dashboard.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,7 +33,8 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: MapOverlay(),
+      //home: MapOverlay(),
+      home: const CampusDashboardPage()
     );
   }
 }

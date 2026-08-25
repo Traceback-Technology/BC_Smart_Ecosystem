@@ -185,8 +185,7 @@ class _CampusDashboardPageState extends State<CampusDashboardPage> {
         subtitle: 'Order Food',
         gradientStart: DashboardColors.eatsGradientStart,
         gradientEnd: DashboardColors.eatsGradientEnd,
-        borderColor: Colors.red,
-        // CORRECT: Just pass the string path!
+        borderColor: Colors.red,        
         imageAsset: 'assets/images/eats_food.png', 
         iconData: Icons.restaurant,
       ),

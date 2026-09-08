@@ -1,0 +1,30 @@
+name: Research Request
+description: Request technical research
+title: "[RESEARCH] "
+labels:
+
+* research
+
+body:
+
+* type: input
+  id: topic
+  attributes:
+  label: Research Topic
+  placeholder: MQTT vs WebSocket for drone telemetry
+  validations:
+  required: true
+
+* type: textarea
+  id: objective
+  attributes:
+  label: Objective
+  description: What are we trying to learn?
+  validations:
+  required: true
+
+* type: textarea
+  id: expected
+  attributes:
+  label: Expected Deliverable
+  placeholder: Comparison document, prototype, recommendation...

@@ -1,0 +1,30 @@
+name: Pull Request Validation
+
+on:
+pull_request:
+branches:
+- main
+- develop
+
+jobs:
+validate-pr:
+runs-on: ubuntu-latest
+
+
+steps:
+  - uses: actions/checkout@v4
+
+  - name: Validate PR title
+    run: |
+      TITLE="${{ github.event.pull_request.title }}"
+
+      if [[ ! "$TITLE" =~ ^(feat|fix|docs|refactor|test|chore): ]]; then
+        echo "Invalid PR title"
+        echo "Use: feat:, fix:, docs:, refactor:"
+        exit 1
+      fi
+
+  - name: Ensure README exists
+    run: |
+      test -f README.md
+

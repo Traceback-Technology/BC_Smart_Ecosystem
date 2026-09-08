@@ -1,0 +1,48 @@
+name: Feature Request
+description: Suggest a new feature
+title: "[FEATURE] "
+labels:
+
+* enhancement
+
+body:
+
+* type: textarea
+  id: feature
+  attributes:
+  label: Feature Description
+  description: Explain the requested feature
+  validations:
+  required: true
+
+* type: textarea
+  id: problem
+  attributes:
+  label: Problem Being Solved
+  description: Why is this feature needed?
+  validations:
+  required: true
+
+* type: dropdown
+  id: module
+  attributes:
+  label: Module
+  options:
+  - BC Ways
+  - BC Eats
+  - Drone System
+  - Analytics
+  - Security
+  - Shared Components
+  validations:
+  required: true
+
+* type: textarea
+  id: proposed
+  attributes:
+  label: Proposed Solution
+
+* type: textarea
+  id: alternatives
+  attributes:
+  label: Alternative Solutions

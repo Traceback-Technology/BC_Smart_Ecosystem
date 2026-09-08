@@ -1,0 +1,44 @@
+name: Integration Issue
+description: Report a module integration problem
+title: "[INTEGRATION] "
+labels:
+
+* integration
+
+body:
+
+* type: textarea
+  id: issue
+  attributes:
+  label: Integration Problem
+  placeholder: Flutter app cannot connect to backend socket...
+  validations:
+  required: true
+
+* type: dropdown
+  id: systems
+  attributes:
+  label: Systems Involved
+  multiple: true
+  options:
+  - Flutter Frontend
+  - Backend API
+  - MongoDB
+  - WebSocket
+  - Drone System
+  - Analytics Dashboard
+
+* type: textarea
+  id: reproduce
+  attributes:
+  label: Steps to Reproduce
+
+* type: textarea
+  id: expected
+  attributes:
+  label: Expected Result
+
+* type: textarea
+  id: logs
+  attributes:
+  label: Logs / Errors

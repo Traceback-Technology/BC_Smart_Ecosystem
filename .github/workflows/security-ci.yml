@@ -1,0 +1,26 @@
+name: Security CI
+
+on:
+push:
+branches: [main, develop]
+
+pull_request:
+branches: [main, develop]
+
+jobs:
+security-scan:
+runs-on: ubuntu-latest
+
+
+steps:
+  - name: Checkout repo
+    uses: actions/checkout@v4
+
+  - name: Run dependency audit
+    run: npm audit --audit-level=high || true
+
+  - name: Secret Scan
+    uses: trufflesecurity/trufflehog@main
+    with:
+      path: ./
+

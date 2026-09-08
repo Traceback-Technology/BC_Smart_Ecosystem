@@ -1,0 +1,29 @@
+name: Lint Check
+
+on:
+push:
+pull_request:
+
+jobs:
+lint:
+runs-on: ubuntu-latest
+
+steps:
+  - uses: actions/checkout@v4
+
+  - name: Lint Backend
+    run: |
+      if [ -d "backend" ]; then
+        cd backend
+        npm install
+        npm run lint || true
+      fi
+
+  - name: Flutter Analyze
+    run: |
+      if [ -d "platform/mobile-app" ]; then
+        cd platform/mobile-app
+        flutter pub get
+        flutter analyze || true
+      fi
+

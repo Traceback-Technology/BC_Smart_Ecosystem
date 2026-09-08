@@ -25,7 +25,7 @@ We operate under the following principles:
 
 Each subsystem lives within its designated domain folder:
 
-- apps/
+- platform/
 - core/
 - robotics/
 - security/

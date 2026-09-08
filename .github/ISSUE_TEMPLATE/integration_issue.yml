@@ -1,26 +1,44 @@
 name: Integration Issue
-description: Report or propose cross-subsystem integration work
-title: "[Integration]: "
-labels: ["integration"]
+description: Report a module integration problem
+title: "[INTEGRATION] "
+labels:
+
+* integration
+
 body:
-  - type: textarea
-    id: subsystems
-    attributes:
-      label: Subsystems Involved
-      description: List all affected subsystems.
-    validations:
-      required: true
 
-  - type: textarea
-    id: impact
-    attributes:
-      label: Integration Impact
-      description: Describe architectural or data contract impact.
-    validations:
-      required: true
+* type: textarea
+  id: issue
+  attributes:
+  label: Integration Problem
+  placeholder: Flutter app cannot connect to backend socket...
+  validations:
+  required: true
 
-  - type: textarea
-    id: risks
-    attributes:
-      label: Risks
-      description: What could break?
+* type: dropdown
+  id: systems
+  attributes:
+  label: Systems Involved
+  multiple: true
+  options:
+  - Flutter Frontend
+  - Backend API
+  - MongoDB
+  - WebSocket
+  - Drone System
+  - Analytics Dashboard
+
+* type: textarea
+  id: reproduce
+  attributes:
+  label: Steps to Reproduce
+
+* type: textarea
+  id: expected
+  attributes:
+  label: Expected Result
+
+* type: textarea
+  id: logs
+  attributes:
+  label: Logs / Errors

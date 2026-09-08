@@ -1,16 +1,26 @@
-name: Security System CI
+name: Security CI
 
 on:
-  pull_request:
-    paths:
-      - 'security/**'
+push:
+branches: [main, develop]
+
+pull_request:
+branches: [main, develop]
 
 jobs:
-  security-tests:
-    runs-on: ubuntu-latest
+security-scan:
+runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: Run Security Checks
-        run: echo "Running security validation"
+steps:
+  - name: Checkout repo
+    uses: actions/checkout@v4
+
+  - name: Run dependency audit
+    run: npm audit --audit-level=high || true
+
+  - name: Secret Scan
+    uses: trufflesecurity/trufflehog@main
+    with:
+      path: ./
+

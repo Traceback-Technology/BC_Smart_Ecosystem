@@ -1,126 +1,145 @@
-# 🔷 Pull Request
+# Pull Request Summary
 
-## 🧩 Related Issue
+## Description
+
+Provide a clear summary of the changes made.
+
+Example:
+
+* Added shortest-path navigation API for BC Ways
+* Fixed authentication middleware bug
+* Improved drone delivery telemetry logging
+
+---
+
+## Type of Change
+
+Please select the relevant option(s):
+
+* [ ] feat: New feature
+* [ ] fix: Bug fix
+* [ ] docs: Documentation update
+* [ ] refactor: Code restructuring
+* [ ] test: Added/updated tests
+* [ ] chore: Maintenance / tooling
+
+---
+
+## Related Module(s)
+
+Select the affected system area(s):
+
+* [ ] BC Ways (Navigation)
+* [ ] BC Eats (Tuckshop)
+* [ ] Drone System
+* [ ] Backend API
+* [ ] Frontend (Flutter)
+* [ ] Authentication
+* [ ] Notifications
+* [ ] Analytics
+* [ ] Security
+* [ ] Shared Components
+* [ ] Infrastructure
+
+---
+
+## Related Issue
+
 Closes #
 
----
-
-## 📦 Subsystem
-<!-- Select one -->
-- [ ] Platform
-- [ ] Core
-- [ ] Robotics
-- [ ] Security
-- [ ] Simulation
-- [ ] Analytics
-- [ ] Infrastructure
-- [ ] Shared
+Example:
+Closes #42
 
 ---
 
-## 📝 Description
+## Changes Made
 
-Provide a clear and concise description of the changes introduced in this PR (Pull Request).
-Included in the description should be reasins for the changes.
+Describe what was implemented.
 
-What does this implement or fix?
+### Added
 
----
+*
+*
+*
 
-## 🎯 Type of Change
+### Updated
 
-- [ ] Feature
-- [ ] Bug Fix
-- [ ] Refactor
-- [ ] Integration
-- [ ] Architecture Change
-- [ ] Documentation
-- [ ] Test Improvement
+*
+*
+*
 
----
+### Removed
 
-## 🧠 Technical Details
-
-Explain:
-
-- Key design decisions
-- Architectural impact
-- Data contracts affected
-- API changes (if any)
-- Database schema changes (if any)
-- Hardware/robotics impact (if any)
+*
+*
+*
 
 ---
 
-## 🔄 Integration Impact
+## Testing Completed
 
-Does this affect other subsystems?
+Please confirm testing performed.
 
-- [ ] No
-- [ ] Yes (explain below)
+* [ ] Unit tests pass
+* [ ] Integration tests pass
+* [ ] Manual testing completed
+* [ ] No breaking changes introduced
 
-If yes, describe:
+### Test Evidence
 
-- What subsystem(s) are affected?
-- Backward compatibility maintained?
-- Migration required?
-
----
-
-## 🧪 Testing
-
-Describe how this was tested.
-
-- [ ] Unit tests added/updated
-- [ ] Integration tests added/updated
-- [ ] Manual testing performed
-- [ ] Robotics simulation tested
-- [ ] Security validation performed
-
-Explain test coverage:
+Include screenshots, logs, or explanation if applicable.
 
 ---
 
-## 🔐 Security Considerations
+## API Changes
 
-- [ ] No security impact
-- [ ] Authentication logic modified
-- [ ] Authorization logic modified
-- [ ] Input validation added/changed
-- [ ] Sensitive data handling affected
+If backend APIs were modified:
 
-If applicable, explain:
+* [ ] No API changes
+* [ ] New endpoint added
+* [ ] Existing endpoint updated
+* [ ] Breaking API changes
 
----
+Endpoints affected:
 
-## 📊 Performance Impact
-
-- [ ] No measurable impact
-- [ ] Improves performance
-- [ ] Potential performance degradation (explain below)
+```http
+GET /api/example
+POST /api/example
+```
 
 ---
 
-## 📸 Screenshots / Logs (if applicable)
+## Database Changes
 
-Attach UI screenshots, logs, or simulation outputs.
-
----
-
-## ✅ Checklist Before Requesting Review
-
-- [ ] Code compiles/builds successfully
-- [ ] CI pipeline passes
-- [ ] Issue is linked
-- [ ] Acceptance criteria satisfied
-- [ ] Documentation updated (if required)
-- [ ] No debug code left behind
-- [ ] No secrets committed
+* [ ] No database changes
+* [ ] MongoDB schema updated
+* [ ] Seed data changed
+* [ ] Migration required
 
 ---
 
-## 👀 Reviewer Notes
+## Security Checklist
 
-Tag relevant subsystem leads.
+* [ ] No secrets exposed
+* [ ] Input validation implemented
+* [ ] Authentication checked
+* [ ] Authorization checked
+* [ ] Sensitive data protected
 
-@synetrix @RyanTPH
+---
+
+## Screenshots / Demo (Optional)
+
+Add screenshots, GIFs, or recordings here.
+
+---
+
+## Reviewer Checklist
+
+Before approving, verify:
+
+* [ ] Code follows project standards
+* [ ] No merge conflicts
+* [ ] Documentation updated
+* [ ] Tests pass
+* [ ] Feature works as expected

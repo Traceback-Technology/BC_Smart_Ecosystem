@@ -1,48 +1,33 @@
 # Architecture Decision Records (ADR)
 
-This directory contains Architecture Decision Records for the Smart Campus Ecosystem.
+This directory contains Architecture Decision Records (ADRs) for the BC Smart Lifestyle system.
 
 ## Purpose
 
-ADRs document significant technical and architectural decisions, including:
+ADRs document important technical and architectural decisions made during development.
 
-- System structure
-- Technology selection
-- Communication protocols
-- Security models
-- Data management
-- Integration patterns
+Each ADR explains:
 
-## Format
+* The problem or context
+* The decision made
+* Alternatives considered
+* Consequences of the decision
 
-Each ADR follows the format:
+These records improve project maintainability, transparency, and onboarding for new contributors.
 
-- Title
-- Status
-- Context
-- Decision
-- Alternatives Considered
-- Consequences
+## ADR Index
 
-## Status Values
+| ADR  | Description                 |
+| ---- | --------------------------- |
+| 0001 | Monorepo Structure          |
+| 0002 | Backend Architecture        |
+| 0003 | Navigation Algorithm        |
+| 0004 | Drone Delivery Architecture |
+| 0005 | Real-Time Communication     |
 
-- Proposed
-- Accepted
-- Rejected
-- Deprecated
-- Superseded
+## Status Types
 
-## Naming Convention
-
-ADR files are named:
-
-000X-short-title.md
-
-Example:
-0001-monorepo-structure.md
-
-## Rules
-
-- ADRs are required for major architecture changes.
-- ADRs must be reviewed before acceptance.
-- Once accepted, they cannot be modified — only superseded.
+* **Proposed** → Under discussion
+* **Accepted** → Approved for implementation
+* **Deprecated** → No longer recommended
+* **Superseded** → Replaced by a newer ADR

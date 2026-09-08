@@ -1,18 +1,34 @@
-# infrastructure/
+# Infrastructure
 
-This is the file that should not get updated by each version.
-*** configure in .gitingnore ***
+This directory contains infrastructure-related configurations and technical setup for BC Smart Lifestyle.
+
+## Purpose
+
+The infrastructure layer supports:
+
+* Database management
+* Real-time communication
+* IoT messaging
+* Environment configuration
+* Deployment preparation
+
 ---
 
-- Deployment configs
-- Docker
-- Database schema
-- environment configs
+## Directory Structure
 
-*** NEVER MIX INFRASTRUCTURE WITH BUSINESS LAYER ***
+| Folder     | Purpose                                      |
+| ---------- | -------------------------------------------- |
+| configs/   | Environment variables and deployment configs |
+| database/  | MongoDB structure and indexing               |
+| websocket/ | Socket.IO communication                      |
+| mqtt/      | Drone telemetry messaging                    |
 
-Responsibilities
-- Database schemas
-- Deployment configurations
-- System containers
-- environment setup
+---
+
+## Core Technologies
+
+* MongoDB
+* Socket.IO
+* MQTT
+* Docker
+* Node.js Environment Configuration

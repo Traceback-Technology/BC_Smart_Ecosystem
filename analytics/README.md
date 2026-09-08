@@ -1,17 +1,34 @@
-# analytics/
+# Analytics
 
-    - AI analytics is its own domain ( anomaly detection)
-    - Keep prediction separate from reporting.
-    
-Responsibilities
-- Student activity prediction 
-- event demand forecasting
-- campus usage analysis
-- system monitoring dashboards
+This directory contains analytics and monitoring modules for the BC Smart Lifestyle system.
 
+## Purpose
 
-Features
-- cluster locations on campus
-- optimal routes for delivery
-- Student choice predictions
+Analytics supports:
 
+* Order demand insights
+* Navigation behaviour analysis
+* System health monitoring
+* Drone and API monitoring
+* Performance tracking
+
+---
+
+## Directory Structure
+
+| Folder                | Purpose                                   |
+| --------------------- | ----------------------------------------- |
+| order-analytics/      | BC Eats ordering insights                 |
+| navigation-analytics/ | BC Ways navigation analysis               |
+| system-monitoring/    | System performance and anomaly monitoring |
+
+---
+
+## Goals
+
+The analytics layer helps:
+
+* Improve student experience
+* Optimize tuckshop operations
+* Improve navigation efficiency
+* Monitor system stability

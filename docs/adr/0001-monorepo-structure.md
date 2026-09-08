@@ -1,51 +1,82 @@
 # ADR 0001: Monorepo Structure
 
-## Status
-Accepted
+**Status:** Accepted
+**Date:** 2026-06-12
 
 ---
 
 ## Context
 
-The Smart Campus Ecosystem includes:
+BC Smart Lifestyle contains multiple interconnected modules including:
 
-- Platform application
-- Robotics systems (Drone + Rover)
-- Security services
-- Real-time simulation
-- Analytics components
+* BC Ways (Navigation)
+* BC Eats (Tuckshop & Delivery)
+* Drone Integration
+* Backend APIs
+* Shared utilities and contracts
 
-We require clear architecture governance and centralized integration.
+The system requires multiple teams to work simultaneously while maintaining consistent architecture and code reuse.
 
 ---
 
 ## Decision
 
-We will use a monorepo structure with domain-based folder separation.
+The project will use a **monorepo architecture**.
 
-Each subsystem will exist within its own top-level directory.
+All major modules will be maintained inside a single repository with logical separation by domain:
+
+* `/platform`
+* `/backend`
+* `/core`
+* `/robotics`
+* `/analytics`
+* `/security`
+* `/shared`
+
+GitHub Actions workflows will validate module integrity and pull requests.
 
 ---
 
 ## Alternatives Considered
 
-1. Multiple repositories per subsystem
-   - Pros: Isolation
-   - Cons: Harder integration, fragmented CI
+### Multiple Repositories
 
-2. Hybrid model
-   - Pros: Flexible
-   - Cons: Increased complexity for student team
+Pros:
+
+* Smaller repositories
+* Independent deployments
+
+Cons:
+
+* Harder integration
+* Duplicate shared code
+* Increased coordination overhead
+
+### Monorepo (Chosen)
+
+Pros:
+
+* Easier collaboration
+* Shared contracts and utilities
+* Centralized CI/CD
+* Better visibility across squads
+
+Cons:
+
+* Larger repository
+* More CI complexity
 
 ---
 
 ## Consequences
 
 ### Positive
-- Unified CI/CD
-- Easier integration testing
-- Centralized governance
+
+* Easier integration between BC Ways and BC Eats
+* Shared code reuse
+* Simplified contributor onboarding
 
 ### Negative
-- Larger repository size
-- Requires strong code ownership rules
+
+* CI pipelines may take longer
+* Strong folder governance required

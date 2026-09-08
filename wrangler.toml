@@ -1,0 +1,13 @@
+name = "bc-smart-ecosystem"
+compatibility_date = "2026-09-08"
+
+[assets]
+# Path to the Flutter web build output, relative to the repo root
+# (where this wrangler.toml file lives).
+# Replace FLUTTER_APP_FOLDER with the actual folder name of your
+# Flutter app inside the BC_Smart_Ecosystem monorepo.
+directory = "./FLUTTER_APP_FOLDER/build/web"
+
+# Falls back to index.html for any route not found as a static file,
+# so client-side routing (e.g. go_router) survives a page refresh.
+not_found_handling = "single-page-application"

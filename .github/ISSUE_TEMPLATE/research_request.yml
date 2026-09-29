@@ -1,0 +1,29 @@
+name: Research Request
+description: Investigate technology or feasibility
+title: "[Research]: "
+labels: ["research"]
+body:
+  - type: textarea
+    id: topic
+    attributes:
+      label: Research Topic
+      description: What needs investigation?
+    validations:
+      required: true
+
+  - type: textarea
+    id: objectives
+    attributes:
+      label: Objectives
+      description: What should the research deliver?
+    validations:
+      required: true
+
+  - type: textarea
+    id: deliverables
+    attributes:
+      label: Expected Deliverables
+      placeholder: |
+        - Feasibility report
+        - Prototype
+        - Risk summary

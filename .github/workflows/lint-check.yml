@@ -1,0 +1,41 @@
+name: Lint Check
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+  push:
+    branches:
+      - develop
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: |
+          if [ -f package.json ]; then
+            npm install
+          fi
+
+      - name: Run ESLint
+        run: |
+          if [ -f package.json ]; then
+            npx eslint .
+          fi
+
+      - name: Run Prettier Check
+        run: |
+          if [ -f package.json ]; then
+            npx prettier --check .
+          fi

@@ -1,0 +1,33 @@
+name: Architecture Change Proposal
+description: Propose a structural or architectural change
+title: "[Architecture]: "
+labels: ["architecture"]
+body:
+  - type: textarea
+    id: current_state
+    attributes:
+      label: Current Architecture
+      description: Describe the current system structure.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_change
+    attributes:
+      label: Proposed Change
+      description: Explain the modification.
+    validations:
+      required: true
+
+  - type: textarea
+    id: justification
+    attributes:
+      label: Justification
+      description: Why is this necessary?
+    validations:
+      required: true
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risk Assessment

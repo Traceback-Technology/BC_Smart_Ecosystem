@@ -566,7 +566,7 @@ class _DashboardOverviewScreenState extends State<DashboardOverviewScreen> {
           ),
           const SizedBox(height: 12),
           Text('R${_totalSales.toStringAsFixed(2)}', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AdminColors.successGreen)),
-          Text('${_salesGrowth >= 0 ? '+' : ''}${_salesGrowth.toStringAsFixed(1)}% vs previous period', style: TextStyle(fontSize: 11, color: AppColors.successGreen, fontWeight: FontWeight.bold)),
+          Text('${_salesGrowth >= 0 ? '+' : ''}${_salesGrowth.toStringAsFixed(1)}% vs previous period', style: TextStyle(fontSize: 11, color: AdminColors.successGreen, fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
           
           if (_salesPoints.isEmpty)

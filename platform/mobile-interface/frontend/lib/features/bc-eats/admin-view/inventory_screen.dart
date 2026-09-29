@@ -69,7 +69,9 @@ class ProductItem {
   }
 }
 
+// =============================================================================
 // INVENTORY SCREEN
+// =============================================================================
 
 class InventoryScreen extends StatefulWidget {
   const InventoryScreen({super.key});

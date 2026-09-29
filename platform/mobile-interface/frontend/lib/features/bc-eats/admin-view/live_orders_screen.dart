@@ -13,6 +13,7 @@ class LiveOrdersScreen extends StatefulWidget {
 class _LiveOrdersScreenState extends State<LiveOrdersScreen> {
   bool _hasNewOrderAlert = false;
 
+  //TODO: Hardcoded lists: to remove
   List<Map<String, dynamic>> orders = [
     {
       'orderId': '#BCE12601',

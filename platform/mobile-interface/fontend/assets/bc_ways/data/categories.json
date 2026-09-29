@@ -1,0 +1,32 @@
+[
+    {
+        "id": "academic",
+        "name": "Academic",
+        "color": "#800020",
+        "icon": "school"
+    },
+    {
+        "id": "administration",
+        "name": "Administration",
+        "color": "#1565C0",
+        "icon": "business"
+    },
+    {
+        "id": "parking",
+        "name": "Parking",
+        "color": "#616161",
+        "icon": "local_parking"
+    },
+    {
+        "id": "residence",
+        "name": "Residence",
+        "color": "#2E7D32",
+        "icon": "home"
+    },
+    {
+        "id": "sports",
+        "name": "Sports",
+        "color": "#EF6C00",
+        "icon": "sports_soccer"
+    }
+]

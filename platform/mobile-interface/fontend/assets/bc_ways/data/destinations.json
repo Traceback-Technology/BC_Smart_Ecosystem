@@ -1,0 +1,698 @@
+[
+    {
+        "id": "chi",
+        "name": "Chi",
+        "category": "Classroom",
+        "position": {
+            "x": 574,
+            "y": 1216
+        },
+        "nearestNode": "chi_entrance"
+    },
+    {
+        "id": "psi",
+        "name": "Psi",
+        "category": "Classroom",
+        "position": {
+            "x": 789,
+            "y": 1026
+        },
+        "nearestNode": "psi_entrance"
+    },
+    {
+        "id": "iota-phi",
+        "name": "Iota Phi",
+        "category": "Classroom",
+        "position": {
+            "x": 989,
+            "y": 1054
+        },
+        "nearestNode": "iota-phi_entrance"
+    },
+    {
+        "id": "kappa",
+        "name": "Kappa",
+        "category": "Classroom",
+        "position": {
+            "x": 1063,
+            "y": 1367
+        },
+        "nearestNode": "kappa_entrance"
+    },
+    {
+        "id": "ypsilon",
+        "name": "Ypsilon",
+        "category": "Classroom",
+        "position": {
+            "x": 1398,
+            "y": 2114
+        },
+        "nearestNode": "ypsilon_entrance"
+    },
+    {
+        "id": "omega",
+        "name": "Omega",
+        "category": "Classroom",
+        "position": {
+            "x": 1473,
+            "y": 2125
+        },
+        "nearestNode": "omega_entrance"
+    },
+    {
+        "id": "sigma",
+        "name": "Sigma",
+        "category": "Classroom",
+        "position": {
+            "x": 1468,
+            "y": 2158
+        },
+        "nearestNode": "sigma_entrance"
+    },  
+    {
+        "id": "pi",
+        "name": "Pi",
+        "category": "Classroom",
+        "position": {
+            "x": 1556,
+            "y": 2232
+        },
+        "nearestNode": "pi_entrance"
+    },
+    {
+        "id": "gamma",
+        "name": "Gamma",
+        "category": "Classroom",
+        "position": {
+            "x": 1505,
+            "y": 2484
+        },
+        "nearestNode": "gamma_entrance"
+    },
+    {
+        "id": "zeta",
+        "name": "Zeta",
+        "category": "Classroom",
+        "position": {
+            "x": 1235,
+            "y": 2532
+        },
+        "nearestNode": "zeta_entrance"
+    },
+    {
+        "id": "omnikron",
+        "name": "Omnikron",
+        "category": "Classroom",
+        "position": {
+            "x": 1222,
+            "y": 2562
+        },
+        "nearestNode": "omnikron_entrance"
+    },
+    {
+        "id": "lambda",
+        "name": "Lambda",
+        "category": "Classroom",
+        "position": {
+            "x": 1182,
+            "y": 2523
+        },
+        "nearestNode": "lambda_entrance"
+    },
+    {
+        "id": "delta",
+        "name": "Delta",
+        "category": "Classroom",
+        "position": {
+            "x": 1429,
+            "y": 2648
+        },
+        "nearestNode": "delta_entrance"
+    },
+    {
+        "id": "theta",
+        "name": "Theta",
+        "category": "Classroom",
+        "position": {
+            "x": 1479,
+            "y": 2651
+        },
+        "nearestNode": "theta_entrance"
+    },
+    {
+        "id": "alpha",
+        "name": "Alpha",
+        "category": "Classroom",
+        "position": {
+            "x": 1479,
+            "y": 2725
+        },
+        "nearestNode": "alpha_entrance"
+    },
+    {
+        "id": "beta",
+        "name": "Beta",
+        "category": "Classroom",
+        "position": {
+            "x": 1322,
+            "y": 2768
+        },
+        "nearestNode": "beta_entrance"
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    {
+        "id": "lier",
+        "name": "Lier",
+        "category": "Residence",
+        "position": {
+            "x": 579,
+            "y": 1509
+        },
+        "nearestNode": "lier_entrance"
+    },
+    {
+        "id": "turnhout",
+        "name": "Turnhout",
+        "category": "Residence",
+        "position": {
+            "x": 968,
+            "y": 1314
+        },
+        "nearestNode": "turnhout_entrance"
+    },
+    {
+        "id": "tienen",
+        "name": "Tienen",
+        "category": "Residence",
+        "position": {
+            "x": 962,
+            "y": 1370
+        },
+        "nearestNode": "tienen_entrance"
+    },
+    {
+        "id": "namur",
+        "name": "Namur",
+        "category": "Residence",
+        "position": {
+            "x": 1071,
+            "y": 1647
+        },
+        "nearestNode": "namur_entrance"
+    },
+    {
+        "id": "mechelen",
+        "name": "Mechelen",
+        "category": "Residence",
+        "position": {
+            "x": 1237,
+            "y": 1660
+        },
+        "nearestNode": "mechelen_entrance"
+    },
+    {
+        "id": "denant",
+        "name": "Denant",
+        "category": "Residence",
+        "position": {
+            "x": 1828,
+            "y": 1894
+        },
+        "nearestNode": "denant_entrance"
+    },
+    {
+        "id": "oostende",
+        "name": "Oostende",
+        "category": "Residence",
+        "position": {
+            "x": 2301,
+            "y": 1525
+        },
+        "nearestNode": "oostende_entrance"
+    },
+    {
+        "id": "florenville",
+        "name": "Florenville",
+        "category": "Residence",
+        "position": {
+            "x": 2340,
+            "y": 1169
+        },
+        "nearestNode": "florenville_entrance"
+    },
+    {
+        "id": "ekklo",
+        "name": "Ekklo",
+        "category": "Residence",
+        "position": {
+            "x": 1568,
+            "y": 2187
+        },
+        "nearestNode": "ekklo_entrance"
+    },
+    {
+        "id": "genk",
+        "name": "Genk",
+        "category": "Residence",
+        "position": {
+            "x": 1250,
+            "y": 2259
+        },
+        "nearestNode": "genk_entrance"
+    },
+    {
+        "id": "leuven",
+        "name": "Leuven",
+        "category": "Residence",
+        "position": {
+            "x": 1313,
+            "y": 2458
+        },
+        "nearestNode": "leuven_entrance"
+    },
+    {
+        "id": "brussels",
+        "name": "Brussels",
+        "category": "Residence",
+        "position": {
+            "x": 1505,
+            "y": 2573
+        },
+        "nearestNode": "brussels_entrance"
+    },
+    {
+        "id": "hasselt",
+        "name": "Hasselt",
+        "category": "Residence",
+        "position": {
+            "x": 1365,
+            "y": 2787
+        },
+        "nearestNode": "hasselt_entrance"
+    },
+    {
+        "id": "antwerp",
+        "name": "Antwerp",
+        "category": "Residence",
+        "position": {
+            "x": 1454,
+            "y": 2804
+        },
+        "nearestNode": "antwerp_entrance"
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    {
+        "id": "chi-study",
+        "name": "Study Room",
+        "category": "Study Room",
+        "position": {
+            "x": 636,
+            "y": 1216
+        },
+        "nearestNode": "chi-study_entrance"
+    },
+    {
+        "id": "learning-factory",
+        "name": "Learning Factory",
+        "category": "Student Building",
+        "position": {
+            "x": 901,
+            "y": 1189
+        },
+        "nearestNode": "learning-factory_entrance"
+    },
+    {
+        "id": "smart-city",
+        "name": "Smart City",
+        "category": "Student Building",
+        "position": {
+            "x": 1020,
+            "y": 1214
+        },
+        "nearestNode": "smart-city_entrance"
+    },
+    {
+        "id": "north-laundry",
+        "name": "Laundry",
+        "category": "Laundry",
+        "position": {
+            "x": 1350,
+            "y": 1510
+        },
+        "nearestNode": "north-laundry_entrance"
+    },
+    {
+        "id": "cafeteria",
+        "name": "Cafeteria",
+        "category": "Cafeteria",
+        "position": {
+            "x": 1864,
+            "y": 1615
+        },
+        "nearestNode": "cafeteria_entrance"
+    },
+    {
+        "id": "tuck-shop",
+        "name": "Tuck Shop",
+        "category": "Tuck Shop",
+        "position": {
+            "x": 1146,
+            "y": 2196
+        },
+        "nearestNode": "tuck-shop_entrance"
+    },
+    {
+        "id": "main-study",
+        "name": "Study Room",
+        "category": "Study Room",
+        "position": {
+            "x": 1551,
+            "y": 2275
+        },
+        "nearestNode": "main-study_entrance"
+    },
+    {
+        "id": "main-library",
+        "name": "Library",
+        "category": "Library",
+        "position": {
+            "x": 1311,
+            "y": 2632
+        },
+        "nearestNode": "main-library_entrance"
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    {
+        "id": "volleyball",
+        "name": "Volleyball",
+        "category": "Outdoor Areas",
+        "position": {
+            "x": 1298,
+            "y": 1250
+        },
+        "nearestNode": "volleyball_entrance"
+    },
+    {
+        "id": "sports-fields",
+        "name": "Sports Fields",
+        "category": "Outdoor Areas",
+        "position": {
+            "x": 1874,
+            "y": 1406
+        },
+        "nearestNode": "sports-fields_entrance"
+    },
+    {
+        "id": "basketball",
+        "name": "Basketball",
+        "category": "Outdoor Areas",
+        "position": {
+            "x": 1238,
+            "y": 2484
+        },
+        "nearestNode": "basketball_entrance"
+    },
+    {
+        "id": "chess",
+        "name": "Chess",
+        "category": "Outdoor Areas",
+        "position": {
+            "x": 1363,
+            "y": 2548
+        },
+        "nearestNode": "chess_entrance"
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    {
+        "id": "student-parking",
+        "name": "Student Parking",
+        "category": "Parking",
+        "position": {
+            "x": 1615,
+            "y": 1676
+        },
+        "nearestNode": "student-parking_entrance"
+    },
+    {
+        "id": "staff-parking-1",
+        "name": "Staff Parking",
+        "category": "Parking",
+        "position": {
+            "x": 1450,
+            "y": 2027
+        },
+        "nearestNode": "staff-parking-1_entrance"
+    },
+    {
+        "id": "staff-parking-2",
+        "name": "Staff Parking",
+        "category": "Parking",
+        "position": {
+            "x": 1228,
+            "y": 2338
+        },
+        "nearestNode": "staff-parking-2_entrance"
+    },
+    {
+        "id": "visitors-parking",
+        "name": "Visitors Parking",
+        "category": "Parking",
+        "position": {
+            "x": 1104,
+            "y": 2481
+        },
+        "nearestNode": "visitors-parking_entrance"
+    },
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    {
+        "id": "chi-classroom-toilets",
+        "name": "Toilets",
+        "category": "Toilets",
+        "position": {
+            "x": 606,
+            "y": 1176
+        },
+        "nearestNode": "chi-classroom-toilets_entrance"
+    },
+    {
+        "id": "psi-classroom-toilets",
+        "name": "Toilets",
+        "category": "Toilets",
+        "position": {
+            "x": 806,
+            "y": 986
+        },
+        "nearestNode": "psi-classroom-toilets_entrance"
+    },
+    {
+        "id": "iota-phi-classroom-toilets",
+        "name": "Toilets",
+        "category": "Toilets",
+        "position": {
+            "x": 1085,
+            "y": 1075
+        },
+        "nearestNode": "iota-phi-classroom-toilets_entrance"
+    },
+    {
+        "id": "it-department",
+        "name": "IT Department",
+        "category": "Office",
+        "position": {
+            "x": 812,
+            "y": 1552
+        },
+        "nearestNode": "it-department_entrance"
+    },
+    {
+        "id": "counsel-offices",
+        "name": "Counsel Offices",
+        "category": "Office",
+        "position": {
+            "x": 1442,
+            "y": 2116
+        },
+        "nearestNode": "counsel-offices_entrance"
+    },
+    {
+        "id": "private-toilets",
+        "name": "Private Toilets",
+        "category": "Toilets",
+        "position": {
+            "x": 1390,
+            "y": 2144
+        },
+        "nearestNode": "private-toilets_entrance"
+    },
+    {
+        "id": "residence-manager",
+        "name": "Residence Manager",
+        "category": "Office",
+        "position": {
+            "x": 1417,
+            "y": 2199
+        },
+        "nearestNode": "residence-manager_entrance"
+    },
+    {
+        "id": "health-and-safety",
+        "name": "Health & Safety",
+        "category": "Office",
+        "position": {
+            "x": 1434,
+            "y": 2203
+        },
+        "nearestNode": "health-and-safety_entrance"
+    },
+    {
+        "id": "store-room",
+        "name": "Store Room",
+        "category": "Office",
+        "position": {
+            "x": 1478,
+            "y": 2214
+        },
+        "nearestNode": "store-room_entrance"
+    },
+    {
+        "id": "public-toilets",
+        "name": "Public Toilets",
+        "category": "Toilets",
+        "position": {
+            "x": 1558,
+            "y": 2323
+        },
+        "nearestNode": "public-toilets_entrance"
+    },
+    {
+        "id": "administration",
+        "name": "Administration",
+        "category": "Office",
+        "position": {
+            "x": 1042,
+            "y": 2504
+        },
+        "nearestNode": "administration_entrance"
+    },
+    {
+        "id": "sales",
+        "name": "Sales",
+        "category": "Office",
+        "position": {
+            "x": 1001,
+            "y": 2568
+        },
+        "nearestNode": "sales_entrance"
+    },
+    {
+        "id": "reception",
+        "name": "Reception",
+        "category": "Office",
+        "position": {
+            "x": 1045,
+            "y": 2619
+        },
+        "nearestNode": "reception_entrance"
+    },
+    {
+        "id": "finance-department",
+        "name": "Finance",
+        "category": "Office",
+        "position": {
+            "x": 1016,
+            "y": 2612
+        },
+        "nearestNode": "reception_entrance"
+    },
+    {
+        "id": "academics",
+        "name": "Academics",
+        "category": "Office",
+        "position": {
+            "x": 1245,
+            "y": 2672
+        },
+        "nearestNode": "academics_entrance"
+    },
+    {
+        "id": "zeta-classroom-toilets",
+        "name": "Toilets",
+        "category": "Toilets",
+        "position": {
+            "x": 1279,
+            "y": 2548
+        },
+        "nearestNode": "zeta-classroom-toilets_entrance"
+    },
+    {
+        "id": "procurement",
+        "name": "Procurement",
+        "category": "Office",
+        "position": {
+            "x": 1316,
+            "y": 2575
+        },
+        "nearestNode": "procurement_entrance"
+    }
+
+]

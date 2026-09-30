@@ -4,8 +4,10 @@ import '../admin-view/constants/admin_colours.dart';
 
 // =============================================================================
 // DYNAMIC DATA MODELS (EXPRESS DATA STRUCTURES)
+// Description: Data models for parsing JSON payloads received from backend REST endpoints.
 // =============================================================================
 
+/// Represents a single time-series point on the Sales Overview line chart (e.g., hourly/daily total).
 class SalesPoint {
   final String label;
   final double amount;
@@ -20,6 +22,7 @@ class SalesPoint {
   }
 }
 
+/// Represents category revenue share for rendering the Top Categories donut pie chart.
 class CategoryShare {
   final String category;
   final double percentage;
@@ -36,6 +39,7 @@ class CategoryShare {
   }
 }
 
+/// Holds details for real-time customer orders appearing in the Incoming Orders queue panel.
 class IncomingOrder {
   final String id;
   final String orderNumber;
@@ -68,6 +72,7 @@ class IncomingOrder {
   }
 }
 
+/// Stores top-selling menu items used in the Popular Items ranking list.
 class PopularProduct {
   final String name;
   final int salesCount;
@@ -84,6 +89,7 @@ class PopularProduct {
   }
 }
 
+/// Holds customer feedback details displayed in the Recent Reviews section.
 class CustomerReview {
   final String customerName;
   final int rating;
@@ -112,6 +118,8 @@ class CustomerReview {
 
 // =============================================================================
 // DASHBOARD OVERVIEW SCREEN
+// Description: Main admin screen displaying real-time metrics, active orders,
+// sales line charts, category distribution, top items, and reviews.
 // =============================================================================
 
 class DashboardOverviewScreen extends StatefulWidget {
@@ -167,6 +175,8 @@ class _DashboardOverviewScreenState extends State<DashboardOverviewScreen> {
 
   // ===========================================================================
   // EXPRESS ENDPOINT INTEGRATION POINT
+  // Description: Asynchronously fetches analytics data from the Express backend API
+  // and updates local state models for UI presentation.
   // ===========================================================================
   Future<void> _fetchDashboardOverview() async {
     setState(() {
@@ -228,6 +238,7 @@ class _DashboardOverviewScreenState extends State<DashboardOverviewScreen> {
     }
   }
 
+  /// Extracts unique food categories dynamically from popular products for dropdown filtering.
   List<String> get _availableCategories {
     final categories = <String>{'All'};
     for (var product in _popularProducts) {
@@ -238,11 +249,17 @@ class _DashboardOverviewScreenState extends State<DashboardOverviewScreen> {
     return categories.toList();
   }
 
+/// Filters product list based on selected category filter in the Popular Items panel.
   List<PopularProduct> get _filteredProducts {
     if (_selectedCategoryFilter == 'All') return _popularProducts;
     return _popularProducts.where((p) => p.category == _selectedCategoryFilter).toList();
   }
 
+  // ===========================================================================
+  // BUILD METHOD
+  // Description: Handles responsive layout rendering (Single column for Mobile,
+  // 2-Column Grid for Desktop/Tablet).
+  // ===========================================================================
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -341,6 +358,7 @@ class _DashboardOverviewScreenState extends State<DashboardOverviewScreen> {
   // WIDGET COMPONENTS
   // ===========================================================================
 
+  /// Renders a retry view when API calls fail to fetch dashboard overview metrics.
   Widget _buildErrorView(Color mutedText) {
     return Center(
       child: Padding(
@@ -361,6 +379,7 @@ class _DashboardOverviewScreenState extends State<DashboardOverviewScreen> {
     );
   }
 
+  /// Displays vendor greeting, tagline, and time-frame filtering dropdown ('Today', 'This Week', etc.).
   Widget _buildHeader(BuildContext context, Color mutedText) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -428,6 +447,7 @@ class _DashboardOverviewScreenState extends State<DashboardOverviewScreen> {
     );
   }
 
+  /// Constructs top overview KPI grid (Total Orders, Preparing, On the Way, Completed).
   Widget _buildTopMetricsRow(bool isMobile, Color cardBg, Color borderColor, Color mutedText) {
     final cards = [
       _buildSummaryCard('Orders', '$_totalOrders', '${_ordersDiff >= 0 ? '+' : ''}$_ordersDiff vs yesterday', Icons.shopping_bag_outlined, const Color(0xFFFFF0F0), const Color(0xFFE53935), cardBg, borderColor, mutedText),
@@ -445,6 +465,7 @@ class _DashboardOverviewScreenState extends State<DashboardOverviewScreen> {
     );
   }
 
+  /// Utility card builder for individual metric containers in the top row.
   Widget _buildSummaryCard(String title, String value, String subtitle, IconData icon, Color bg, Color iconColor, Color cardBg, Color borderColor, Color mutedText) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -472,6 +493,7 @@ class _DashboardOverviewScreenState extends State<DashboardOverviewScreen> {
     );
   }
 
+  /// Displays live queue of incoming orders with delivery type, items count, and order status indicators.
   Widget _buildIncomingOrdersPanel(Color cardBg, Color borderColor, Color mutedText) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -545,6 +567,7 @@ class _DashboardOverviewScreenState extends State<DashboardOverviewScreen> {
 
   // ===========================================================================
   // FL_CHART: SALES OVERVIEW LINE CHART
+  // Description: Renders smooth curved LineChart for trackable sales performance over time.
   // ===========================================================================
   Widget _buildSalesOverviewChartPanel(Color cardBg, Color borderColor, Color mutedText) {
     return Container(
@@ -615,6 +638,7 @@ class _DashboardOverviewScreenState extends State<DashboardOverviewScreen> {
     );
   }
 
+/// Small metric label-value pair helper widget.
   Widget _buildMiniMetric(String label, String val, Color mutedText) {
     return Column(
       children: [
@@ -688,6 +712,8 @@ class _DashboardOverviewScreenState extends State<DashboardOverviewScreen> {
 
   // ===========================================================================
   // FL_CHART: TOP CATEGORIES DONUT CHART
+  // Description: Renders an interactive PieChart with a hollow center (donut chart)
+  // visualizing sales percentage share by category.
   // ===========================================================================
   Widget _buildTopCategoriesDonutPanel(Color cardBg, Color borderColor, Color mutedText) {
     return Container(
@@ -760,7 +786,7 @@ class _DashboardOverviewScreenState extends State<DashboardOverviewScreen> {
       ),
     );
   }
-
+  /// Renders recent customer feedback and star rating reviews.
   Widget _buildRecentReviewsPanel(Color cardBg, Color borderColor, Color mutedText) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -803,6 +829,7 @@ class _DashboardOverviewScreenState extends State<DashboardOverviewScreen> {
     );
   }
 
+  /// Provides navigation shortcuts for frequent administrative management actions.
   Widget _buildQuickActionsPanel(Color cardBg, Color borderColor, Color mutedText) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -821,6 +848,7 @@ class _DashboardOverviewScreenState extends State<DashboardOverviewScreen> {
     );
   }
 
+  /// Helper widget constructing quick action interactive buttons.
   Widget _buildActionButton(String label, IconData icon, Color bg, Color iconColor, VoidCallback onTap) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),

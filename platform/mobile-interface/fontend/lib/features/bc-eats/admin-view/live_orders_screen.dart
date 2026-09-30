@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'constants/admin_colours.dart';
 import 'inventory_screen.dart'; // Uses shared ProductItem model
 
+/// Displays real-time incoming orders with status filtering (Pending, Preparing, Completed)
+/// and allows store managers to update order fulfillment states
+
 class LiveOrdersScreen extends StatefulWidget {
   const LiveOrdersScreen({super.key});
 
@@ -56,8 +59,7 @@ class _LiveOrdersScreenState extends State<LiveOrdersScreen> {
 
   // BACKEND INTEGRATION POINT: Subscribe to Realtime DB updates
   void _subscribeToLiveOrdersAndStock() {
-    // TODO: Attach Supabase Realtime channel / WebSocket stream listeners here:
-    // supabase.channel('orders').onPostgresChanges(event: PostgresChangeEvent.all, schema: 'public', table: 'orders', callback: (payload) { ... });
+    // TODO: Attach Database Realtime channel / WebSocket stream listeners here:
   }
 
   // BACKEND INTEGRATION POINT: Order Simulation / Creating New Orders
@@ -78,7 +80,6 @@ class _LiveOrdersScreenState extends State<LiveOrdersScreen> {
     });
 
     // TODO: Send order creation request to backend if required:
-    // await supabase.from('orders').insert({ ... });
 
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) setState(() => _hasNewOrderAlert = false);
@@ -100,7 +101,6 @@ class _LiveOrdersScreenState extends State<LiveOrdersScreen> {
     }
 
     // TODO: Update status in database table:
-    // await supabase.from('orders').update({'status': nextStatus}).eq('orderId', orderId);
 
     setState(() {
       if (nextStatus == 'Completed') {
@@ -116,7 +116,6 @@ class _LiveOrdersScreenState extends State<LiveOrdersScreen> {
     final product = foodItems[index];
 
     // TODO: Sync toggle directly to backend inventory table:
-    // await supabase.from('products').update({'inStock': newValue}).eq('id', product.id);
 
     setState(() {
       foodItems[index] = product.copyWith(inStock: newValue);

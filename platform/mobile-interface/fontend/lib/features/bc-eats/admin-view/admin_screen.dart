@@ -4,6 +4,8 @@ import 'dashboard_overview_screen.dart';
 import 'live_orders_screen.dart';
 import 'inventory_screen.dart';
 
+/// Shell widget providing responsive navigation and scaffolding for the Admin portal.
+/// Dynamically toggles between desktop sidebar + header and mobile app bar + bottom nav.
 class AdminShellScreen extends StatefulWidget {
   const AdminShellScreen({super.key});
 
@@ -12,23 +14,26 @@ class AdminShellScreen extends StatefulWidget {
 }
 
 class _AdminShellScreenState extends State<AdminShellScreen> {
+  // Currently active navigation tab index
   int _selectedIndex = 0;
 
+// Main admin view pages retained via IndexedStack
   final List<Widget> _pages = const [
     DashboardOverviewScreen(),
     LiveOrdersScreen(),
     InventoryScreen(),
   ];
 
+//Main Layout Builder
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isMobile = constraints.maxWidth < 768;
+        final isMobile = constraints.maxWidth < 768; // Breakpoint checking for mobile view
 
         return Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          appBar: isMobile
+          appBar: isMobile // Mobile Top App Bar
               ? AppBar(
                   title: const Text('BC WAYS & EATS', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                   backgroundColor: Theme.of(context).cardColor,
@@ -41,13 +46,13 @@ class _AdminShellScreenState extends State<AdminShellScreen> {
                   ],
                 )
               : null,
-          body: Row(
+          body: Row( //Responsive Main Body Layout
             children: [
               if (!isMobile) _buildSidebar(),
               Expanded(
                 child: Column(
                   children: [
-                    if (!isMobile) _buildHeader(),
+                    if (!isMobile) _buildHeader(), // Top Bar Header for Tablet & Desktop screens
                     Expanded(
                       child: IndexedStack(
                         index: _selectedIndex,
@@ -59,6 +64,8 @@ class _AdminShellScreenState extends State<AdminShellScreen> {
               ),
             ],
           ),
+         
+          // Bottom Navigation Bar for Mobile screens
           bottomNavigationBar: isMobile
               ? BottomNavigationBar(
                   currentIndex: _selectedIndex,
@@ -77,6 +84,12 @@ class _AdminShellScreenState extends State<AdminShellScreen> {
     );
   }
 
+  // ==========================================
+  // Desktop Navigation Components
+  // ==========================================
+
+  /// Builds the side navigation drawer for desktop and wide screens.
+  /// Displays app branding, primary navigation links, and a support section.
   Widget _buildSidebar() {
     return Container(
       width: 240,
@@ -145,6 +158,8 @@ class _AdminShellScreenState extends State<AdminShellScreen> {
     );
   }
 
+  /// Builds a clickable navigation item tile for the sidebar.
+  /// Highlighted when active based on [index].
   Widget _buildNavItem(int index, IconData icon, String label) {
     final isSelected = _selectedIndex == index;
     return Padding(
@@ -174,6 +189,8 @@ class _AdminShellScreenState extends State<AdminShellScreen> {
     );
   }
 
+  /// Builds the top header navigation bar for desktop and wide screens.
+  ///Includes page title, system notification actions, and admin profile status
   Widget _buildHeader() {
     return Container(
       height: 60,
@@ -192,6 +209,7 @@ class _AdminShellScreenState extends State<AdminShellScreen> {
               overflow: TextOverflow.ellipsis,
             ),
           ),
+          // User Controls & Actions
           Row(
             children: [
               IconButton(

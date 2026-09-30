@@ -116,10 +116,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
   Future<void> _fetchProducts() async {
     setState(() => _isLoading = true);
     try {
-      // TODO: Replace local mock with your Supabase / Express API call:
-      // final response = await supabase.from('products').select();
-      // _products = response.map((data) => ProductItem.fromJson(data)).toList();
-      
+      // TODO: Replace local mock with Express API call:
       await Future.delayed(const Duration(milliseconds: 300));
       setState(() {
         _products = [
@@ -140,8 +137,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   // BACKEND INTEGRATION POINT: Add new product item
   Future<void> _addProduct(ProductItem item) async {
-    // TODO: Send new product payload to Express/Supabase backend:
-    // await supabase.from('products').insert(item.toJson());
+    // TODO: Send new product payload to Express backend:
     
     setState(() {
       _products.add(item);
@@ -150,8 +146,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   // BACKEND INTEGRATION POINT: Toggle stock availability status
   Future<void> _toggleStockStatus(String productId, bool currentStatus) async {
-    // TODO: Update stock status in database:
-    // await supabase.from('products').update({'inStock': !currentStatus}).eq('id', productId);
+    // TODO: Update stock status in database
     
     setState(() {
       final index = _products.indexWhere((p) => p.id == productId);
@@ -164,7 +159,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
   // BACKEND INTEGRATION POINT: Delete inventory product
   Future<void> _deleteProduct(String productId) async {
     // TODO: Delete record from database:
-    // await supabase.from('products').delete().eq('id', productId);
     
     setState(() {
       _products.removeWhere((p) => p.id == productId);

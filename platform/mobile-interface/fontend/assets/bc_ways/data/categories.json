@@ -1,32 +1,70 @@
 [
-    {
-        "id": "academic",
-        "name": "Academic",
-        "color": "#800020",
-        "icon": "school"
-    },
-    {
-        "id": "administration",
-        "name": "Administration",
-        "color": "#1565C0",
-        "icon": "business"
-    },
-    {
-        "id": "parking",
-        "name": "Parking",
-        "color": "#616161",
-        "icon": "local_parking"
-    },
-    {
-        "id": "residence",
-        "name": "Residence",
-        "color": "#2E7D32",
-        "icon": "home"
-    },
-    {
-        "id": "sports",
-        "name": "Sports",
-        "color": "#EF6C00",
-        "icon": "sports_soccer"
-    }
+  {
+    "id": "classrooms",
+    "label": "Classrooms",
+    "icon": "school",
+    "color": "#AF1857",
+    "matches": [
+      "Classroom"
+    ]
+  },
+  {
+    "id": "offices",
+    "label": "Offices",
+    "icon": "badge",
+    "color": "#757575",
+    "matches": [
+      "Office"
+    ]
+  },
+  {
+    "id": "parking",
+    "label": "Parking",
+    "icon": "local_parking",
+    "color": "#A8A8A8",
+    "matches": [
+      "Parking"
+    ]
+  },
+  {
+    "id": "residences",
+    "label": "Residences",
+    "icon": "apartment",
+    "color": "#F5C42E",
+    "matches": [
+      "Residence"
+    ]
+  },
+  {
+    "id": "toilets",
+    "label": "Toilets",
+    "icon": "wc",
+    "color": "#000000",
+    "matches": [
+      "Toilets"
+    ]
+  },
+  {
+    "id": "outdoor_areas",
+    "label": "Outdoor Areas",
+    "icon": "park",
+    "color": "#7FB36B",
+    "matches": [
+      "Outdoor Areas"
+    ]
+  },
+  {
+    "id": "other",
+    "label": "Other",
+    "icon": "business",
+    "color": "#65C0BF",
+    "matches": [
+      "Student Building",
+      "Library",
+      "Study Room",
+      "Laundry",
+      "Tuck Shop",
+      "Cafeteria"
+    ]
+  }
 ]

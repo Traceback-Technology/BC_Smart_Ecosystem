@@ -1,35 +1,27 @@
 import 'package:flutter/material.dart';
+import '../constants/colors.dart';
 
-import '../models/node.dart';
-
+/// Draws the resolved route as a rounded blue line over the campus map.
 class RoutePainter extends CustomPainter {
-  final List<Node> path;
-
-  const RoutePainter(this.path);
+  final List<Offset> points;
+  RoutePainter(this.points);
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (path.length < 2) return;
-
-    final paint =
-        Paint()
-          ..color = Colors.blue
-          ..strokeWidth = 8
-          ..strokeCap = StrokeCap.round
-          ..style = PaintingStyle.stroke;
-
-    final route = Path();
-
-    route.moveTo(path.first.x, path.first.y);
-
-    for (int i = 1; i < path.length; i++) {
-      route.lineTo(path[i].x, path[i].y);
+    if (points.length < 2) return;
+    final paint = Paint()
+      ..color = BcColors.blue
+      ..strokeWidth = 10
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+    final path = Path()..moveTo(points.first.dx, points.first.dy);
+    for (final p in points.skip(1)) {
+      path.lineTo(p.dx, p.dy);
     }
-
-    canvas.drawPath(route, paint);
+    canvas.drawPath(path, paint);
   }
 
   @override
-  bool shouldRepaint(RoutePainter oldDelegate) =>
-      oldDelegate.path != path;
+  bool shouldRepaint(covariant RoutePainter oldDelegate) => oldDelegate.points != points;
 }

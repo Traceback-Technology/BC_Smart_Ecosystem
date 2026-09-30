@@ -1,15 +1,19 @@
-import 'edge.dart';
 import 'node.dart';
 
+/// In-memory representation of the campus walking graph: every node plus
+/// an undirected adjacency list built from edges.json. Pure data — no
+/// loading or pathfinding logic lives here (see GraphService / DijkstraService).
 class Graph {
+  final Map<String, GraphNode> nodesById;
+  final Map<String, List<GraphAdjacency>> adjacency;
 
-  final Map<String, Node> nodes;
+  const Graph({required this.nodesById, required this.adjacency});
 
-  final Map<String, List<Edge>> adjacencyList;
+  List<GraphAdjacency> neighborsOf(String nodeId) => adjacency[nodeId] ?? const [];
+}
 
-  Graph({
-    required this.nodes,
-    required this.adjacencyList,
-  });
-
+class GraphAdjacency {
+  final String nodeId;
+  final double distance;
+  const GraphAdjacency(this.nodeId, this.distance);
 }

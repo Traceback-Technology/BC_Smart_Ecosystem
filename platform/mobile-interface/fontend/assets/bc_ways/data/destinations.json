@@ -7,7 +7,8 @@
             "x": 574,
             "y": 1216
         },
-        "nearestNode": "chi_entrance"
+        "nearestNode": "chi_entrance",
+        "yard": "north"
     },
     {
         "id": "psi",
@@ -17,7 +18,8 @@
             "x": 789,
             "y": 1026
         },
-        "nearestNode": "psi_entrance"
+        "nearestNode": "psi_entrance",
+        "yard": "north"
     },
     {
         "id": "iota-phi",
@@ -27,7 +29,8 @@
             "x": 989,
             "y": 1054
         },
-        "nearestNode": "iota-phi_entrance"
+        "nearestNode": "iota-phi_entrance",
+        "yard": "north"
     },
     {
         "id": "kappa",
@@ -37,7 +40,8 @@
             "x": 1063,
             "y": 1367
         },
-        "nearestNode": "kappa_entrance"
+        "nearestNode": "kappa_entrance",
+        "yard": "north"
     },
     {
         "id": "ypsilon",
@@ -47,7 +51,8 @@
             "x": 1398,
             "y": 2114
         },
-        "nearestNode": "ypsilon_entrance"
+        "nearestNode": "ypsilon_entrance",
+        "yard": "main"
     },
     {
         "id": "omega",
@@ -57,7 +62,8 @@
             "x": 1473,
             "y": 2125
         },
-        "nearestNode": "omega_entrance"
+        "nearestNode": "omega_entrance",
+        "yard": "main"
     },
     {
         "id": "sigma",
@@ -67,7 +73,8 @@
             "x": 1468,
             "y": 2158
         },
-        "nearestNode": "sigma_entrance"
+        "nearestNode": "sigma_entrance",
+        "yard": "main"
     },  
     {
         "id": "pi",
@@ -77,7 +84,8 @@
             "x": 1556,
             "y": 2232
         },
-        "nearestNode": "pi_entrance"
+        "nearestNode": "pi_entrance",
+        "yard": "main"
     },
     {
         "id": "gamma",
@@ -87,7 +95,8 @@
             "x": 1505,
             "y": 2484
         },
-        "nearestNode": "gamma_entrance"
+        "nearestNode": "gamma_entrance",
+        "yard": "main"
     },
     {
         "id": "zeta",
@@ -97,7 +106,8 @@
             "x": 1235,
             "y": 2532
         },
-        "nearestNode": "zeta_entrance"
+        "nearestNode": "zeta_entrance",
+        "yard": "main"
     },
     {
         "id": "omnikron",
@@ -107,7 +117,8 @@
             "x": 1222,
             "y": 2562
         },
-        "nearestNode": "omnikron_entrance"
+        "nearestNode": "omnikron_entrance",
+        "yard": "main"
     },
     {
         "id": "lambda",
@@ -117,7 +128,8 @@
             "x": 1182,
             "y": 2523
         },
-        "nearestNode": "lambda_entrance"
+        "nearestNode": "lambda_entrance",
+        "yard": "main"
     },
     {
         "id": "delta",
@@ -127,7 +139,8 @@
             "x": 1429,
             "y": 2648
         },
-        "nearestNode": "delta_entrance"
+        "nearestNode": "delta_entrance",
+        "yard": "main"
     },
     {
         "id": "theta",
@@ -137,7 +150,8 @@
             "x": 1479,
             "y": 2651
         },
-        "nearestNode": "theta_entrance"
+        "nearestNode": "theta_entrance",
+        "yard": "main"
     },
     {
         "id": "alpha",
@@ -147,7 +161,8 @@
             "x": 1479,
             "y": 2725
         },
-        "nearestNode": "alpha_entrance"
+        "nearestNode": "alpha_entrance",
+        "yard": "main"
     },
     {
         "id": "beta",
@@ -157,7 +172,8 @@
             "x": 1322,
             "y": 2768
         },
-        "nearestNode": "beta_entrance"
+        "nearestNode": "beta_entrance",
+        "yard": "main"
     },
 
 
@@ -180,7 +196,8 @@
             "x": 579,
             "y": 1509
         },
-        "nearestNode": "lier_entrance"
+        "nearestNode": "lier_entrance",
+        "yard": "north"
     },
     {
         "id": "turnhout",
@@ -190,7 +207,8 @@
             "x": 968,
             "y": 1314
         },
-        "nearestNode": "turnhout_entrance"
+        "nearestNode": "turnhout_entrance",
+        "yard": "north"
     },
     {
         "id": "tienen",
@@ -200,7 +218,8 @@
             "x": 962,
             "y": 1370
         },
-        "nearestNode": "tienen_entrance"
+        "nearestNode": "tienen_entrance",
+        "yard": "north"
     },
     {
         "id": "namur",
@@ -210,7 +229,8 @@
             "x": 1071,
             "y": 1647
         },
-        "nearestNode": "namur_entrance"
+        "nearestNode": "namur_entrance",
+        "yard": "north"
     },
     {
         "id": "mechelen",
@@ -220,7 +240,8 @@
             "x": 1237,
             "y": 1660
         },
-        "nearestNode": "mechelen_entrance"
+        "nearestNode": "mechelen_entrance",
+        "yard": "north"
     },
     {
         "id": "denant",
@@ -230,7 +251,8 @@
             "x": 1828,
             "y": 1894
         },
-        "nearestNode": "denant_entrance"
+        "nearestNode": "denant_entrance",
+        "yard": "north"
     },
     {
         "id": "oostende",
@@ -240,7 +262,8 @@
             "x": 2301,
             "y": 1525
         },
-        "nearestNode": "oostende_entrance"
+        "nearestNode": "oostende_entrance",
+        "yard": "north"
     },
     {
         "id": "florenville",
@@ -250,7 +273,8 @@
             "x": 2340,
             "y": 1169
         },
-        "nearestNode": "florenville_entrance"
+        "nearestNode": "florenville_entrance",
+        "yard": "north"
     },
     {
         "id": "ekklo",
@@ -260,7 +284,8 @@
             "x": 1568,
             "y": 2187
         },
-        "nearestNode": "ekklo_entrance"
+        "nearestNode": "ekklo_entrance",
+        "yard": "main"
     },
     {
         "id": "genk",
@@ -270,7 +295,8 @@
             "x": 1250,
             "y": 2259
         },
-        "nearestNode": "genk_entrance"
+        "nearestNode": "genk_entrance",
+        "yard": "main"
     },
     {
         "id": "leuven",
@@ -280,7 +306,8 @@
             "x": 1313,
             "y": 2458
         },
-        "nearestNode": "leuven_entrance"
+        "nearestNode": "leuven_entrance",
+        "yard": "main"
     },
     {
         "id": "brussels",
@@ -290,7 +317,8 @@
             "x": 1505,
             "y": 2573
         },
-        "nearestNode": "brussels_entrance"
+        "nearestNode": "brussels_entrance",
+        "yard": "main"
     },
     {
         "id": "hasselt",
@@ -300,7 +328,8 @@
             "x": 1365,
             "y": 2787
         },
-        "nearestNode": "hasselt_entrance"
+        "nearestNode": "hasselt_entrance",
+        "yard": "main"
     },
     {
         "id": "antwerp",
@@ -310,7 +339,8 @@
             "x": 1454,
             "y": 2804
         },
-        "nearestNode": "antwerp_entrance"
+        "nearestNode": "antwerp_entrance",
+        "yard": "main"
     },
 
 
@@ -327,13 +357,14 @@
     
     {
         "id": "chi-study",
-        "name": "Study Room",
+        "name": "Chi Study",
         "category": "Study Room",
         "position": {
             "x": 636,
             "y": 1216
         },
-        "nearestNode": "chi-study_entrance"
+        "nearestNode": "chi-study_entrance",
+        "yard": "north"
     },
     {
         "id": "learning-factory",
@@ -343,7 +374,8 @@
             "x": 901,
             "y": 1189
         },
-        "nearestNode": "learning-factory_entrance"
+        "nearestNode": "learning-factory_entrance",
+        "yard": "north"
     },
     {
         "id": "smart-city",
@@ -353,7 +385,8 @@
             "x": 1020,
             "y": 1214
         },
-        "nearestNode": "smart-city_entrance"
+        "nearestNode": "smart-city_entrance",
+        "yard": "north"
     },
     {
         "id": "north-laundry",
@@ -363,7 +396,8 @@
             "x": 1350,
             "y": 1510
         },
-        "nearestNode": "north-laundry_entrance"
+        "nearestNode": "north-laundry_entrance",
+        "yard": "north"
     },
     {
         "id": "cafeteria",
@@ -373,7 +407,8 @@
             "x": 1864,
             "y": 1615
         },
-        "nearestNode": "cafeteria_entrance"
+        "nearestNode": "cafeteria_entrance",
+        "yard": "north"
     },
     {
         "id": "tuck-shop",
@@ -383,17 +418,19 @@
             "x": 1146,
             "y": 2196
         },
-        "nearestNode": "tuck-shop_entrance"
+        "nearestNode": "tuck-shop_entrance",
+        "yard": "main"
     },
     {
         "id": "main-study",
-        "name": "Study Room",
+        "name": "Main Study",
         "category": "Study Room",
         "position": {
             "x": 1551,
             "y": 2275
         },
-        "nearestNode": "main-study_entrance"
+        "nearestNode": "main-study_entrance",
+        "yard": "main"
     },
     {
         "id": "main-library",
@@ -403,7 +440,8 @@
             "x": 1311,
             "y": 2632
         },
-        "nearestNode": "main-library_entrance"
+        "nearestNode": "main-library_entrance",
+        "yard": "main"
     },
 
 
@@ -426,7 +464,8 @@
             "x": 1298,
             "y": 1250
         },
-        "nearestNode": "volleyball_entrance"
+        "nearestNode": "volleyball_entrance",
+        "yard": "north"
     },
     {
         "id": "sports-fields",
@@ -436,7 +475,8 @@
             "x": 1874,
             "y": 1406
         },
-        "nearestNode": "sports-fields_entrance"
+        "nearestNode": "sports-fields_entrance",
+        "yard": "north"
     },
     {
         "id": "basketball",
@@ -446,7 +486,8 @@
             "x": 1238,
             "y": 2484
         },
-        "nearestNode": "basketball_entrance"
+        "nearestNode": "basketball_entrance",
+        "yard": "main"
     },
     {
         "id": "chess",
@@ -456,7 +497,8 @@
             "x": 1363,
             "y": 2548
         },
-        "nearestNode": "chess_entrance"
+        "nearestNode": "chess_entrance",
+        "yard": "main"
     },
 
 
@@ -479,27 +521,30 @@
             "x": 1615,
             "y": 1676
         },
-        "nearestNode": "student-parking_entrance"
+        "nearestNode": "student-parking_entrance",
+        "yard": "north"
     },
     {
         "id": "staff-parking-1",
-        "name": "Staff Parking",
+        "name": "Staff Parking 1",
         "category": "Parking",
         "position": {
             "x": 1450,
             "y": 2027
         },
-        "nearestNode": "staff-parking-1_entrance"
+        "nearestNode": "staff-parking-1_entrance",
+        "yard": "main"
     },
     {
         "id": "staff-parking-2",
-        "name": "Staff Parking",
+        "name": "Staff Parking 2",
         "category": "Parking",
         "position": {
             "x": 1228,
             "y": 2338
         },
-        "nearestNode": "staff-parking-2_entrance"
+        "nearestNode": "staff-parking-2_entrance",
+        "yard": "main"
     },
     {
         "id": "visitors-parking",
@@ -509,7 +554,8 @@
             "x": 1104,
             "y": 2481
         },
-        "nearestNode": "visitors-parking_entrance"
+        "nearestNode": "visitors-parking_entrance",
+        "yard": "main"
     },
 
 
@@ -532,7 +578,8 @@
             "x": 606,
             "y": 1176
         },
-        "nearestNode": "chi-classroom-toilets_entrance"
+        "nearestNode": "chi-classroom-toilets_entrance",
+        "yard": "north"
     },
     {
         "id": "psi-classroom-toilets",
@@ -542,7 +589,8 @@
             "x": 806,
             "y": 986
         },
-        "nearestNode": "psi-classroom-toilets_entrance"
+        "nearestNode": "psi-classroom-toilets_entrance",
+        "yard": "north"
     },
     {
         "id": "iota-phi-classroom-toilets",
@@ -552,7 +600,8 @@
             "x": 1085,
             "y": 1075
         },
-        "nearestNode": "iota-phi-classroom-toilets_entrance"
+        "nearestNode": "iota-phi-classroom-toilets_entrance",
+        "yard": "north"
     },
     {
         "id": "it-department",
@@ -562,7 +611,8 @@
             "x": 812,
             "y": 1552
         },
-        "nearestNode": "it-department_entrance"
+        "nearestNode": "it-department_entrance",
+        "yard": "north"
     },
     {
         "id": "counsel-offices",
@@ -572,7 +622,8 @@
             "x": 1442,
             "y": 2116
         },
-        "nearestNode": "counsel-offices_entrance"
+        "nearestNode": "counsel-offices_entrance",
+        "yard": "main"
     },
     {
         "id": "private-toilets",
@@ -582,7 +633,8 @@
             "x": 1390,
             "y": 2144
         },
-        "nearestNode": "private-toilets_entrance"
+        "nearestNode": "private-toilets_entrance",
+        "yard": "main"
     },
     {
         "id": "residence-manager",
@@ -592,7 +644,8 @@
             "x": 1417,
             "y": 2199
         },
-        "nearestNode": "residence-manager_entrance"
+        "nearestNode": "residence-manager_entrance",
+        "yard": "main"
     },
     {
         "id": "health-and-safety",
@@ -602,7 +655,8 @@
             "x": 1434,
             "y": 2203
         },
-        "nearestNode": "health-and-safety_entrance"
+        "nearestNode": "health-and-safety_entrance",
+        "yard": "main"
     },
     {
         "id": "store-room",
@@ -612,7 +666,8 @@
             "x": 1478,
             "y": 2214
         },
-        "nearestNode": "store-room_entrance"
+        "nearestNode": "store-room_entrance",
+        "yard": "main"
     },
     {
         "id": "public-toilets",
@@ -622,7 +677,8 @@
             "x": 1558,
             "y": 2323
         },
-        "nearestNode": "public-toilets_entrance"
+        "nearestNode": "public-toilets_entrance",
+        "yard": "main"
     },
     {
         "id": "administration",
@@ -632,7 +688,8 @@
             "x": 1042,
             "y": 2504
         },
-        "nearestNode": "administration_entrance"
+        "nearestNode": "administration_entrance",
+        "yard": "main"
     },
     {
         "id": "sales",
@@ -642,7 +699,8 @@
             "x": 1001,
             "y": 2568
         },
-        "nearestNode": "sales_entrance"
+        "nearestNode": "sales_entrance",
+        "yard": "main"
     },
     {
         "id": "reception",
@@ -652,7 +710,8 @@
             "x": 1045,
             "y": 2619
         },
-        "nearestNode": "reception_entrance"
+        "nearestNode": "reception_entrance",
+        "yard": "main"
     },
     {
         "id": "finance-department",
@@ -662,7 +721,8 @@
             "x": 1016,
             "y": 2612
         },
-        "nearestNode": "reception_entrance"
+        "nearestNode": "reception_entrance",
+        "yard": "main"
     },
     {
         "id": "academics",
@@ -672,7 +732,8 @@
             "x": 1245,
             "y": 2672
         },
-        "nearestNode": "academics_entrance"
+        "nearestNode": "academics_entrance",
+        "yard": "main"
     },
     {
         "id": "zeta-classroom-toilets",
@@ -682,7 +743,8 @@
             "x": 1279,
             "y": 2548
         },
-        "nearestNode": "zeta-classroom-toilets_entrance"
+        "nearestNode": "zeta-classroom-toilets_entrance",
+        "yard": "main"
     },
     {
         "id": "procurement",
@@ -692,7 +754,8 @@
             "x": 1316,
             "y": 2575
         },
-        "nearestNode": "procurement_entrance"
+        "nearestNode": "procurement_entrance",
+        "yard": "main"
     }
 
 ]

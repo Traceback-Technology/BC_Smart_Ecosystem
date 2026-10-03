@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'constants/admin_colours.dart';
+import '../admin-view/constants/admin_colours.dart';
 
 // =============================================================================
 // INVENTORY MODEL

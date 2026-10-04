@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+
+import '../models/bc_eats_product.dart';
+import '../repositories/bc_eats_product_repository.dart';
+import '../repositories/mock_bc_eats_product_repository.dart';
 import '../constants/bc_eats_colors.dart';
 
 // This is the BC Eats menu screen where users can browse the real tuckshop items and filter them using the categories on the left.
 class BCEatsMenuScreen extends StatefulWidget {
   final bool showBottomNavigation;
+  final BcEatsProductRepository? productRepository;
 
-  const BCEatsMenuScreen({super.key, this.showBottomNavigation = true});
+  const BCEatsMenuScreen({
+    super.key,
+    this.showBottomNavigation = true,
+    this.productRepository,
+  });
 
   @override
   State<BCEatsMenuScreen> createState() => _BCEatsMenuScreenState();
@@ -26,246 +35,50 @@ class _BCEatsMenuScreenState extends State<BCEatsMenuScreen> {
     'Drinks',
     'Extras',
   ];
+  final List<BcEatsProduct> _products = [];
 
-  // These are the real menu items we are using for the BC Eats prototype.
-  // The backend team can later connect this list to the actual database.
-  final List<MenuItem> menuItems = [
-    MenuItem(
-      name: 'Wors Roll Special',
-      description: 'Wors roll with chips and a 300ml cold drink',
-      price: 62.00,
-      category: 'Daily Specials',
-      image: 'assets/images/wors_roll_special.png',
-    ),
-    MenuItem(
-      name: 'Hot Dog Special',
-      description: 'Hot dog with chips and a 300ml cold drink',
-      price: 55.00,
-      category: 'Daily Specials',
-      image: 'assets/images/hot_dog_special.png',
-    ),
-    MenuItem(
-      name: 'Chicken Wrap',
-      description: 'Fresh chicken wrap',
-      price: 35.00,
-      category: 'Daily Specials',
-      image: 'assets/images/chicken_wrap.png',
-    ),
-    MenuItem(
-      name: 'Cheese Toasted Sandwich',
-      description: 'Toasted sandwich with cheese',
-      price: 25.00,
-      category: 'Sandwiches',
-      image: 'assets/images/cheese_toastie.png',
-    ),
-    MenuItem(
-      name: 'Chilli Cheese Toasted Sandwich',
-      description: 'Toasted sandwich with chilli and cheese',
-      price: 28.00,
-      category: 'Sandwiches',
-      image: 'assets/images/chilli_cheese_toastie.png',
-    ),
-    MenuItem(
-      name: 'Tomato Cheese Toasted Sandwich',
-      description: 'Toasted sandwich with tomato and cheese',
-      price: 28.00,
-      category: 'Sandwiches',
-      image: 'assets/images/tomato_cheese_toastie.png',
-    ),
-    MenuItem(
-      name: 'Ham Cheese Toasted Sandwich',
-      description: 'Toasted sandwich with ham and cheese',
-      price: 32.00,
-      category: 'Sandwiches',
-      image: 'assets/images/ham_cheese_toastie.png',
-    ),
-    MenuItem(
-      name: 'Ham Cheese Tomato Toasted Sandwich',
-      description: 'Toasted sandwich with ham, cheese and tomato',
-      price: 35.00,
-      category: 'Sandwiches',
-      image: 'assets/images/ham_cheese_tomato_toastie.png',
-    ),
-    MenuItem(
-      name: 'Bacon Egg Cheese Toasted Sandwich',
-      description: 'Toasted sandwich with bacon, egg and cheese',
-      price: 38.00,
-      category: 'Sandwiches',
-      image: 'assets/images/bacon_egg_cheese_toastie.png',
-    ),
-    MenuItem(
-      name: 'Chicken Mayo Sandwich',
-      description: 'Toasted sandwich with chicken mayo',
-      price: 35.00,
-      category: 'Sandwiches',
-      image: 'assets/images/chicken_mayo.png',
-    ),
-    MenuItem(
-      name: 'Chicken Burger',
-      description: 'Chicken burger',
-      price: 40.00,
-      category: 'Burgers',
-      image: 'assets/images/chicken_burger.png',
-    ),
-    MenuItem(
-      name: 'Beef Burger',
-      description: 'Beef burger',
-      price: 40.00,
-      category: 'Burgers',
-      image: 'assets/images/beef_burger.png',
-    ),
-    MenuItem(
-      name: 'Chicken Hot Dog',
-      description: 'Chicken hot dog',
-      price: 32.00,
-      category: 'Hot Dogs',
-      image: 'assets/images/chicken_hot_dog.png',
-    ),
-    MenuItem(
-      name: 'Pork Hot Dog',
-      description: 'Pork hot dog',
-      price: 32.00,
-      category: 'Hot Dogs',
-      image: 'assets/images/pork_hot_dog.png',
-    ),
-    MenuItem(
-      name: 'Pork Russian Roll',
-      description: 'Russian roll',
-      price: 30.00,
-      category: 'Hot Dogs',
-      image: 'assets/images/pork_russian_roll.png',
-    ),
-    MenuItem(
-      name: 'Medium Chips',
-      description: 'Medium portion of chips',
-      price: 20.00,
-      category: 'Chips',
-      image: 'assets/images/chips_medium.png',
-    ),
-    MenuItem(
-      name: 'Large Chips',
-      description: 'Large portion of chips',
-      price: 28.00,
-      category: 'Chips',
-      image: 'assets/images/chips_large.png',
-    ),
-    MenuItem(
-      name: 'Russian and Chips',
-      description: 'Russian with chips',
-      price: 35.00,
-      category: 'Chips',
-      image: 'assets/images/russian_chips.png',
-    ),
-    MenuItem(
-      name: 'Soft Drink',
-      description: '330ml soft drink',
-      price: 15.00,
-      category: 'Drinks',
-      image: 'assets/images/coke.png',
-    ),
-    MenuItem(
-      name: 'Coke',
-      description: 'Cold soft drink',
-      price: 15.00,
-      category: 'Drinks',
-      image: 'assets/images/coke.png',
-    ),
-    MenuItem(
-      name: 'Coke Zero',
-      description: 'Cold soft drink',
-      price: 15.00,
-      category: 'Drinks',
-      image: 'assets/images/coke_zero.png',
-    ),
-    MenuItem(
-      name: 'Fanta',
-      description: 'Cold soft drink',
-      price: 15.00,
-      category: 'Drinks',
-      image: 'assets/images/fanta.png',
-    ),
-    MenuItem(
-      name: 'Sprite',
-      description: 'Cold soft drink',
-      price: 15.00,
-      category: 'Drinks',
-      image: 'assets/images/sprite.png',
-    ),
-    MenuItem(
-      name: 'Monster',
-      description: 'Energy drink',
-      price: 30.00,
-      category: 'Drinks',
-      image: 'assets/images/monster.png',
-    ),
-    MenuItem(
-      name: 'Red Bull',
-      description: 'Energy drink',
-      price: 30.00,
-      category: 'Drinks',
-      image: 'assets/images/red_bull.png',
-    ),
-    MenuItem(
-      name: 'Dragon',
-      description: 'Energy drink',
-      price: 20.00,
-      category: 'Drinks',
-      image: 'assets/images/dragon.png',
-    ),
-    MenuItem(
-      name: 'Energade',
-      description: 'Sports drink',
-      price: 18.00,
-      category: 'Drinks',
-      image: 'assets/images/energade.png',
-    ),
-    MenuItem(
-      name: 'Still Water',
-      description: 'Bottled water',
-      price: 15.00,
-      category: 'Drinks',
-      image: 'assets/images/still_water.png',
-    ),
-    MenuItem(
-      name: 'Sparkling Water',
-      description: 'Bottled sparkling water',
-      price: 18.00,
-      category: 'Drinks',
-      image: 'assets/images/sparkling_water.png',
-    ),
-    MenuItem(
-      name: 'Extra Cheese',
-      description: 'Add extra cheese',
-      price: 8.00,
-      category: 'Extras',
-      image: 'assets/images/extra_cheese.png',
-    ),
-    MenuItem(
-      name: 'Extra Bacon',
-      description: 'Add extra bacon',
-      price: 12.00,
-      category: 'Extras',
-      image: 'assets/images/bacon_slices.png',
-    ),
-    MenuItem(
-      name: 'Fried Egg',
-      description: 'Add a fried egg',
-      price: 8.00,
-      category: 'Extras',
-      image: 'assets/images/fried_egg.png',
-    ),
-    MenuItem(
-      name: 'Buttered Bread',
-      description: 'Bread with butter',
-      price: 12.00,
-      category: 'Extras',
-      image: 'assets/images/buttered_bread.png',
-    ),
-  ];
+  bool _isLoading = true;
+  String? _loadError;
+
+  BcEatsProductRepository get _productRepository =>
+      widget.productRepository ?? MockBcEatsProductRepository.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProducts();
+  }
+
+  Future<void> _loadProducts() async {
+    try {
+      final products = await _productRepository.fetchProducts();
+
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _products
+          ..clear()
+          ..addAll(products);
+        _isLoading = false;
+        _loadError = null;
+      });
+    } catch (error) {
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _isLoading = false;
+        _loadError = 'Unable to load the menu. Please try again.';
+      });
+    }
+  }
 
   // This filters the menu using both the selected category and search text. It means users can search for an item while still staying in a category.
-  List<MenuItem> get filteredItems {
-    return menuItems.where((item) {
+  List<BcEatsProduct> get filteredItems {
+    return _products.where((item) {
       final matchesCategory =
           selectedCategory == 'All Items' || item.category == selectedCategory;
 
@@ -481,7 +294,19 @@ class _BCEatsMenuScreenState extends State<BCEatsMenuScreen> {
 
               const SizedBox(height: 18),
 
-              if (filteredItems.isEmpty)
+              if (_isLoading)
+                const Padding(
+                  padding: EdgeInsets.all(30),
+                  child: Center(child: CircularProgressIndicator()),
+                )
+              else if (_loadError != null)
+                Padding(
+                  padding: const EdgeInsets.all(30),
+                  child: Center(
+                    child: Text(_loadError!, textAlign: TextAlign.center),
+                  ),
+                )
+              else if (filteredItems.isEmpty)
                 Padding(
                   padding: EdgeInsets.all(30),
 
@@ -537,7 +362,7 @@ class _BCEatsMenuScreenState extends State<BCEatsMenuScreen> {
 
   // Each menu item is displayed as a card with its image, description, price, and Add button.
   // The real menu images help us see how the final BC Eats screen could look.
-  Widget _buildMenuCard(BuildContext context, MenuItem item) {
+  Widget _buildMenuCard(BuildContext context, BcEatsProduct item) {
     return Container(
       height: 185,
 
@@ -564,7 +389,7 @@ class _BCEatsMenuScreenState extends State<BCEatsMenuScreen> {
             ),
 
             child: Image.asset(
-              item.image,
+              item.imagePath,
 
               fit: BoxFit.contain,
 
@@ -617,7 +442,7 @@ class _BCEatsMenuScreenState extends State<BCEatsMenuScreen> {
                 Row(
                   children: [
                     Text(
-                      'R${item.price.toStringAsFixed(2)}',
+                      item.formattedPrice,
 
                       style: const TextStyle(
                         color: BcEatsColors.red,
@@ -753,21 +578,4 @@ class _BCEatsMenuScreenState extends State<BCEatsMenuScreen> {
         return Icons.fastfood;
     }
   }
-}
-
-// This model represents one food item in the menu. The backend team can later use a similar structure when connecting the database.
-class MenuItem {
-  final String name;
-  final String description;
-  final double price;
-  final String category;
-  final String image;
-
-  const MenuItem({
-    required this.name,
-    required this.description,
-    required this.price,
-    required this.category,
-    required this.image,
-  });
 }

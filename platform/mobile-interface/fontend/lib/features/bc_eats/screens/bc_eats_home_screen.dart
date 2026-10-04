@@ -3,7 +3,9 @@ import '../constants/bc_eats_colors.dart';
 
 // I used the real menu items and images so the prototype gives the team an idea of how the final page could look.
 class BCEatsHomeScreen extends StatelessWidget {
-  const BCEatsHomeScreen({super.key});
+  final bool showBottomNavigation;
+
+  const BCEatsHomeScreen({super.key, this.showBottomNavigation = true});
 
   @override
   Widget build(BuildContext context) {
@@ -352,7 +354,9 @@ class BCEatsHomeScreen extends StatelessWidget {
         ),
       ),
 
-      bottomNavigationBar: _buildBottomNavigationBar(context),
+      bottomNavigationBar: showBottomNavigation
+          ? _buildBottomNavigationBar(context)
+          : null,
     );
   }
 

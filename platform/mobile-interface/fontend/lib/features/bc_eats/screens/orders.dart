@@ -1,44 +1,13 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(const orders());
-
-// --- 1. Root App Widget (Simplified & Error-Free) ---
-class orders extends StatelessWidget {
-  const orders({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'BC Eats',
-      debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.system, // Automatically follows device settings
-      theme: ThemeData(
-        brightness: Brightness.light,
-        primaryColor: const Color(0xFFE53935),
-        scaffoldBackgroundColor: const Color(0xFFF9FAFB),
-        cardColor: Colors.white,
-        fontFamily: 'Lato',
-        colorScheme: const ColorScheme.light(primary: Colors.red),
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: const Color(0xFFE53935),
-        scaffoldBackgroundColor: const Color(0xFF121212),
-        cardColor: const Color(0xFF1E1E1E),
-        fontFamily: 'Lato',
-        colorScheme: const ColorScheme.dark(primary: Colors.red),
-      ),
-      home: const OrdersScreen(),
-    );
-  }
-}
-
-// --- 2. State Enum ---
+// BC Eats order flow state.
 enum OrderStage { cart, checkout, payment, preparing, droneTracking, delivered }
 
 // --- 3. Main Orders Screen ---
 class OrdersScreen extends StatefulWidget {
-  const OrdersScreen({super.key});
+  final bool showBottomNavigation;
+
+  const OrdersScreen({super.key, this.showBottomNavigation = true});
 
   @override
   State<OrdersScreen> createState() => _OrdersScreenState();
@@ -99,8 +68,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
         ),
       ),
       bottomNavigationBar:
-          _currentStage.index < OrderStage.preparing.index ||
-              _currentStage == OrderStage.delivered
+          widget.showBottomNavigation &&
+              (_currentStage.index < OrderStage.preparing.index ||
+                  _currentStage == OrderStage.delivered)
           ? _buildBottomNav()
           : null,
     );
@@ -346,8 +316,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     ),
                     Text(
                       _isDelivery
-                          ? '20-30 min • R15.00 delivery fee'
-                          : 'Ready in 15 mins • No fee',
+                          ? '20-30 min ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ R15.00 delivery fee'
+                          : 'Ready in 15 mins ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ No fee',
                       style: TextStyle(fontSize: 12, color: subtleTextColor),
                     ),
                   ],

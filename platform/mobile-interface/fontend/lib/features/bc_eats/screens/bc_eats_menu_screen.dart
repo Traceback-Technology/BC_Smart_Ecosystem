@@ -3,7 +3,9 @@ import '../constants/bc_eats_colors.dart';
 
 // This is the BC Eats menu screen where users can browse the real tuckshop items and filter them using the categories on the left.
 class BCEatsMenuScreen extends StatefulWidget {
-  const BCEatsMenuScreen({super.key});
+  final bool showBottomNavigation;
+
+  const BCEatsMenuScreen({super.key, this.showBottomNavigation = true});
 
   @override
   State<BCEatsMenuScreen> createState() => _BCEatsMenuScreenState();
@@ -296,7 +298,7 @@ class _BCEatsMenuScreenState extends State<BCEatsMenuScreen> {
               ),
             ),
 
-            _buildBottomNavigation(context),
+            if (widget.showBottomNavigation) _buildBottomNavigation(context),
           ],
         ),
       ),

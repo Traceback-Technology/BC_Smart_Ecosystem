@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../admin-view/constants/admin_colours.dart';
+import '../admin-view/eats_data/service_file.dart';
 
 // =============================================================================
 // DYNAMIC DATA MODELS (EXPRESS DATA STRUCTURES)
@@ -130,6 +131,8 @@ class DashboardOverviewScreen extends StatefulWidget {
 }
 
 class _DashboardOverviewScreenState extends State<DashboardOverviewScreen> {
+  final EatsDataService _dataService = EatsDataService();
+
   bool _isLoading = true;
   String? _errorMessage;
 
@@ -186,20 +189,13 @@ class _DashboardOverviewScreenState extends State<DashboardOverviewScreen> {
 
     try {
       // TODO: Express HTTP GET Call:
-      // final response = await http.get(
-      //   Uri.parse('$kApiBaseUrl/api/v1/vendor/dashboard?range=${_selectedDateFilter.toLowerCase()}'),
-      //   headers: {'Authorization': 'Bearer $authToken'},
-      // );
-      // final data = jsonDecode(response.body);
 
-      await Future.delayed(const Duration(milliseconds: 300));
-      final Map<String, dynamic> data = {};
-
-      if (!mounted) return;
+      final Map<String, dynamic> data = await _dataService.fetchDashboardData();
+      
+      if(!mounted) return;
 
       setState(() {
         _vendorName = data['vendor_name'] ?? '';
-
         _totalOrders = (data['total_orders'] as num?)?.toInt() ?? 0;
         _ordersDiff = (data['orders_diff'] as num?)?.toInt() ?? 0;
         _preparingCount = (data['preparing_count'] as num?)?.toInt() ?? 0;

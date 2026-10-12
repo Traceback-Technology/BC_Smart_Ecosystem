@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import '../constants/bc_eats_colors.dart';
+import '../services/bc_eats_store.dart';
+import '../widgets/eats_order_widgets.dart';
+import '../widgets/eats_dialogs.dart';
+import 'bc_eats_checkout_screen.dart';
 
-// This is the BC Eats cart screen where users review their selected food before checkout..
 class BCEatsCartScreen extends StatefulWidget {
   const BCEatsCartScreen({super.key});
 
@@ -10,828 +12,388 @@ class BCEatsCartScreen extends StatefulWidget {
 }
 
 class _BCEatsCartScreenState extends State<BCEatsCartScreen> {
-  // Temporary cart items for the prototype. The backend team can later replace this with real cart data.
-  final List<CartItemData> cartItems = [
-    CartItemData(
-      name: 'Wors Roll Special',
-      description: 'Wors roll with chips and a cold drink',
-      price: 62.00,
-      quantity: 1,
-      image: 'assets/images/wors_roll_special.png',
-    ),
-    CartItemData(
-      name: 'Chicken Wrap',
-      description: 'Fresh chicken wrap',
-      price: 35.00,
-      quantity: 1,
-      image: 'assets/images/chicken_wrap.png',
-    ),
-    CartItemData(
-      name: 'Coca-Cola',
-      description: '330ml soft drink',
-      price: 15.00,
-      quantity: 1,
-      image: 'assets/images/coke.png',
-    ),
-  ];
-
-  // Temporary values until the backend team provides the official fees.
-  final double serviceFee = 5.00;
-  final double deliveryFee = 15.00;
-
-  String deliveryLocation = 'Main Campus';
-  String deliveryTime = '20–30 min';
-  String specialInstructions = '';
-
-  double get subtotal {
-    // We calculate the subtotal locally for now.
-    return cartItems.fold(
-      0,
-      (total, item) => total + (item.price * item.quantity),
-    );
-  }
-
-  double get total {
-    // The final total will later use the official backend fee rules.
-    return subtotal + serviceFee + deliveryFee;
-  }
-
-  int get totalItems {
-    return cartItems.fold(0, (total, item) => total + item.quantity);
-  }
+  bool _checkoutVisited = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SafeArea(
-        child: Column(
-          children: [
-            _buildHeader(context),
-            Expanded(
-              child: ListView(
-                padding: EdgeInsets.fromLTRB(20, 18, 20, 24),
-                children: [
-                  _buildCartTitle(context),
-                  SizedBox(height: 18),
-                  if (cartItems.isEmpty)
-                    _buildEmptyCart(context)
-                  else ...[
-                    ...cartItems.map((item) => _buildCartItem(context, item)),
-                    SizedBox(height: 8),
-                    _buildSpecialInstructions(context),
-                    SizedBox(height: 20),
-                    _buildOrderSummary(context),
-                    SizedBox(height: 16),
-                    _buildDeliveryCard(context),
-                    SizedBox(height: 20),
-                    _buildCheckoutButtons(context),
-                  ],
-                ],
-              ),
-            ),
-            _buildBottomNavigation(context),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // This header shows the BC Eats branding, a back button, and the number of items in the cart. The back navigation can be connected when all the screens are integrated.
-  Widget _buildHeader(BuildContext context) {
-    return Container(
-      height: 105,
-      padding: EdgeInsets.symmetric(horizontal: 24),
-      color: Theme.of(context).cardColor,
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: () {
-              // Navigation will be connected when the screens are integrated.
-            },
-            icon: Icon(
-              Icons.arrow_back,
-              size: 30,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-          ),
-          SizedBox(width: 4),
-          Image.asset(
-            'assets/images/bc_icon.jpg',
-            width: 58,
-            height: 58,
-            fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) {
-              return Icon(
-                Icons.restaurant,
-                size: 42,
-                color: Theme.of(context).colorScheme.onSurface,
-              );
-            },
-          ),
-          SizedBox(width: 12),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
+    final store = BcEatsStore.instance;
+    return ListenableBuilder(
+      listenable: store,
+      builder: (context, _) => EatsPage(
+        titleWidget: Text.rich(
+          TextSpan(
             children: [
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: 'BC ',
-                      style: TextStyle(
-                        color: BcEatsColors.red,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextSpan(
-                      text: 'EATS',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Text(
-                'Campus Tuckshop',
-                style: TextStyle(
-                  color: Theme.of(context).textTheme.bodySmall?.color,
-                  fontSize: 14,
-                ),
+              const TextSpan(text: 'Your Cart '),
+              TextSpan(
+                text: '(${store.count})',
+                style: const TextStyle(color: eatsRed),
               ),
             ],
           ),
-          Spacer(),
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Icon(
-                Icons.shopping_cart_outlined,
-                size: 30,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-              if (totalItems > 0)
-                Positioned(
-                  right: -8,
-                  top: -10,
-                  child: Container(
-                    padding: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                      color: BcEatsColors.red,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Text(
-                      '$totalItems',
-                      style: TextStyle(
-                        color: Theme.of(context).cardColor,
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  // This section shows the cart title and gives the user an option to clear everything. Clearing the cart currently only changes the local prototype data.
-  Widget _buildCartTitle(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: 'Your Cart ',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextSpan(
-                      text: '($totalItems)',
-                      style: TextStyle(
-                        color: BcEatsColors.red,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 4),
-              Text(
-                'Review your items before checkout.',
-                style: TextStyle(
-                  color: Theme.of(context).textTheme.bodySmall?.color,
-                  fontSize: 16,
-                ),
-              ),
-            ],
+          style: const TextStyle(
+            fontSize: 24,
+            height: 1.4,
+            fontWeight: FontWeight.w600,
           ),
         ),
-        if (cartItems.isNotEmpty)
-          OutlinedButton.icon(
-            onPressed: () {
-              setState(() {
-                // This clears the local prototype cart.
-                cartItems.clear();
-              });
-            },
-            icon: Icon(Icons.delete_outline, color: BcEatsColors.red),
-            label: Text(
-              'Clear Cart',
-              style: TextStyle(color: BcEatsColors.red),
+        subtitle: 'Review your items before checkout.',
+        action: OutlinedButton.icon(
+          style: OutlinedButton.styleFrom(
+            foregroundColor: eatsRed,
+            side: BorderSide(color: eatsRed.withValues(alpha: .3)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
             ),
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(color: Colors.redAccent),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 11),
           ),
-      ],
-    );
-  }
-
-  // This reusable card displays each selected item, its quantity, and the quantity controls.
-  // The backend can later connect these actions to the real cart and stock information.
-  Widget _buildCartItem(BuildContext context, CartItemData item) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 14),
-      padding: EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: 105,
-            height: 125,
-            padding: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Image.asset(
-              item.image,
-              fit: BoxFit.contain,
-              errorBuilder: (context, error, stackTrace) {
-                return Icon(
-                  Icons.fastfood_outlined,
-                  color: Theme.of(context).textTheme.bodySmall?.color,
-                  size: 45,
-                );
-              },
-            ),
-          ),
-          SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        item.name,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurface,
+          icon: const Icon(Icons.delete_outline, size: 18),
+          label: const Text('Clear Cart', style: TextStyle(fontSize: 12)),
+          onPressed: store.count == 0
+              ? null
+              : () async {
+                  final clear = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Clear your cart?'),
+                      content: const Text('Remove all items from your cart?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: const Text('Keep items'),
                         ),
-                      ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text('Clear cart'),
+                        ),
+                      ],
                     ),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          // This removes the item from the local cart.
-                          cartItems.remove(item);
-                        });
-                      },
-                      icon: Icon(Icons.delete_outline, color: BcEatsColors.red),
-                      padding: EdgeInsets.zero,
-                      constraints: BoxConstraints(),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 6),
-                Text(
-                  item.description,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Theme.of(context).textTheme.bodySmall?.color,
-                    fontSize: 14,
-                  ),
-                ),
-                SizedBox(height: 12),
-                Row(
-                  children: [
-                    Text(
-                      'R${item.price.toStringAsFixed(2)}',
-                      style: TextStyle(
-                        color: BcEatsColors.red,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Spacer(),
-                    _buildQuantityControls(item),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQuantityControls(CartItemData item) {
-    return Container(
-      height: 42,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                // The quantity currently changes only in local state.
-                if (item.quantity > 1) {
-                  item.quantity--;
-                }
-              });
-            },
-            icon: Icon(Icons.remove, size: 18),
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            constraints: BoxConstraints(),
-          ),
-          Text(
-            '${item.quantity}',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          IconButton(
-            onPressed: () {
-              setState(() {
-                // The backend team can later handle quantity validation.
-                item.quantity++;
-              });
-            },
-            icon: Icon(Icons.add, size: 18, color: BcEatsColors.red),
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            constraints: BoxConstraints(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Users can add special instructions here, such as requests about their order.
-
-  Widget _buildSpecialInstructions(BuildContext context) {
-    return InkWell(
-      onTap: _showSpecialInstructionsDialog,
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                color: Color(0xFFFFE8E8),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.receipt_long_outlined,
-                color: BcEatsColors.red,
-                size: 26,
-              ),
-            ),
-            SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Special Instructions',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    specialInstructions.isEmpty
-                        ? 'Add any notes (optional)'
-                        : specialInstructions,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.bodySmall?.color,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Icon(Icons.chevron_right, size: 28),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> _showSpecialInstructionsDialog() async {
-    final controller = TextEditingController(text: specialInstructions);
-
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Special Instructions'),
-          content: TextField(
-            controller: controller,
-            maxLines: 4,
-            decoration: InputDecoration(
-              hintText: 'Add a note for the tuckshop...',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  // This note is stored locally until order integration exists.
-                  specialInstructions = controller.text.trim();
-                });
-                Navigator.pop(context);
-              },
-              child: Text('Save'),
-            ),
-          ],
-        );
-      },
-    );
-
-    controller.dispose();
-  }
-
-  // This summary shows the subtotal, service fee, delivery fee, and final total.
-  // The fees are temporary values for the prototype and can later come from the backend.
-  Widget _buildOrderSummary(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Order Summary',
-          style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
-        ),
-        SizedBox(height: 10),
-        Container(
-          padding: EdgeInsets.all(18),
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Column(
-            children: [
-              _summaryRow('Subtotal ($totalItems items)', subtotal),
-              SizedBox(height: 12),
-              _summaryRow('Service Fee', serviceFee),
-              SizedBox(height: 12),
-              _summaryRow('Delivery Fee', deliveryFee),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                child: Divider(),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Total',
-                    style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    'R${total.toStringAsFixed(2)}',
-                    style: TextStyle(
-                      color: BcEatsColors.red,
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _summaryRow(String label, double amount) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: Theme.of(context).textTheme.bodySmall?.color,
-            fontSize: 16,
-          ),
-        ),
-        Text(
-          'R${amount.toStringAsFixed(2)}',
-          style: TextStyle(
-            color: Theme.of(context).textTheme.bodyMedium?.color,
-            fontSize: 16,
-          ),
-        ),
-      ],
-    );
-  }
-
-  // This card lets users see and change where their order should be delivered.
-  // The available locations are mock options for now, but the flow shows how it could work.
-  Widget _buildDeliveryCard(BuildContext context) {
-    return InkWell(
-      onTap: _showDeliveryLocationDialog,
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        padding: EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 52,
-              height: 52,
-              decoration: BoxDecoration(
-                color: Color(0xFFE3FAF1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.delivery_dining,
-                color: BcEatsColors.green,
-                size: 28,
-              ),
-            ),
-            SizedBox(width: 14),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Deliver to: $deliveryLocation',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    '$deliveryTime  •  R${deliveryFee.toStringAsFixed(2)} delivery fee',
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.bodySmall?.color,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Text(
-              'Change',
-              style: TextStyle(
-                color: BcEatsColors.red,
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Icon(Icons.chevron_right, color: BcEatsColors.red),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> _showDeliveryLocationDialog() async {
-    final locations = ['Main Campus', 'Pickup at Tuckshop'];
-
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Choose delivery location'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: locations.map((location) {
-              return ListTile(
-                title: Text(location),
-                trailing: location == deliveryLocation
-                    ? Icon(Icons.check, color: BcEatsColors.red)
-                    : null,
-                onTap: () {
-                  setState(() {
-                    // This only updates the prototype screen for now.
-                    deliveryLocation = location;
-                  });
-                  Navigator.pop(context);
+                  );
+                  if (clear == true) store.clear();
                 },
-              );
-            }).toList(),
-          ),
-        );
-      },
-    );
-  }
-
-  // These buttons demonstrate the checkout and scheduling actions.
-  // The real payment and order scheduling process will be connected later by the backend team.
-  Widget _buildCheckoutButtons(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 2,
-          child: ElevatedButton.icon(
-            onPressed: () {
-              // The backend/payment team will connect the real checkout flow.
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    'Checkout integration will be connected later.',
+        ),
+        children: store.count == 0
+            ? [
+                const EatsCard(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 32),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.shopping_bag_outlined,
+                          size: 64,
+                          color: eatsYellow,
+                        ),
+                        SizedBox(height: 20),
+                        Text('Your cart is empty.'),
+                        SizedBox(height: 8),
+                        Text('Add something delicious from Eats.'),
+                      ],
+                    ),
                   ),
                 ),
-              );
-            },
-            icon: Icon(Icons.arrow_forward, color: Colors.black),
-            label: Text(
-              'Proceed to Checkout',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: BcEatsColors.yellow,
-              elevation: 0,
-              padding: EdgeInsets.symmetric(vertical: 18),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18),
-              ),
-            ),
-          ),
-        ),
-        SizedBox(width: 10),
-        Expanded(
-          child: OutlinedButton.icon(
-            onPressed: () {
-              // Scheduling will be connected once the order flow is ready.
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Scheduling will be added later.')),
-              );
-            },
-            icon: Icon(
-              Icons.calendar_month_outlined,
-              color: BcEatsColors.yellow,
-            ),
-            label: Text(
-              'Schedule',
-              style: TextStyle(
-                color: BcEatsColors.yellow,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            style: OutlinedButton.styleFrom(
-              padding: EdgeInsets.symmetric(vertical: 18),
-              side: BorderSide(color: BcEatsColors.yellow),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  // This is the empty-cart state shown when the user removes all their items. It gives the user a simple message instead of leaving the page blank.
-  Widget _buildEmptyCart(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 70),
-      child: Column(
-        children: [
-          Icon(
-            Icons.shopping_cart_outlined,
-            size: 75,
-            color: Theme.of(context).textTheme.bodySmall?.color,
-          ),
-          SizedBox(height: 16),
-          Text(
-            'Your cart is empty',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 8),
-          Text(
-            'Add something delicious from BC Eats.',
-            style: TextStyle(color: Colors.grey),
-          ),
-        ],
+                EatsAction(
+                  'Browse Eats',
+                  onPressed: () {
+                    final flow = EatsFlowScope.maybeOf(context);
+                    if (flow != null) {
+                      flow.navigate(2);
+                    } else {
+                      Navigator.maybePop(context);
+                    }
+                  },
+                ),
+              ]
+            : [
+                for (final line in store.cart) _CartItem(line: line),
+                InkWell(
+                  borderRadius: BorderRadius.circular(13),
+                  onTap: () => editEatsNotes(context),
+                  child: EatsCard(
+                    shadow: true,
+                    child: Row(
+                      children: [
+                        const EatsCircle(
+                          color: eatsRed,
+                          child: Icon(Icons.receipt_long_outlined),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'Special Instructions',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                store.notes.isEmpty
+                                    ? 'Add any notes (optional)'
+                                    : store.notes,
+                                style: TextStyle(
+                                  color: context.eatsMuted,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Icon(Icons.chevron_right),
+                      ],
+                    ),
+                  ),
+                ),
+                eatsHeading(context, 'Order Summary'),
+                EatsSummary(
+                  subtotal: store.subtotal,
+                  serviceFee: store.serviceFee,
+                  deliveryFee: store.deliveryFee,
+                  count: store.count,
+                  showFulfilmentFee: _checkoutVisited,
+                ),
+                if (_checkoutVisited) ...[
+                  EatsCard(
+                    shadow: true,
+                    child: Row(
+                      children: [
+                        EatsCircle(
+                          color: const Color(0xFF00B98E),
+                          child: store.fulfilment == Fulfilment.drone
+                              ? const DroneIcon(color: Color(0xFF00B98E))
+                              : const Icon(Icons.storefront),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                store.fulfilment == Fulfilment.drone
+                                    ? 'Deliver to: Main Campus'
+                                    : 'Pickup: Campus Tuckshop',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                store.fulfilment == Fulfilment.drone
+                                    ? '20–30 min · R15.00 delivery fee'
+                                    : '15–25 min · Free pickup',
+                                style: TextStyle(
+                                  color: context.eatsMuted,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () => _checkout(context),
+                          child: const Text(
+                            'Change ›',
+                            style: TextStyle(color: eatsRed, fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                ],
+                EatsPair(
+                  firstFlex: 5,
+                  secondFlex: 2,
+                  breakpoint: 340,
+                  gap: 10,
+                  first: EatsAction(
+                    'Proceed to Checkout',
+                    onPressed: () => _checkout(context),
+                  ),
+                  second: EatsAction(
+                    'Schedule',
+                    outlined: true,
+                    icon: Icons.event_available_outlined,
+                    onPressed: () => scheduleEatsOrder(context),
+                  ),
+                ),
+                if (store.scheduledFor != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: Text(
+                      'Scheduled: ${eatsDate(context, store.scheduledFor!)}',
+                      style: TextStyle(color: context.eatsMuted),
+                    ),
+                  ),
+              ],
       ),
     );
   }
 
-  // This bottom navigation keeps the main app sections visible from the cart screen.
-  // Orders is highlighted here because the user is currently reviewing an order.
-  Widget _buildBottomNavigation(BuildContext context) {
-    return Container(
-      height: 68,
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        border: Border(top: BorderSide(color: Theme.of(context).dividerColor)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _bottomNavItem(context, Icons.home_outlined, 'Home', false),
-          _bottomNavItem(context, Icons.restaurant_menu, 'Menu', false),
-          _bottomNavItem(context, Icons.shopping_bag, 'Orders', true),
-          _bottomNavItem(context, Icons.bookmark_border, 'Saved', false),
-          _bottomNavItem(context, Icons.person_outline, 'Profile', false),
-        ],
-      ),
-    );
-  }
+  Future<void> _checkout(BuildContext context) async {
+    final store = BcEatsStore.instance;
 
-  // This creates one reusable item for the bottom navigation bar.
-  // The selected state changes the colour so the active section is easy to identify.
-  Widget _bottomNavItem(
-    BuildContext context,
-    IconData icon,
-    String label,
-    bool selected,
-  ) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          icon,
-          color: selected ? BcEatsColors.yellow : Theme.of(context).hintColor,
-          size: 24,
-        ),
-        SizedBox(height: 3),
-        Text(
-          label,
-          style: TextStyle(
-            color: selected ? BcEatsColors.yellow : Theme.of(context).hintColor,
-            fontSize: 12,
-          ),
-        ),
-      ],
+    if (!_checkoutVisited) {
+      setState(() {
+        _checkoutVisited = true;
+      });
+    }
+
+    // Keep the existing Delivery or Pickup screen behaviour.
+    // That screen previously starts with its normal/default option.
+    if (!store.hasFulfilmentChoice) {
+      store.chooseFulfilment(
+        store.droneAvailable ? Fulfilment.drone : Fulfilment.pickup,
+      );
+    }
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        settings: const RouteSettings(name: '/checkout'),
+        builder: (_) => const BCEatsCheckoutScreen(),
+      ),
     );
+
+    // Refresh the cart when the user returns so any changed
+    // Delivery/Pickup choice is reflected immediately.
+    if (mounted) {
+      setState(() {});
+    }
   }
 }
 
-// This is a small local model for the cart prototype. The backend team can later replace it with the real cart model.
-class CartItemData {
-  final String name;
-  final String description;
-  final double price;
-  final String image;
-  int quantity;
-
-  CartItemData({
-    required this.name,
-    required this.description,
-    required this.price,
-    required this.quantity,
-    required this.image,
-  });
+class _CartItem extends StatelessWidget {
+  final EatsLine line;
+  const _CartItem({required this.line});
+  @override
+  Widget build(BuildContext context) {
+    final store = BcEatsStore.instance;
+    return EatsCard(
+      shadow: true,
+      padding: const EdgeInsets.all(8),
+      child: LayoutBuilder(
+        builder: (context, c) {
+          final imageWidth = (c.maxWidth * .3).clamp(75.0, 160.0).toDouble();
+          final compact =
+              c.maxWidth < 400 ||
+              MediaQuery.textScalerOf(context).scale(14) > 20;
+          final controls = Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: context.eatsBorder),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  tooltip: 'Decrease ${line.product.name}',
+                  constraints: const BoxConstraints(
+                    minWidth: 34,
+                    minHeight: 36,
+                  ),
+                  visualDensity: VisualDensity.compact,
+                  onPressed: () => store.decrease(line.product.id),
+                  icon: const Icon(Icons.remove, size: 19),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Text('${line.quantity}'),
+                ),
+                IconButton(
+                  tooltip: 'Increase ${line.product.name}',
+                  constraints: const BoxConstraints(
+                    minWidth: 34,
+                    minHeight: 36,
+                  ),
+                  visualDensity: VisualDensity.compact,
+                  onPressed: () => store.add(line.product),
+                  icon: const Icon(Icons.add_circle, color: eatsRed, size: 29),
+                ),
+              ],
+            ),
+          );
+          final price = Text(
+            money(line.total),
+            style: const TextStyle(
+              fontSize: 18,
+              color: eatsRed,
+              fontWeight: FontWeight.w600,
+            ),
+          );
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              EatsProductImage(
+                path: line.product.imagePath,
+                width: imageWidth,
+                height: compact ? 112 : 138,
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 6),
+                            child: Text(
+                              line.product.name,
+                              style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 30,
+                          height: 32,
+                          child: IconButton(
+                            tooltip: 'Remove ${line.product.name}',
+                            padding: EdgeInsets.zero,
+                            onPressed: () => store.remove(line.product.id),
+                            icon: const Icon(
+                              Icons.delete_outline,
+                              color: eatsRed,
+                              size: 23,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      line.product.description,
+                      style: TextStyle(
+                        color: context.eatsMuted,
+                        fontSize: 12,
+                        height: 1.4,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    if (compact)
+                      Wrap(
+                        spacing: 10,
+                        runSpacing: 6,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        children: [price, controls],
+                      )
+                    else
+                      Row(children: [price, const Spacer(), controls]),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
 }

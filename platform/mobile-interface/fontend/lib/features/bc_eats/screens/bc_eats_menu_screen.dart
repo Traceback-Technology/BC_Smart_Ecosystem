@@ -4,6 +4,7 @@ import '../models/bc_eats_product.dart';
 import '../repositories/bc_eats_product_repository.dart';
 import '../repositories/mock_bc_eats_product_repository.dart';
 import '../constants/bc_eats_colors.dart';
+import '../widgets/eats_top_bar.dart';
 
 // This is the BC Eats menu screen where users can browse the real tuckshop items and filter them using the categories on the left.
 class BCEatsMenuScreen extends StatefulWidget {
@@ -119,80 +120,7 @@ class _BCEatsMenuScreenState extends State<BCEatsMenuScreen> {
   }
 
   // This is the header for the BC Eats page, including the logo and cart icon. I kept the header simple so that the menu content remains the main focus.
-  Widget _buildHeader(BuildContext context) {
-    return Container(
-      height: 105,
-      padding: const EdgeInsets.symmetric(horizontal: 28),
-      color: Theme.of(context).appBarTheme.backgroundColor,
-      child: Row(
-        children: [
-          Image.asset(
-            'assets/images/bc_icon.jpg',
-            width: 65,
-            height: 65,
-            fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) {
-              return const Icon(
-                Icons.restaurant,
-                size: 45,
-                color: Colors.black,
-              );
-            },
-          ),
-
-          const SizedBox(width: 14),
-
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                      text: 'BC ',
-                      style: TextStyle(
-                        color: BcEatsColors.red,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    TextSpan(
-                      text: 'EATS',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSurface,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              Text(
-                'Campus Tuckshop',
-                style: TextStyle(
-                  color: Theme.of(context).textTheme.bodySmall?.color,
-                  fontSize: 15,
-                ),
-              ),
-            ],
-          ),
-
-          const Spacer(),
-
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.shopping_cart_outlined,
-              size: 30,
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildHeader(BuildContext context) => const EatsTopBar();
 
   // This is the only category menu we are keeping for now. Users can select a category here, and the menu items will update below.
   Widget _buildDesktopCategoryMenu() {

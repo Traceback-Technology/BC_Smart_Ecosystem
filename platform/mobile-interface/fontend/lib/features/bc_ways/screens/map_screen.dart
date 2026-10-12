@@ -24,9 +24,9 @@ import 'navigation_screen.dart';
 
 class MapScreen extends StatefulWidget {
   final String? initialDestinationQuery;
+  final ValueChanged<int>? onNavigate;
 
-  const MapScreen({super.key, this.initialDestinationQuery});
-
+  const MapScreen({super.key, this.initialDestinationQuery, this.onNavigate});
   @override
   State<MapScreen> createState() => _MapScreenState();
 }
@@ -524,33 +524,35 @@ class _MapScreenState extends State<MapScreen>
   // ===========================================================================
 
   void _onBottomNavTap(int index) {
-    if (index == 0) {
-      if (Navigator.of(context).canPop()) {
-        Navigator.of(context).pop();
-      }
-
-      return;
-    }
-
+    // Map is already active.
     if (index == 1) {
       return;
     }
 
-    if (index == 2 || index == 3) {
+    final onNavigate = widget.onNavigate;
+
+    if (onNavigate != null) {
+      onNavigate(index);
+      return;
+    }
+
+    // Safe fallback for MapScreen usages outside the
+    // main application navigation flow.
+    if (index == 0) {
+      Navigator.of(context).maybePop();
+      return;
+    }
+
+    const labels = ['Home', 'Map', 'Eats', 'Orders', 'Profile'];
+
+    if (index >= 0 && index < labels.length) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            '${index == 2 ? 'Orders' : 'Profile'} '
-            'is not connected yet.',
-          ),
+          content: Text('${labels[index]} is not connected from this screen.'),
         ),
       );
     }
   }
-
-  // ===========================================================================
-  // BUILD
-  // ===========================================================================
 
   @override
   Widget build(BuildContext context) {
@@ -613,6 +615,7 @@ class _MapScreenState extends State<MapScreen>
                       'BC',
                       style: TextStyle(
                         fontSize: 20,
+                        height: 1.0,
                         fontWeight: FontWeight.w900,
                         color: BcColors.primary,
                       ),
@@ -622,15 +625,21 @@ class _MapScreenState extends State<MapScreen>
                       'WAYS',
                       style: TextStyle(
                         fontSize: 20,
+                        height: 1.0,
                         fontWeight: FontWeight.w900,
                         color: context.textPrimary,
                       ),
                     ),
                   ],
                 ),
+                const SizedBox(height: 2),
                 Text(
                   'Find Your Destination',
-                  style: TextStyle(fontSize: 13, color: context.textSecondary),
+                  style: TextStyle(
+                    fontSize: 13,
+                    height: 1.0,
+                    color: context.textSecondary,
+                  ),
                 ),
               ],
             ),

@@ -100,20 +100,20 @@ class CampusGpsService {
   // We first convert GPS differences to local east/north metres,
   // then transform those metres into your SVG coordinate space.
 
-  static const double _originLatitude = -25.68312072540506;
+  static const double _originLatitude = -25.68209603990679;
 
-  static const double _originLongitude = 28.131238693594774;
+  static const double _originLongitude = 28.130735259555863;
 
   static const double _earthRadius = 6378137.0;
 
   // Affine calibration coefficients.
-  static const double _xEast = 4.724917984740321;
-  static const double _xNorth = 0.00550539907309755;
-  static const double _xOffset = 1293.4050773315826;
+  static const double _xEast = 4.73363291;
+  static const double _xNorth = -0.01453758;
+  static const double _xOffset = 1055.0;
 
-  static const double _yEast = 0.06670997023485103;
-  static const double _yNorth = -4.752954932070055;
-  static const double _yOffset = 1934.4276869562611;
+  static const double _yEast = 0.06463142;
+  static const double _yNorth = -4.74778265;
+  static const double _yOffset = 1389.0;
 
   /// Converts live GPS into your 3000 x 3000 SVG coordinate system.
   Offset toMapOffset(geo.Position gps) {

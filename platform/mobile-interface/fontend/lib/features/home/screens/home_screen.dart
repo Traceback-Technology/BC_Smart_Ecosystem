@@ -8,6 +8,8 @@ import '../../bc_ways/constants/colors.dart';
 import '../../bc_ways/constants/map_constants.dart';
 import '../../bc_ways/screens/map_screen.dart';
 import '../../bc_ways/widgets/bc_bottom_navigation_bar.dart';
+import '../../bc_eats/screens/bc_eats_shell.dart';
+import '../../profile/screens/profile_screen.dart';
 
 class CampusDashboardPage extends StatelessWidget {
   final AppSession session;
@@ -20,41 +22,90 @@ class CampusDashboardPage extends StatelessWidget {
   });
 
   void _openBcWays(BuildContext context) {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute<void>(builder: (_) => const MapScreen()));
+    _onBottomNavTap(context, 1);
   }
 
   void _openBcEats(BuildContext context) {
-    // Students will use the real BC Eats feature later.
-    // For now, do nothing.
-    if (session.isStudent) {
-      return;
-    }
+    _onBottomNavTap(context, 2);
+  }
 
-    // Guests / parents are redirected to BC Ways
-    // with the Tuck Shop selected.
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => const MapScreen(
-          initialDestinationQuery: 'Tuck Shop',
-        ),
-      ),
+  void _showFeature(BuildContext context, WidgetBuilder builder) {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute<void>(builder: builder),
+      (route) => route.isFirst,
     );
   }
 
   void _onBottomNavTap(BuildContext context, int index) {
-    if (index == 1) {
-      _openBcWays(context);
-    } else if (index == 2 || index == 3) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            '${index == 2 ? 'Orders' : 'Profile'} '
-            'is not connected yet.',
+    void onNavigate(int nextIndex) {
+      _onBottomNavTap(context, nextIndex);
+    }
+
+    switch (index) {
+      // Main app Home.
+      case 0:
+        Navigator.of(context).popUntil((route) => route.isFirst);
+        return;
+
+      // BC Ways.
+      case 1:
+        _showFeature(context, (_) => MapScreen(onNavigate: onNavigate));
+        return;
+
+      // BC Eats.
+      case 2:
+        if (session.isStudent) {
+          _showFeature(
+            context,
+            (_) => BCEatsShell(session: session, onNavigate: onNavigate),
+          );
+          return;
+        }
+
+        // Guests / parents do not enter the ordering
+        // interface. BC Ways opens with the Tuck Shop
+        // selected instead.
+        _showFeature(
+          context,
+          (_) => MapScreen(
+            initialDestinationQuery: 'Tuck Shop',
+            onNavigate: onNavigate,
           ),
-        ),
-      );
+        );
+        return;
+
+      // Orders.
+      case 3:
+        if (session.isStudent) {
+          _showFeature(
+            context,
+            (_) => BCEatsShell(
+              session: session,
+              initialIndex: 1,
+              onNavigate: onNavigate,
+            ),
+          );
+          return;
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Orders are available to signed-in students.'),
+          ),
+        );
+        return;
+
+      // Profile.
+      case 4:
+        _showFeature(
+          context,
+          (_) => ProfileScreen(
+            session: session,
+            onLogout: onLogout,
+            onNavigate: onNavigate,
+          ),
+        );
+        return;
     }
   }
 
@@ -91,16 +142,32 @@ class CampusDashboardPage extends StatelessWidget {
                           ),
                         ),
 
-                      Badge(
-                        label: const Text('3'),
-                        child: IconButton(
-                          tooltip: 'Notifications',
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.notifications_none_outlined,
-                            size: 30,
+                      Stack(
+                        clipBehavior: Clip.none,
+                        children: [
+                          const Icon(Icons.notifications_none, size: 29),
+                          Positioned(
+                            right: -4,
+                            top: -5,
+                            child: Container(
+                              width: 18,
+                              height: 18,
+                              alignment: Alignment.center,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFE31B23),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Text(
+                                '3',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ],
                   ),
@@ -135,13 +202,10 @@ class CampusDashboardPage extends StatelessWidget {
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 12,
-                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     session.isGuest

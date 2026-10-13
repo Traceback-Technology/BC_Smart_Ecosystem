@@ -1,73 +1,7 @@
 import 'package:flutter/material.dart';
 import '../admin-view/constants/admin_colours.dart';
-
-// =============================================================================
-// INVENTORY MODEL
-// =============================================================================
-
-class ProductItem {
-  final String id;
-  final String name;
-  final String category;
-  final double price;
-  final bool inStock;
-  final int stockCount;
-  final int threshold;
-
-  ProductItem({
-    required this.id,
-    required this.name,
-    required this.category,
-    required this.price,
-    required this.inStock,
-    required this.stockCount,
-    required this.threshold,
-  });
-
-  factory ProductItem.fromJson(Map<String, dynamic> json) {
-    return ProductItem(
-      id: json['id']?.toString() ?? '',
-      name: json['name'] ?? '',
-      category: json['category'] ?? 'Uncategorized',
-      price: (json['price'] as num?)?.toDouble() ?? 0.0,
-      inStock: json['inStock'] ?? false,
-      stockCount: json['stockCount'] ?? 0,
-      threshold: json['threshold'] ?? 0,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'category': category,
-      'price': price,
-      'inStock': inStock,
-      'stockCount': stockCount,
-      'threshold': threshold,
-    };
-  }
-
-  ProductItem copyWith({
-    String? id,
-    String? name,
-    String? category,
-    double? price,
-    bool? inStock,
-    int? stockCount,
-    int? threshold,
-  }) {
-    return ProductItem(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      category: category ?? this.category,
-      price: price ?? this.price,
-      inStock: inStock ?? this.inStock,
-      stockCount: stockCount ?? this.stockCount,
-      threshold: threshold ?? this.threshold,
-    );
-  }
-}
+import '../admin-view/eats_data/service_file.dart';
+import '../admin-view/eats_data/app_data.dart';
 
 // =============================================================================
 // INVENTORY SCREEN
@@ -81,6 +15,9 @@ class InventoryScreen extends StatefulWidget {
 }
 
 class _InventoryScreenState extends State<InventoryScreen> {
+
+  final EatsDataService _dataService = EatsDataService();//instance of the data service to fetch vendor and product data
+
   String _selectedCategory = 'All';
   String _searchQuery = '';
   bool _isLoading = false;
@@ -90,45 +27,48 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   // Dialog Controllers
   final _nameController = TextEditingController();
-  final _priceController = TextEditingController();
   final _categoryController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _priceController = TextEditingController();
   final _stockController = TextEditingController();
+  final _quantityController = TextEditingController();
   final _thresholdController = TextEditingController(text: '5');
   bool _enableThresholdAlert = false;
 
   @override
   void initState() {
     super.initState();
-    _fetchProducts();
+    _fetchProducts(); //calls service when screen loads
   }
 
   @override
   void dispose() {
     _nameController.dispose();
+    _descriptionController.dispose();
     _priceController.dispose();
     _categoryController.dispose();
     _stockController.dispose();
+    _quantityController.dispose();
     _thresholdController.dispose();
     super.dispose();
   }
 
+//Fetch products from central service (EatsDataService)
   // BACKEND INTEGRATION POINT: Fetch all inventory items
   Future<void> _fetchProducts() async {
     setState(() => _isLoading = true);
     try {
-      // TODO: Replace local mock with Express API call:
-      await Future.delayed(const Duration(milliseconds: 300));
+      //Calls the EatsDataService to fetch vendor data, which includes the list of products
+      VendorData vendorData = await _dataService.fetchVendorData();
+
       setState(() {
-        _products = [
-          ProductItem(id: '1', name: 'French Fries (Large)', category: 'Quick Picks', price: 28.00, inStock: true, stockCount: 15, threshold: 5),
-          ProductItem(id: '2', name: 'Ice Tea (Lemon)', category: 'Drinks', price: 22.00, inStock: true, stockCount: 3, threshold: 5),
-          ProductItem(id: '3', name: 'Cheese & Tomato Toastie', category: 'Toasties', price: 32.00, inStock: true, stockCount: 1, threshold: 3),
-          ProductItem(id: '4', name: 'Beef Burger Meal', category: 'Combos', price: 65.00, inStock: false, stockCount: 0, threshold: 5),
-        ];
+        _products = vendorData.products;
       });
+      
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error fetching products: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error fetching products: $e')));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -149,7 +89,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
     // TODO: Update stock status in database
     
     setState(() {
-      final index = _products.indexWhere((p) => p.id == productId);
+      final index = _products.indexWhere((p) => p.productId == productId);
       if (index != -1) {
         _products[index] = _products[index].copyWith(inStock: !currentStatus);
       }
@@ -161,14 +101,14 @@ class _InventoryScreenState extends State<InventoryScreen> {
     // TODO: Delete record from database:
     
     setState(() {
-      _products.removeWhere((p) => p.id == productId);
+      _products.removeWhere((p) => p.productId == productId);
     });
   }
 
   List<ProductItem> get _filteredProducts {
     return _products.where((product) {
       final matchesCategory = _selectedCategory == 'All' || product.category == _selectedCategory;
-      final matchesSearch = product.name.toLowerCase().contains(_searchQuery.toLowerCase());
+      final matchesSearch = product.productName.toLowerCase().contains(_searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     }).toList();
   }
@@ -348,7 +288,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
         separatorBuilder: (context, index) => Divider(height: 1, color: Theme.of(context).dividerColor),
         itemBuilder: (context, index) {
           final product = products[index];
-          final isLowStock = product.stockCount <= product.threshold;
+          final isLowStock = product.quantity <= product.threshold;
 
           return ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -356,7 +296,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
               children: [
                 Expanded(
                   child: Text(
-                    product.name,
+                    product.productName,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Theme.of(context).colorScheme.onSurface),
                   ),
                 ),
@@ -373,7 +313,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
               ],
             ),
             subtitle: Text(
-              '${product.category} • R${product.price.toStringAsFixed(2)} • Stock: ${product.stockCount}',
+              '${product.category} • R${product.productPrice.toStringAsFixed(2)} • Stock: ${product.quantity}',
               style: TextStyle(fontSize: 12, color: mutedText),
             ),
             trailing: Row(
@@ -382,11 +322,11 @@ class _InventoryScreenState extends State<InventoryScreen> {
                 Switch(
                   value: product.inStock,
                   activeColor: AdminColors.successGreen,
-                  onChanged: (val) => _toggleStockStatus(product.id, product.inStock),
+                  onChanged: (val) => _toggleStockStatus(product.productId, product.inStock),
                 ),
                 IconButton(
                   icon: Icon(Icons.delete_outline, size: 20, color: mutedText),
-                  onPressed: () => _deleteProduct(product.id),
+                  onPressed: () => _deleteProduct(product.productId),
                 ),
               ],
             ),
@@ -435,12 +375,13 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   style: ElevatedButton.styleFrom(backgroundColor: AdminColors.primaryYellow),
                   onPressed: () {
                     final newProduct = ProductItem(
-                      id: DateTime.now().millisecondsSinceEpoch.toString(),
-                      name: _nameController.text,
+                      productId: DateTime.now().millisecondsSinceEpoch.toString(),
+                      productName: _nameController.text,
+                      productDescription: _descriptionController.text,
                       category: _categoryController.text,
-                      price: double.tryParse(_priceController.text) ?? 0.0,
+                      productPrice: double.tryParse(_priceController.text) ?? 0.0,
                       inStock: true,
-                      stockCount: int.tryParse(_stockController.text) ?? 0,
+                      quantity: int.tryParse(_stockController.text) ?? 0,
                       threshold: int.tryParse(_thresholdController.text) ?? 5,
                     );
                     _addProduct(newProduct);

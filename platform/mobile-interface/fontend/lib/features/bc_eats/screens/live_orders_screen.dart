@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'constants/admin_colours.dart';
-import 'inventory_screen.dart'; // Uses shared ProductItem model
+import '../admin-view/constants/admin_colours.dart';
+import '../admin-view/eats_data/service_file.dart';
+import '../admin-view/eats_data/app_data.dart';
 
 /// Displays real-time incoming orders with status filtering (Pending, Preparing, Completed)
 /// and allows store managers to update order fulfillment states
@@ -14,52 +15,39 @@ class LiveOrdersScreen extends StatefulWidget {
 }
 
 class _LiveOrdersScreenState extends State<LiveOrdersScreen> {
+  //calling from the products object in the service file
+  final EatsDataService _dataService = EatsDataService();
+  bool _isLoading = true; 
+
+  List<Map<String, dynamic>> orders = [];
+  List<ProductItem> foodItems = [];
   bool _hasNewOrderAlert = false;
-
-  //TODO: Hardcoded lists: to remove
-  List<Map<String, dynamic>> orders = [
-    {
-      'orderId': '#BCE12601',
-      'customer': 'Sipho Dlamini',
-      'time': '2 mins ago',
-      'items': ['1x Beef Burger Meal', '1x Energy Drink'],
-      'total': 90.00,
-      'status': 'New',
-    },
-    {
-      'orderId': '#BCE12602',
-      'customer': 'Thabo M.',
-      'time': '7 mins ago',
-      'items': ['2x Cheese & Tomato Toastie', '1x Coffee'],
-      'total': 82.00,
-      'status': 'Preparing',
-    },
-    {
-      'orderId': '#BCE12603',
-      'customer': 'Anika K.',
-      'time': '12 mins ago',
-      'items': ['1x Study Combo'],
-      'total': 70.00,
-      'status': 'Ready',
-    },
-  ];
-
-  List<ProductItem> foodItems = [
-    ProductItem(id: '1', name: 'French Fries (Large)', category: 'Quick Picks', price: 28.00, inStock: true, stockCount: 15, threshold: 5),
-    ProductItem(id: '2', name: 'Ice Tea (Lemon)', category: 'Drinks', price: 22.00, inStock: true, stockCount: 3, threshold: 5),
-    ProductItem(id: '3', name: 'Cheese & Tomato Toastie', category: 'Toasties', price: 32.00, inStock: true, stockCount: 1, threshold: 3),
-    ProductItem(id: '4', name: 'Beef Burger Meal', category: 'Combos', price: 65.00, inStock: false, stockCount: 0, threshold: 5),
-  ];
 
   @override
   void initState() {
     super.initState();
-    _subscribeToLiveOrdersAndStock();
+    _loadLiveOrdersData();
   }
 
   // BACKEND INTEGRATION POINT: Subscribe to Realtime DB updates
-  void _subscribeToLiveOrdersAndStock() {
-    // TODO: Attach Database Realtime channel / WebSocket stream listeners here:
+  Future<void> _loadLiveOrdersData() async{
+    setState(() => _isLoading = true);
+
+    try{
+      //await the fetch call from EatsDataService to get the vendor data
+      final vendorData = await _dataService.fetchVendorData();
+
+      setState(() {
+        //populate food items from the fetched data
+        orders = vendorData.incomingOrders; 
+        foodItems = vendorData.products;
+      });
+    }catch(e){
+      // Handle error gracefully, e.g., show a snackbar or log the error
+      debugPrint('Error fetching live orders data: $e');
+    }finally{
+      if(mounted) setState(() => _isLoading = false);
+    }
   }
 
   // BACKEND INTEGRATION POINT: Order Simulation / Creating New Orders
@@ -78,17 +66,14 @@ class _LiveOrdersScreenState extends State<LiveOrdersScreen> {
         'status': 'New',
       });
     });
-
     // TODO: Send order creation request to backend if required:
-
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) setState(() => _hasNewOrderAlert = false);
     });
   }
 
-  // BACKEND INTEGRATION POINT: Updating Order Progress Status
+  // Updating Order Progress Status
   Future<void> _advanceOrderStatus(int index) async {
-    final orderId = orders[index]['orderId'];
     final currentStatus = orders[index]['status'];
     String nextStatus = currentStatus;
 
@@ -99,7 +84,6 @@ class _LiveOrdersScreenState extends State<LiveOrdersScreen> {
     } else if (currentStatus == 'Ready') {
       nextStatus = 'Completed';
     }
-
     // TODO: Update status in database table:
 
     setState(() {
@@ -116,7 +100,6 @@ class _LiveOrdersScreenState extends State<LiveOrdersScreen> {
     final product = foodItems[index];
 
     // TODO: Sync toggle directly to backend inventory table:
-
     setState(() {
       foodItems[index] = product.copyWith(inStock: newValue);
     });
@@ -368,14 +351,14 @@ class _LiveOrdersScreenState extends State<LiveOrdersScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            item.name,
+                            item.productName,
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
                               fontSize: 12,
                               color: !item.inStock ? mutedText : Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
-                          Text('R ${item.price.toStringAsFixed(2)}', style: TextStyle(fontSize: 11, color: mutedText)),
+                          Text('R ${item.productPrice.toStringAsFixed(2)}', style: TextStyle(fontSize: 11, color: mutedText)),
                         ],
                       ),
                     ),

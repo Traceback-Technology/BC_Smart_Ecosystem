@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'constants/admin_colours.dart';
+import '../admin-view/constants/admin_colours.dart';
 import 'dashboard_overview_screen.dart';
 import 'live_orders_screen.dart';
 import 'inventory_screen.dart';

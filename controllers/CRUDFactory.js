@@ -20,7 +20,7 @@ function createCRUDController(Model) {
 
     // Update a document by its ID
     updateById: async(id, updates) => {
-        return Model.findByIdAndUpdate(id, { $set: updates }, { returnDocument: 'after' });
+        return Model.findByIdAndUpdate(id, { $set: updates }, { returnDocument: 'after', runValidators: true });
     },
 
     // Delete a document by its ID

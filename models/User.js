@@ -26,7 +26,15 @@ const userSchema = new mongoose.Schema(
 
         passwordHash: {
             type: String,
-            required: true
+            required: true,
+            select: false // never return the password hash in queries
+        },
+
+        //Evryone who registers is a "user" by default
+        role: {
+            type: String,
+            enum: ['user', 'admin'],
+            default: 'user'
         },
 
         studentNumber: {

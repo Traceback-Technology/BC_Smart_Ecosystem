@@ -98,3 +98,25 @@ cover/
 .env
 backend/.env
 **/.env
+
+# Node
+node_modules/
+
+# Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+build/
+
+# Android
+.gradle/
+local.properties
+
+# iOS
+ios/Flutter/ephemeral/
+ios/Flutter/flutter_export_environment.sh
+ios/Flutter/Generated.xcconfig
+
+# Environment files
+.env
+**/.env

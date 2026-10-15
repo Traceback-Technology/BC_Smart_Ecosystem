@@ -1,0 +1,17 @@
+const router=require('express').Router();
+const c=require('../controllers/foodController');
+const {identifier,requireRegisteredUser}=require('../middlewares/identification');
+const {requireRoles}=require('../middlewares/role');
+const multer=require('multer');
+const path=require('path');
+const fs=require('fs');
+const uploadDir=path.join(__dirname,'..','uploads');
+fs.mkdirSync(uploadDir,{recursive:true});
+const storage=multer.diskStorage({destination:(_req,_file,cb)=>cb(null,uploadDir),filename:(_req,file,cb)=>cb(null,`${Date.now()}-${Math.random().toString(36).slice(2,10)}${path.extname(file.originalname).toLowerCase()}`)});
+const upload=multer({storage,limits:{fileSize:5*1024*1024},fileFilter:(_req,file,cb)=>cb(null,['image/jpeg','image/png','image/webp','image/gif'].includes(file.mimetype))});
+router.get('/',c.getFoods);router.get('/search',c.getFoods);router.get('/:id',c.getFood);
+router.post('/upload-image',identifier,requireRoles('admin','restaurant'),upload.single('image'),c.uploadFoodImage);
+router.post('/',identifier,requireRoles('admin','restaurant'),c.createFood);
+router.put('/:id',identifier,requireRoles('admin','restaurant'),c.updateFood);
+router.delete('/:id',identifier,requireRoles('admin','restaurant'),c.deleteFood);
+module.exports=router;

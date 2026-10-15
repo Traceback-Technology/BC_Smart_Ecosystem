@@ -1,0 +1,2 @@
+const router=require('express').Router(),c=require('../controllers/couponController'),{identifier}=require('../middlewares/identification'),{requireRoles}=require('../middlewares/role');
+router.get('/',c.getCoupons);router.post('/validate',identifier,c.validateCoupon);router.use(identifier,requireRoles('admin'));router.post('/',c.createCoupon);router.patch('/:id',c.updateCoupon);router.delete('/:id',c.deleteCoupon);module.exports=router;

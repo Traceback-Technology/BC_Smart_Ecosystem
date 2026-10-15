@@ -94,3 +94,7 @@ cover/
 # Translations
 *.mo
 *.pot
+
+.env
+backend/.env
+**/.env

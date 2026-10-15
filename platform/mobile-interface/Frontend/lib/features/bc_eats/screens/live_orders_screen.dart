@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../../core/bc_api_client.dart';
 import '../admin-view/constants/admin_colours.dart';
 import 'inventory_screen.dart'; // Uses shared ProductItem model
 
@@ -15,6 +17,14 @@ class LiveOrdersScreen extends StatefulWidget {
 
 class _LiveOrdersScreenState extends State<LiveOrdersScreen> {
   bool _hasNewOrderAlert = false;
+
+  // Live mode = signed in with the backend. Otherwise the hardcoded demo
+  // orders below are shown (offline preview).
+  bool get _live => BcApiClient.instance.hasToken;
+  Timer? _poll;
+  bool _loading = false;
+  bool _loadedOnce = false;
+  final Set<String> _seenIds = {};
 
   //TODO: Hardcoded lists: to remove
   List<Map<String, dynamic>> orders = [
@@ -91,7 +101,103 @@ class _LiveOrdersScreenState extends State<LiveOrdersScreen> {
 
   // BACKEND INTEGRATION POINT: Subscribe to Realtime DB updates
   void _subscribeToLiveOrdersAndStock() {
-    // TODO: Attach Database Realtime channel / WebSocket stream listeners here:
+    if (!_live) return;
+    orders = [];
+    _loadOrders();
+    // Polling is enough for the MVP. TODO: swap for a WebSocket push later.
+    _poll = Timer.periodic(const Duration(seconds: 10), (_) => _loadOrders(silent: true));
+  }
+
+  @override
+  void dispose() {
+    _poll?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _loadOrders({bool silent = false, bool force = false}) async {
+    if (!_live || (_loading && !force)) return;
+    _loading = true;
+    try {
+      final response = await BcApiClient.instance.getJson('/api/orders/staff');
+      final rows = response['data'];
+      if (rows is! List || !mounted) return;
+      final mapped = rows.whereType<Map>().map((raw) => _fromServer(Map<String, dynamic>.from(raw))).toList();
+      final hasNew = _loadedOnce && mapped.any((order) => !_seenIds.contains(order['_id']));
+      _seenIds.addAll(mapped.map((order) => order['_id'] as String));
+      _loadedOnce = true;
+      setState(() => orders = mapped);
+      if (hasNew) _alertNewOrder();
+    } catch (error) {
+      if (mounted && !silent) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Could not load orders: $error')));
+      }
+    } finally {
+      _loading = false;
+    }
+  }
+
+  void _alertNewOrder() {
+    SystemSound.play(SystemSoundType.click);
+    HapticFeedback.mediumImpact();
+    setState(() => _hasNewOrderAlert = true);
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) setState(() => _hasNewOrderAlert = false);
+    });
+  }
+
+  /// Maps a backend order onto the map shape the queue UI already renders.
+  Map<String, dynamic> _fromServer(Map<String, dynamic> row) {
+    final user = row['userId'] is Map ? Map<String, dynamic>.from(row['userId'] as Map) : <String, dynamic>{};
+    final contact = row['contact'] is Map ? Map<String, dynamic>.from(row['contact'] as Map) : <String, dynamic>{};
+    final name = [contact['name'], user['fullName'], user['name']]
+        .map((value) => (value ?? '').toString().trim())
+        .firstWhere((value) => value.isNotEmpty, orElse: () => 'Student');
+    final items = (row['items'] is List ? row['items'] as List : const [])
+        .whereType<Map>()
+        .map((item) => '${item['quantity'] ?? 1}x ${item['name'] ?? 'Item'}')
+        .toList();
+    final serverStatus = (row['status'] ?? '').toString();
+    return {
+      '_id': (row['_id'] ?? '').toString(),
+      'orderId': '#${row['orderNumber'] ?? row['_id']}',
+      'customer': name,
+      'time': _ago(DateTime.tryParse((row['createdAt'] ?? '').toString())),
+      'items': items,
+      'total': (row['total'] as num? ?? 0).toDouble(),
+      'status': switch (serverStatus) { 'preparing' => 'Preparing', 'ready' => 'Ready', _ => 'New' },
+      'serverStatus': serverStatus,
+      'deliveryType': (row['deliveryType'] ?? 'pickup').toString(),
+    };
+  }
+
+  String _ago(DateTime? time) {
+    if (time == null) return '';
+    final diff = DateTime.now().difference(time);
+    if (diff.inMinutes < 1) return 'Just now';
+    if (diff.inMinutes < 60) return '${diff.inMinutes} mins ago';
+    if (diff.inHours < 24) return '${diff.inHours} hrs ago';
+    return '${diff.inDays} days ago';
+  }
+
+  Future<void> _advanceServerOrder(int index) async {
+    final order = orders[index];
+    final next = switch (order['serverStatus']) {
+      'confirmed' => 'preparing',
+      'preparing' => 'ready',
+      // Counter hand-over: pickup orders finish here; drone orders go to
+      // dispatch. STEP 3 replaces this with real drone assignment.
+      'ready' => order['deliveryType'] == 'drone' ? 'drone_assigned' : 'delivered',
+      _ => null,
+    };
+    if (next == null) return;
+    try {
+      await BcApiClient.instance.patchJson('/api/orders/${order['_id']}/status', {'status': next});
+      await _loadOrders(silent: true, force: true);
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Could not update order: $error')));
+      }
+    }
   }
 
   // BACKEND INTEGRATION POINT: Order Simulation / Creating New Orders
@@ -120,6 +226,7 @@ class _LiveOrdersScreenState extends State<LiveOrdersScreen> {
 
   // BACKEND INTEGRATION POINT: Updating Order Progress Status
   Future<void> _advanceOrderStatus(int index) async {
+    if (_live) return _advanceServerOrder(index);
     final orderId = orders[index]['orderId'];
     final currentStatus = orders[index]['status'];
     String nextStatus = currentStatus;
@@ -416,15 +523,15 @@ class _LiveOrdersScreenState extends State<LiveOrdersScreen> {
                     vertical: 6,
                   ),
                 ),
-                onPressed: _simulateIncomingOrder,
-                icon: const Icon(
-                  Icons.add_alert,
+                onPressed: _live ? () => _loadOrders(force: true) : _simulateIncomingOrder,
+                icon: Icon(
+                  _live ? Icons.refresh : Icons.add_alert,
                   size: 14,
                   color: AdminColors.textDark,
                 ),
-                label: const Text(
-                  'Simulate Order',
-                  style: TextStyle(
+                label: Text(
+                  _live ? 'Refresh' : 'Simulate Order',
+                  style: const TextStyle(
                     fontSize: 11,
                     color: AdminColors.textDark,
                     fontWeight: FontWeight.bold,

@@ -1,0 +1,5 @@
+const Banner=require('../models/bannerModel');
+exports.getBanners=async(req,res,next)=>{try{const now=new Date();const data=await Banner.find({active:true,$or:[{startsAt:null},{startsAt:{$lte:now}}],$and:[{$or:[{endsAt:null},{endsAt:{$gte:now}}]}]}).sort({priority:-1,createdAt:-1});res.json({success:true,data})}catch(e){next(e)}};
+exports.createBanner=async(req,res,next)=>{try{const b=await Banner.create(req.body);res.status(201).json({success:true,data:b})}catch(e){next(e)}};
+exports.updateBanner=async(req,res,next)=>{try{const b=await Banner.findByIdAndUpdate(req.params.id,req.body,{new:true,runValidators:true});if(!b)return res.status(404).json({success:false,message:'Banner not found'});res.json({success:true,data:b})}catch(e){next(e)}};
+exports.deleteBanner=async(req,res,next)=>{try{const b=await Banner.findByIdAndDelete(req.params.id);if(!b)return res.status(404).json({success:false,message:'Banner not found'});res.json({success:true,message:'Banner deleted'})}catch(e){next(e)}};

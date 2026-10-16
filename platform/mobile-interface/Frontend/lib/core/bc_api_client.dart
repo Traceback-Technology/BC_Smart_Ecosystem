@@ -54,6 +54,11 @@ class BcApiClient {
     'Accept': 'application/json', 'Content-Type': 'application/json',
     if (token != null && token.isNotEmpty) 'Authorization': 'Bearer $token',
   };
+
+  Future<Map<String, dynamic>> patchJson(String path, Map<String, dynamic> body) async {
+    final response = await _client.patch(_uri(path), headers: _headers(_token), body: jsonEncode(body)).timeout(const Duration(seconds: 15));
+    return _decode(response);
+  }
 }
 class BcApiException implements Exception {
   final String message;

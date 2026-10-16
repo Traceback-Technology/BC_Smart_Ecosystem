@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import '../models/bc_eats_product.dart';
+import '../../../core/bc_api_client.dart';
 
 enum Fulfilment { drone, pickup }
 
@@ -29,7 +30,8 @@ class EatsOrder {
   final Map<EatsStatus, DateTime> statusTimes = {};
   final int serviceFee, deliveryFee;
   EatsStatus status = EatsStatus.preparing;
-  DateTime? completedAt;
+  String? backendId;
+  DateTime? completedAt; 
 
   // Drone handover verification.
   DateTime? droneArrivedAt;
@@ -59,6 +61,7 @@ class EatsOrder {
   int get subtotal => lines.fold(0, (sum, line) => sum + line.total);
   int get total => subtotal + serviceFee + deliveryFee;
   bool get completed => status == EatsStatus.completed;
+  bool get isBackendOrder => backendId != null && backendId!.isNotEmpty;
 
   bool get droneArrived => droneArrivedAt != null;
 
@@ -372,6 +375,35 @@ class BcEatsStore extends ChangeNotifier {
       order.completedAt = order.statusTimes[order.status];
     }
 
+    notifyListeners();
+  }
+
+  EatsStatus _statusFromServer(String? s) => switch (s) {
+    'confirmed' => EatsStatus.received,
+    'preparing' => EatsStatus.preparing,
+    'ready' || 'drone_assigned' => EatsStatus.ready,
+    'delivered' || 'completed' || 'collected' => EatsStatus.completed,
+    _ => EatsStatus.preparing,
+  };
+
+  Future<void> refreshBackendOrder(EatsOrder order) async {
+    final id = order.backendId;
+    if (id == null || id.isEmpty || !_orders.contains(order)) return;
+
+    final res = await BcApiClient.instance.getJson('/api/orders/$id');
+    final data = res['data'];
+    if (data is! Map<String, dynamic>) return;
+
+    final next = _statusFromServer(
+      (data['serverStatus'] ?? data['status'])?.toString(),
+    );
+    // Only move forward so a stale response can't undo progress.
+    if (next.index <= order.status.index) return;
+
+    order.status = next;
+    final now = DateTime.now();
+    order.statusTimes[next] = now;
+    if (next == EatsStatus.completed) order.completedAt = now;
     notifyListeners();
   }
 

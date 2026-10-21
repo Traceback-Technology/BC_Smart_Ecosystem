@@ -1,12 +1,13 @@
 const express=require('express'),helmet=require('helmet'),cors=require('cors'),cookieParser=require('cookie-parser'),mongoose=require('mongoose'),path=require('path'),rateLimit=require('express-rate-limit');
 require('dotenv').config();
 const app=express();
-const allowedOrigins=(process.env.CLIENT_ORIGIN||'http://localhost:3000').split(',').map(v=>v.trim()).filter(Boolean);
+
+const allowedOrigins=('bc-smart-ecosystem.tetelo702.workers.dev',process.env.CLIENT_ORIGIN||'http://localhost:3000').split(',').map(v=>v.trim()).filter(Boolean);
 app.use(cors({origin(origin,callback){if(!origin||allowedOrigins.includes(origin))return callback(null,true);return callback(new Error('Origin is not allowed by CORS'));},credentials:true}));
 app.use(helmet());app.use(cookieParser());
 app.use('/uploads',express.static(path.join(__dirname,'uploads'),{fallthrough:false,maxAge:'1d'}));
 app.use('/api/',rateLimit({windowMs:15*60*1000,limit:300,standardHeaders:true,legacyHeaders:false}));
-const paymentController=require('./controllers/paymentController');
+const paymentController=require('./controllers/paymentController');''
 // Stripe webhook must receive the raw request body before express.json().
 app.post('/api/payments/webhook',express.raw({type:'application/json'}),paymentController.webhook);
 app.use(express.json({limit:'2mb'}));app.use(express.urlencoded({extended:true}));

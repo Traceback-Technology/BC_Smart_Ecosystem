@@ -2,7 +2,7 @@ const express=require('express'),helmet=require('helmet'),cors=require('cors'),c
 require('dotenv').config();
 const app=express();
 
-const allowedOrigins=('bc-smart-ecosystem.tetelo702.workers.dev',process.env.CLIENT_ORIGIN||'http://localhost:3000').split(',').map(v=>v.trim()).filter(Boolean);
+const allowedOrigins=('bc-smart-ecosystem.tetelo702.workers.dev',process.env.CLIENT_ORIGIN||'http://localhost:8000').split(',').map(v=>v.trim()).filter(Boolean);
 app.use(cors({origin(origin,callback){if(!origin||allowedOrigins.includes(origin))return callback(null,true);return callback(new Error('Origin is not allowed by CORS'));},credentials:true}));
 app.use(helmet());app.use(cookieParser());
 app.use('/uploads',express.static(path.join(__dirname,'uploads'),{fallthrough:false,maxAge:'1d'}));

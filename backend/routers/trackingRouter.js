@@ -1,0 +1,10 @@
+const router = require('express').Router();
+const controller = require('../controllers/trackingController');
+const { identifier, requireRegisteredUser } = require('../middlewares/identification');
+const { requireRoles } = require('../middlewares/role');
+router.use(identifier, requireRegisteredUser);
+router.get('/:orderId', controller.getRoute);
+router.get('/:orderId/latest', controller.getLatest);
+router.post('/:orderId/start', requireRoles('admin', 'drone_operator'), controller.startTracking);
+router.patch('/:orderId/location', requireRoles('admin', 'drone_operator'), controller.updateLocation);
+module.exports = router;

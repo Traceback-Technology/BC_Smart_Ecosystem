@@ -1,0 +1,2 @@
+const router=require('express').Router(),c=require('../controllers/categoryController'),{identifier}=require('../middlewares/identification'),{requireRoles}=require('../middlewares/role');
+router.get('/',c.getCategories);router.get('/:id',c.getCategory);router.post('/',identifier,requireRoles('admin','restaurant'),c.createCategory);router.put('/:id',identifier,requireRoles('admin','restaurant'),c.updateCategory);router.delete('/:id',identifier,requireRoles('admin'),c.deleteCategory);module.exports=router;

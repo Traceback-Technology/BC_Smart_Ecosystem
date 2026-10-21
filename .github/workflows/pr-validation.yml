@@ -1,29 +1,17 @@
-name: PR Validation
-
-on:
-  pull_request:
-    branches:
-      - develop
-      - main
-
-jobs:
-  validation:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Validate PR title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          if [[ ! "${{ github.event.pull_request.title }}" =~ ^\[(Feature|Bug|Refactor|Integration|Architecture|Docs)\] ]]; then
+          if [[ ! "$PR_TITLE" =~ ^\[(Feature|Bug|Refactor|Integration|Architecture|Docs)\] ]]; then
             echo "PR title must start with [Feature], [Bug], etc."
             exit 1
           fi
 
       - name: Ensure issue is linked
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
         run: |
-          if [[ "${{ github.event.pull_request.body }}" != *"Closes #"* ]]; then
+          if [[ "$PR_BODY" != *"Closes #"* ]]; then
             echo "PR must reference an issue using 'Closes #'"
             exit 1
           fi

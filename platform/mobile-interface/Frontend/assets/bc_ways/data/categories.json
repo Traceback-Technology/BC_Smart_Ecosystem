@@ -1,0 +1,70 @@
+[
+  {
+    "id": "classrooms",
+    "label": "Classrooms",
+    "icon": "school",
+    "color": "#AF1857",
+    "matches": [
+      "Classroom"
+    ]
+  },
+  {
+    "id": "offices",
+    "label": "Offices",
+    "icon": "badge",
+    "color": "#757575",
+    "matches": [
+      "Office"
+    ]
+  },
+  {
+    "id": "parking",
+    "label": "Parking",
+    "icon": "local_parking",
+    "color": "#A8A8A8",
+    "matches": [
+      "Parking"
+    ]
+  },
+  {
+    "id": "residences",
+    "label": "Residences",
+    "icon": "apartment",
+    "color": "#F5C42E",
+    "matches": [
+      "Residence"
+    ]
+  },
+  {
+    "id": "toilets",
+    "label": "Toilets",
+    "icon": "wc",
+    "color": "#000000",
+    "matches": [
+      "Toilets"
+    ]
+  },
+  {
+    "id": "outdoor_areas",
+    "label": "Outdoor Areas",
+    "icon": "park",
+    "color": "#7FB36B",
+    "matches": [
+      "Outdoor Areas"
+    ]
+  },
+  {
+    "id": "other",
+    "label": "Other",
+    "icon": "business",
+    "color": "#65C0BF",
+    "matches": [
+      "Student Building",
+      "Library",
+      "Study Room",
+      "Laundry",
+      "Tuck Shop",
+      "Cafeteria"
+    ]
+  }
+]

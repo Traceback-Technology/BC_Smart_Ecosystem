@@ -1,0 +1,2 @@
+const router=require('express').Router(),c=require('../controllers/cartController'),{identifier,requireRegisteredUser}=require('../middlewares/identification');
+router.use(identifier,requireRegisteredUser);router.get('/',c.getCart);router.post('/items',c.addItem);router.patch('/items/:itemId',c.updateItem);router.delete('/items/:itemId',c.removeItem);router.delete('/',c.clearCart);module.exports=router;

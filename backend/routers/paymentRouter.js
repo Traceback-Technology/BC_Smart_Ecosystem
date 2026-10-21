@@ -1,0 +1,2 @@
+const router=require('express').Router(),c=require('../controllers/paymentController'),{identifier,requireRegisteredUser}=require('../middlewares/identification');
+router.use(identifier,requireRegisteredUser);router.post('/intent',c.createPaymentIntent);router.get('/',c.getPayments);router.get('/:id',c.getPayment);router.post('/:id/refund',require('../middlewares/role').requireRoles('admin'),c.refundPayment);module.exports=router;

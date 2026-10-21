@@ -1,0 +1,24 @@
+name: Analytics CI
+
+on:
+  pull_request:
+    paths:
+      - 'analytics/**'
+
+jobs:
+  ai-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: pip install -r analytics/requirements.txt
+
+      - name: Run AI Tests
+        run: pytest analytics/tests

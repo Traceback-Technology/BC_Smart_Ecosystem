@@ -1,0 +1,4 @@
+const Order=require('../models/orderModel'),Payment=require('../models/paymentModel'),User=require('../models/usersModel');
+exports.ordersReport=async(req,res,next)=>{try{const from=req.query.from?new Date(req.query.from):new Date(0),to=req.query.to?new Date(req.query.to):new Date();const data=await Order.find({createdAt:{$gte:from,$lte:to}}).populate('userId','name email').sort({createdAt:-1});res.json({success:true,count:data.length,data})}catch(e){next(e)}};
+exports.revenueReport=async(req,res,next)=>{try{const [result]=await Payment.aggregate([{$match:{status:'succeeded'}},{$group:{_id:'$currency',transactions:{$sum:1},revenue:{$sum:'$amount'}}}]);res.json({success:true,data:result||{transactions:0,revenue:0}})}catch(e){next(e)}};
+exports.usersReport=async(req,res,next)=>{try{const data=await User.aggregate([{$group:{_id:'$role',count:{$sum:1}}}]);res.json({success:true,data})}catch(e){next(e)}};

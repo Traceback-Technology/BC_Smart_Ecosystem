@@ -4,9 +4,8 @@
   "description": "BC Eats and BC Ways API backend",
   "main": "index.js",
   "scripts": {
-    "start": "node --env-file=.env index.js",
-    "dev": "node --watch --env-file=.env index.js",
-    "seed": "node seed.js"
+    "start": "node index.js",
+    "dev": "node --env-file=.env index.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",

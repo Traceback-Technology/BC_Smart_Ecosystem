@@ -1,145 +1,126 @@
-# Pull Request Summary
+# 🔷 Pull Request
 
-## Description
-
-Provide a clear summary of the changes made.
-
-Example:
-
-* Added shortest-path navigation API for BC Ways
-* Fixed authentication middleware bug
-* Improved drone delivery telemetry logging
-
----
-
-## Type of Change
-
-Please select the relevant option(s):
-
-* [ ] feat: New feature
-* [ ] fix: Bug fix
-* [ ] docs: Documentation update
-* [ ] refactor: Code restructuring
-* [ ] test: Added/updated tests
-* [ ] chore: Maintenance / tooling
-
----
-
-## Related Module(s)
-
-Select the affected system area(s):
-
-* [ ] BC Ways (Navigation)
-* [ ] BC Eats (Tuckshop)
-* [ ] Drone System
-* [ ] Backend API
-* [ ] Frontend (Flutter)
-* [ ] Authentication
-* [ ] Notifications
-* [ ] Analytics
-* [ ] Security
-* [ ] Shared Components
-* [ ] Infrastructure
-
----
-
-## Related Issue
-
+## 🧩 Related Issue
 Closes #
 
-Example:
-Closes #42
+---
+
+## 📦 Subsystem
+<!-- Select one -->
+- [ ] Platform
+- [ ] Core
+- [ ] Robotics
+- [ ] Security
+- [ ] Simulation
+- [ ] Analytics
+- [ ] Infrastructure
+- [ ] Shared
 
 ---
 
-## Changes Made
+## 📝 Description
 
-Describe what was implemented.
+Provide a clear and concise description of the changes introduced in this PR (Pull Request).
+Included in the description should be reasins for the changes.
 
-### Added
-
-*
-*
-*
-
-### Updated
-
-*
-*
-*
-
-### Removed
-
-*
-*
-*
+What does this implement or fix?
 
 ---
 
-## Testing Completed
+## 🎯 Type of Change
 
-Please confirm testing performed.
-
-* [ ] Unit tests pass
-* [ ] Integration tests pass
-* [ ] Manual testing completed
-* [ ] No breaking changes introduced
-
-### Test Evidence
-
-Include screenshots, logs, or explanation if applicable.
+- [ ] Feature
+- [ ] Bug Fix
+- [ ] Refactor
+- [ ] Integration
+- [ ] Architecture Change
+- [ ] Documentation
+- [ ] Test Improvement
 
 ---
 
-## API Changes
+## 🧠 Technical Details
 
-If backend APIs were modified:
+Explain:
 
-* [ ] No API changes
-* [ ] New endpoint added
-* [ ] Existing endpoint updated
-* [ ] Breaking API changes
-
-Endpoints affected:
-
-```http
-GET /api/example
-POST /api/example
-```
+- Key design decisions
+- Architectural impact
+- Data contracts affected
+- API changes (if any)
+- Database schema changes (if any)
+- Hardware/robotics impact (if any)
 
 ---
 
-## Database Changes
+## 🔄 Integration Impact
 
-* [ ] No database changes
-* [ ] MongoDB schema updated
-* [ ] Seed data changed
-* [ ] Migration required
+Does this affect other subsystems?
 
----
+- [ ] No
+- [ ] Yes (explain below)
 
-## Security Checklist
+If yes, describe:
 
-* [ ] No secrets exposed
-* [ ] Input validation implemented
-* [ ] Authentication checked
-* [ ] Authorization checked
-* [ ] Sensitive data protected
+- What subsystem(s) are affected?
+- Backward compatibility maintained?
+- Migration required?
 
 ---
 
-## Screenshots / Demo (Optional)
+## 🧪 Testing
 
-Add screenshots, GIFs, or recordings here.
+Describe how this was tested.
+
+- [ ] Unit tests added/updated
+- [ ] Integration tests added/updated
+- [ ] Manual testing performed
+- [ ] Robotics simulation tested
+- [ ] Security validation performed
+
+Explain test coverage:
 
 ---
 
-## Reviewer Checklist
+## 🔐 Security Considerations
 
-Before approving, verify:
+- [ ] No security impact
+- [ ] Authentication logic modified
+- [ ] Authorization logic modified
+- [ ] Input validation added/changed
+- [ ] Sensitive data handling affected
 
-* [ ] Code follows project standards
-* [ ] No merge conflicts
-* [ ] Documentation updated
-* [ ] Tests pass
-* [ ] Feature works as expected
+If applicable, explain:
+
+---
+
+## 📊 Performance Impact
+
+- [ ] No measurable impact
+- [ ] Improves performance
+- [ ] Potential performance degradation (explain below)
+
+---
+
+## 📸 Screenshots / Logs (if applicable)
+
+Attach UI screenshots, logs, or simulation outputs.
+
+---
+
+## ✅ Checklist Before Requesting Review
+
+- [ ] Code compiles/builds successfully
+- [ ] CI pipeline passes
+- [ ] Issue is linked
+- [ ] Acceptance criteria satisfied
+- [ ] Documentation updated (if required)
+- [ ] No debug code left behind
+- [ ] No secrets committed
+
+---
+
+## 👀 Reviewer Notes
+
+Tag relevant subsystem leads.
+
+@synetrix @RyanTPH

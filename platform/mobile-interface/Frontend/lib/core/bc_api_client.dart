@@ -8,6 +8,7 @@ class BcApiClient {
   static final BcApiClient instance = BcApiClient._();
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
+    // defaultValue: 'http://localhost:8000 ',
     defaultValue: 'https://bc-smart-api.onrender.com',
   );
   final http.Client _client = http.Client();

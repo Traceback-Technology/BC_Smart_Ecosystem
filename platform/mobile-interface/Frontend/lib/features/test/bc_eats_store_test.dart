@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fontend/features/bc_eats/models/bc_eats_product.dart';
-import 'package:fontend/features/bc_eats/services/bc_eats_store.dart';
+import 'package:frontend/features/bc_eats/models/bc_eats_product.dart';
+import 'package:frontend/features/bc_eats/services/bc_eats_store.dart';
 
 void main() {
   const product = BcEatsProduct(id: 'burger', name: 'Burger', description: '', category: 'Meals', price: 65, imagePath: '');

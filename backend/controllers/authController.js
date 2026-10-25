@@ -19,6 +19,20 @@ function makeToken(user) {
   return makeUserToken(user);
 }
 
+function classifyCampusAccount(email) {
+  const value = String(email || '').trim().toLowerCase();
+
+  if (/^\d{6}@student\.belgiumcampus\.ac\.za$/.test(value)) {
+    return 'student';
+  }
+
+  if (/^[a-z][a-z0-9._-]*@belgiumcampus\.ac\.za$/.test(value)) {
+    return 'staff';
+  }
+
+  return 'unclassified';
+}
+
 function safeUser(user) {
   return {
     id: user._id,
@@ -27,6 +41,7 @@ function safeUser(user) {
     email: user.email,
     phone: user.phone,
     role: user.role,
+    accountType: user.accountType || 'unclassified',
     verified: user.verified
   };
 }
@@ -177,7 +192,16 @@ exports.loginWithMicrosoft = async (req, res, next) => {
       });
     }
 
-    const email = microsoftUser.email.toLowerCase();
+    // This identity has already passed Microsoft token verification.
+    if (microsoftUser.tenantId !== 'ea1a909b-6600-4a25-82a5-0c6ed7d0513b') {
+      return res.status(403).json({
+        success: false,
+        message: 'Please sign in with your Belgium Campus Microsoft account.'
+      });
+    }
+
+    const email = microsoftUser.email.trim().toLowerCase();
+    const accountType = classifyCampusAccount(email);
     let user = await User.findOne({
       $or: [
         { microsoftId: microsoftUser.oid },
@@ -204,6 +228,7 @@ exports.loginWithMicrosoft = async (req, res, next) => {
       user.tenantId = microsoftUser.tenantId;
     }
 
+    user.accountType = accountType;
     user.verified = true;
 
     await user.save();

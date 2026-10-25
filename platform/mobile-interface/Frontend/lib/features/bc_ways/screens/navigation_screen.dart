@@ -14,6 +14,8 @@ import '../services/campus_gps_service.dart';
 import '../services/dijkstra_service.dart';
 import '../services/graph_service.dart';
 import '../services/navigation_service.dart';
+import '../services/route_history_service.dart';
+import '../services/route_follow_service.dart';
 import '../widgets/bc_bottom_navigation_bar.dart';
 import '../widgets/campus_map.dart';
 import '../widgets/navigation_card.dart';
@@ -42,7 +44,7 @@ class NavigationScreen extends StatefulWidget {
 }
 
 class _NavigationScreenState extends State<NavigationScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   // ===========================================================================
   // SERVICES
   // ===========================================================================
@@ -54,6 +56,7 @@ class _NavigationScreenState extends State<NavigationScreen>
   final CampusGpsService _gpsService = const CampusGpsService();
 
   late DijkstraService _dijkstra;
+  late final RouteFollowService _routeFollower;
 
   // ===========================================================================
   // MAP / CAMERA
@@ -125,6 +128,13 @@ class _NavigationScreenState extends State<NavigationScreen>
   @override
   void initState() {
     super.initState();
+    _routeFollower = RouteFollowService(vsync: this, onChanged: () {
+      if (!mounted || !_routeFollower.active) return;
+      setState(() {
+        _route = _routeFollower.route;
+        _lastVisibleMapPosition = _routeFollower.position;
+      });
+    });
 
     _cameraAnimationController = AnimationController(
       vsync: this,
@@ -146,9 +156,14 @@ class _NavigationScreenState extends State<NavigationScreen>
 
     _navigationService.dispose();
 
+    _routeFollower.dispose();
     _cameraAnimationController.dispose();
 
     _transformController.dispose();
+
+    // Leaving before arrival (back button, bottom nav) ends the route as
+    // cancelled. A no-op if it was already completed or cancelled.
+    unawaited(RouteHistoryService.instance.markCancelled());
 
     super.dispose();
   }
@@ -229,8 +244,15 @@ class _NavigationScreenState extends State<NavigationScreen>
     // beyond the campus SVG.
     _lastVisibleMapPosition = mapPosition;
 
-    final onNetwork =
-        insideSvg && _graphService.isWithinNavigationNetwork(mapPosition);
+    final selectedGoal = _destination;
+    if (!insideSvg || selectedGoal == null) _routeFollower.reset();
+    final following = insideSvg && selectedGoal != null &&
+        _routeFollower.update(_graphService.graph, mapPosition,
+            selectedGoal.nearestNode, accuracy: gps.accuracy,
+            timestamp: gps.timestamp);
+    final onNetwork = selectedGoal == null
+        ? insideSvg && _graphService.isWithinNavigationNetwork(mapPosition)
+        : following;
 
     final nearestEntry = _gpsService.nearestEntry(
       gps,
@@ -254,9 +276,14 @@ class _NavigationScreenState extends State<NavigationScreen>
     if (startNodeId != null) {
       final startChanged = startNodeId != _currentStartNodeId;
 
-      if (startChanged || route.isEmpty) {
+      if (!following || startChanged || route.isEmpty) {
         route = _dijkstra.findRoute(startNodeId, destination.nearestNode);
       }
+    }
+
+    if (following) {
+      route = _routeFollower.route;
+      _lastVisibleMapPosition = _routeFollower.position;
     }
 
     if (!mounted) {
@@ -274,9 +301,14 @@ class _NavigationScreenState extends State<NavigationScreen>
       _loading = false;
     });
 
+    // Standing on the destination node means the route is finished.
+    if (onNetwork && route.path.length == 1) {
+      unawaited(RouteHistoryService.instance.markCompleted());
+    }
+
     // Smoothly follow and rotate automatically.
     if (_followGps) {
-      _moveNavigationCamera(mapPosition);
+      _moveNavigationCamera(_routeFollower.targetPosition ?? mapPosition);
     }
   }
 
@@ -286,6 +318,8 @@ class _NavigationScreenState extends State<NavigationScreen>
 
   void _endNavigation() {
     _gpsSubscription?.cancel();
+
+    unawaited(RouteHistoryService.instance.markCancelled());
 
     unawaited(_navigationService.stopLocationTracking());
 
@@ -502,7 +536,8 @@ class _NavigationScreenState extends State<NavigationScreen>
                     // Only actual map movement
                     // pauses automatic navigation.
                     onInteractionUpdate: _stopFollowingGps,
-                    gpsAnimationDuration: const Duration(milliseconds: 700),
+                    gpsAnimationDuration: _routeFollower.active
+                        ? Duration.zero : const Duration(milliseconds: 600),
 
                     gpsAnimationCurve: Curves.easeOutCubic,
                   ),

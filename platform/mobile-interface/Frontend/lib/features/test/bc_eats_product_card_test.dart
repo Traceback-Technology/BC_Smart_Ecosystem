@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:fontend/features/bc_eats/models/bc_eats_product.dart';
-import 'package:fontend/features/bc_eats/services/bc_eats_store.dart';
-import 'package:fontend/features/bc_eats/widgets/eats_product_card.dart';
+import 'package:frontend/features/bc_eats/models/bc_eats_product.dart';
+import 'package:frontend/features/bc_eats/services/bc_eats_store.dart';
+import 'package:frontend/features/bc_eats/widgets/eats_product_card.dart';
 
 void main() {
   const meal = BcEatsProduct(id: 'card-meal', name: 'Large burger meal with extra cheese',

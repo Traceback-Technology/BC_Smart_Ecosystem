@@ -115,6 +115,26 @@ class CampusGpsService {
   static const double _yNorth = -4.74778265;
   static const double _yOffset = 1389.0;
 
+  /// Stored with a survey so its map coordinates can be reproduced later.
+  static Map<String, dynamic> get recordingCalibration => {
+    'width': 3000, 'height': 3000,
+    'originLatitude': _originLatitude, 'originLongitude': _originLongitude,
+    'earthRadius': _earthRadius,
+    'xEast': _xEast, 'xNorth': _xNorth, 'xOffset': _xOffset,
+    'yEast': _yEast, 'yNorth': _yNorth, 'yOffset': _yOffset,
+    'gpsOffsetX': BcWaysMapConstants.gpsOffsetX,
+    'gpsOffsetY': BcWaysMapConstants.gpsOffsetY,
+  };
+
+  /// Physical distance from the inverse of the existing affine calibration.
+  static double mapDistanceMeters(Offset a, Offset b) {
+    final d = a - b;
+    final determinant = _xEast * _yNorth - _xNorth * _yEast;
+    final east = (d.dx * _yNorth - d.dy * _xNorth) / determinant;
+    final north = (_xEast * d.dy - _yEast * d.dx) / determinant;
+    return math.sqrt(east * east + north * north);
+  }
+
   /// Converts live GPS into your 3000 x 3000 SVG coordinate system.
   Offset toMapOffset(geo.Position gps) {
     final latitudeRadians = _originLatitude * math.pi / 180.0;

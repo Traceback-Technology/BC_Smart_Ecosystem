@@ -1,4 +1,4 @@
-enum AppUserRole { student, guest }
+enum AppUserRole { student, staff, guest, unclassified }
 
 class AppSession {
   final AppUserRole role;
@@ -15,6 +15,17 @@ class AppSession {
        fullName = fullName ?? firstName,
        role = AppUserRole.student;
 
+  const AppSession.microsoft({
+    required this.fullName,
+    required this.email,
+    required this.accessToken,
+    required String accountType,
+  }) : role = accountType == 'student'
+           ? AppUserRole.student
+           : accountType == 'staff'
+           ? AppUserRole.staff
+           : AppUserRole.unclassified;
+
   const AppSession.guest()
     : role = AppUserRole.guest,
       fullName = null,
@@ -22,6 +33,10 @@ class AppSession {
       accessToken = null;
 
   bool get isStudent => role == AppUserRole.student;
+
+  bool get isStaff => role == AppUserRole.staff;
+
+  bool get isCampusMember => isStudent || isStaff;
 
   bool get isGuest => role == AppUserRole.guest;
 
@@ -45,7 +60,12 @@ class AppSession {
     return 'Guest User';
   }
 
-  String get roleLabel => isStudent ? 'Student' : 'Guest';
+  String get roleLabel => switch (role) {
+    AppUserRole.student => 'Student',
+    AppUserRole.staff => 'Staff',
+    AppUserRole.guest => 'Guest',
+    AppUserRole.unclassified => 'Unclassified',
+  };
 
   String get displayEmail {
     final value = email?.trim();

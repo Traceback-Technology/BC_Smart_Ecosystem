@@ -67,6 +67,13 @@ const userSchema = new mongoose.Schema({
 
   tenantId: String,
 
+  // Campus classification; does not grant application permissions.
+  accountType: {
+    type: String,
+    enum: ['student', 'staff', 'unclassified'],
+    default: 'unclassified'
+  },
+
   // Password is still available for the existing email/password flow.
   password: {
     type: String,

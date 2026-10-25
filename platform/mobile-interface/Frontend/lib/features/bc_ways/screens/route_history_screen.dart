@@ -140,7 +140,7 @@ class _RouteHistoryScreenState extends State<RouteHistoryScreen> {
         return _centered(
           context,
           Icons.error_outline,
-          "Couldn't load your routes.",
+          "No previous routes to load.",
           actionLabel: 'Retry',
           onAction: _loadMore,
         );

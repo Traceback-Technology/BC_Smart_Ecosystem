@@ -16,6 +16,7 @@ class NotificationBadgeController extends ChangeNotifier {
   bool _active = false;
 
   int get unreadCount => _unreadCount;
+  bool get isActive => _active;
 
   /// Call when a REGISTERED user is signed in. Guests get a 403 from
   /// the notification routes, so never start this for a guest.
@@ -31,10 +32,8 @@ class NotificationBadgeController extends ChangeNotifier {
     _active = false;
     _timer?.cancel();
     _timer = null;
-    if (_unreadCount != 0) {
-      _unreadCount = 0;
-      notifyListeners();
-    }
+    _unreadCount = 0;
+    notifyListeners();
   }
 
   Future<void> refresh() async {

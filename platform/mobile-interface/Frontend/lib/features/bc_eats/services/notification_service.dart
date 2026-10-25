@@ -10,7 +10,7 @@ class NotificationService {
 
   final BcApiClient _api = BcApiClient.instance;
 
-  Future<List<AppNotification>> fetchNotification({int limit = 30}) async {
+  Future<List<AppNotification>> fetchNotifications({int limit = 30}) async {
     final res = await _api.getJson(
       'api/notification',
       query: {'limit': '$limit'},

@@ -3,8 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 
 import 'features/auth/models/app_session.dart';
+import 'features/auth/services/microsoft_auth_service.dart';
 import 'core/bc_api_client.dart';
-import 'features/auth/screens/student_name_screen.dart';
+
 import 'features/auth/screens/welcome_screen.dart';
 import 'features/bc_ways/constants/colors.dart';
 import 'features/home/screens/home_screen.dart';
@@ -54,20 +55,84 @@ class BCSmartApp extends StatefulWidget {
 
 class _BCSmartAppState extends State<BCSmartApp> {
   AppSession? _session;
+  bool _restoringMicrosoftSession = true;
+  String? _microsoftStartupError;
+
+  @override
+  void initState() {
+    super.initState();
+    _restoreMicrosoftSession();
+  }
+
+  Future<void> _restoreMicrosoftSession() async {
+    try {
+      final session = await MicrosoftAuthService().restoreWebSession();
+      if (!mounted) {
+        return;
+      }
+
+      if (session != null) {
+        BcApiClient.instance.setToken(session.accessToken);
+        _session = session;
+      }
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+
+      _microsoftStartupError =
+          'Microsoft sign-in could not be completed. '
+          'Please check your connection and try signing in again.';
+    } finally {
+      if (mounted) {
+        setState(() {
+          _restoringMicrosoftSession = false;
+        });
+      }
+    }
+  }
+
+  bool _microsoftLoginBusy = false;
 
   Future<void> _loginStudent(BuildContext context) async {
-    final session = await Navigator.of(context).push<AppSession>(
-      MaterialPageRoute(builder: (_) => const StudentNameScreen()),
-    );
-
-    if (!mounted || session == null) {
+    if (_microsoftLoginBusy) {
       return;
     }
 
-    BcApiClient.instance.setToken(session.accessToken);
     setState(() {
-      _session = session;
+      _microsoftLoginBusy = true;
     });
+
+    try {
+      final session = await MicrosoftAuthService().signIn();
+
+      if (!mounted || session == null) {
+        return;
+      }
+
+      BcApiClient.instance.setToken(session.accessToken);
+      setState(() {
+        _session = session;
+      });
+    } catch (_) {
+      if (!context.mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Microsoft sign-in could not be completed. Please try again.',
+          ),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _microsoftLoginBusy = false;
+        });
+      }
+    }
   }
 
   void _loginGuest() {
@@ -76,11 +141,41 @@ class _BCSmartAppState extends State<BCSmartApp> {
     });
   }
 
-  void _logout() {
-    BcApiClient.instance.setToken(null);
-    setState(() {
-      _session = null;
-    });
+  bool _logoutBusy = false;
+
+  Future<void> _logout() async {
+    if (_logoutBusy) {
+      return;
+    }
+    _logoutBusy = true;
+
+    try {
+      if (_session?.isGuest != true) {
+        await MicrosoftAuthService().signOut();
+      }
+
+      BcApiClient.instance.setToken(null);
+
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _session = null;
+      });
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+
+      setState(() {
+        _microsoftStartupError =
+            'Sign-out could not be completed. Please check your connection '
+            'and try signing out again.';
+      });
+    } finally {
+      _logoutBusy = false;
+    }
   }
 
   @override
@@ -88,6 +183,7 @@ class _BCSmartAppState extends State<BCSmartApp> {
     return MaterialApp(
       title: 'BC Smart Lifestyle',
       debugShowCheckedModeBanner: false,
+      initialRoute: '/',
 
       theme: BcTheme.light().copyWith(pageTransitionsTheme: noPageTransitions),
 
@@ -116,6 +212,42 @@ class _BCSmartAppState extends State<BCSmartApp> {
 
       home: Builder(
         builder: (context) {
+          if (_restoringMicrosoftSession) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }
+
+          if (_microsoftStartupError != null) {
+            return Scaffold(
+              body: SafeArea(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          _microsoftStartupError!,
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        FilledButton(
+                          onPressed: () {
+                            setState(() {
+                              _microsoftStartupError = null;
+                            });
+                          },
+                          child: const Text('Back to sign-in'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }
+
           final session = _session;
 
           if (session != null) {
@@ -123,6 +255,7 @@ class _BCSmartAppState extends State<BCSmartApp> {
           }
 
           return WelcomeScreen(
+            signingIn: _microsoftLoginBusy,
             onStudentTap: () => _loginStudent(context),
 
             onVisitorTap: _loginGuest,

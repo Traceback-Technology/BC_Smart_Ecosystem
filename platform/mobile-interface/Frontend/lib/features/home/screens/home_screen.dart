@@ -54,7 +54,7 @@ class CampusDashboardPage extends StatelessWidget {
 
       // BC Eats.
       case 2:
-        if (session.isStudent) {
+        if (session.isCampusMember) {
           _showFeature(
             context,
             (_) => BCEatsShell(session: session, onNavigate: onNavigate),
@@ -76,7 +76,7 @@ class CampusDashboardPage extends StatelessWidget {
 
       // Orders.
       case 3:
-        if (session.isStudent) {
+        if (session.isCampusMember) {
           _showFeature(
             context,
             (_) => BCEatsShell(
@@ -90,7 +90,9 @@ class CampusDashboardPage extends StatelessWidget {
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Orders are available to signed-in students.'),
+            content: Text(
+              'Orders are available to signed-in students and staff.',
+            ),
           ),
         );
         return;

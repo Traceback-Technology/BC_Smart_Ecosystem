@@ -1,3 +1,4 @@
+import 'walking_recorder_screen.dart';
 import 'dart:async';
 import 'dart:math' as math;
 
@@ -16,6 +17,7 @@ import '../services/campus_gps_service.dart';
 import '../services/dijkstra_service.dart';
 import '../services/graph_service.dart';
 import '../services/navigation_service.dart';
+import '../services/route_follow_service.dart';
 import '../widgets/bc_bottom_navigation_bar.dart';
 import '../widgets/campus_map.dart';
 import 'destination_search_screen.dart';
@@ -31,8 +33,7 @@ class MapScreen extends StatefulWidget {
   State<MapScreen> createState() => _MapScreenState();
 }
 
-class _MapScreenState extends State<MapScreen>
-    with SingleTickerProviderStateMixin {
+class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   // ===========================================================================
   // SERVICES
   // ===========================================================================
@@ -44,6 +45,7 @@ class _MapScreenState extends State<MapScreen>
   final CampusGpsService _gpsService = const CampusGpsService();
 
   late DijkstraService _dijkstra;
+  late final RouteFollowService _routeFollower;
 
   // ===========================================================================
   // MAP
@@ -142,6 +144,16 @@ class _MapScreenState extends State<MapScreen>
   @override
   void initState() {
     super.initState();
+    _routeFollower = RouteFollowService(
+      vsync: this,
+      onChanged: () {
+        if (!mounted || !_routeFollower.active) return;
+        setState(() {
+          _previewRoute = _routeFollower.route;
+          _lastVisibleMapPosition = _routeFollower.position;
+        });
+      },
+    );
 
     _cameraAnimationController = AnimationController(
       vsync: this,
@@ -159,6 +171,7 @@ class _MapScreenState extends State<MapScreen>
 
     _navigationService.dispose();
 
+    _routeFollower.dispose();
     _cameraAnimationController.dispose();
 
     _transformController.dispose();
@@ -238,8 +251,21 @@ class _MapScreenState extends State<MapScreen>
     // WALKING NETWORK
     // -------------------------------------------------------------------------
 
-    final onNetwork =
-        insideSvg && _graphService.isWithinNavigationNetwork(mapPosition);
+    final selectedGoal = _selectedDestination;
+    if (!insideSvg || selectedGoal == null) _routeFollower.reset();
+    final following =
+        insideSvg &&
+        selectedGoal != null &&
+        _routeFollower.update(
+          _graphService.graph,
+          mapPosition,
+          selectedGoal.nearestNode,
+          accuracy: gps.accuracy,
+          timestamp: gps.timestamp,
+        );
+    final onNetwork = selectedGoal == null
+        ? insideSvg && _graphService.isWithinNavigationNetwork(mapPosition)
+        : following;
 
     // -------------------------------------------------------------------------
     // NEAREST ENTRY
@@ -279,12 +305,17 @@ class _MapScreenState extends State<MapScreen>
     if (_selectedDestination != null && startNodeId != null) {
       final startChanged = startNodeId != _currentStartNodeId;
 
-      if (startChanged || route.isEmpty) {
+      if (!following || startChanged || route.isEmpty) {
         route = _dijkstra.findRoute(
           startNodeId,
           _selectedDestination!.nearestNode,
         );
       }
+    }
+
+    if (following) {
+      route = _routeFollower.route;
+      _lastVisibleMapPosition = _routeFollower.position;
     }
 
     if (!mounted) {
@@ -308,7 +339,7 @@ class _MapScreenState extends State<MapScreen>
     // -------------------------------------------------------------------------
 
     if (_followGps) {
-      _moveCameraToUser(mapPosition);
+      _moveCameraToUser(_routeFollower.targetPosition ?? mapPosition);
     }
   }
 
@@ -378,6 +409,7 @@ class _MapScreenState extends State<MapScreen>
   // ===========================================================================
 
   void _selectDestination(Destination destination) {
+    _routeFollower.reset();
     final gps = _gpsPosition;
 
     if (gps != null) {
@@ -401,9 +433,11 @@ class _MapScreenState extends State<MapScreen>
       _selectedDestination = destination;
       _previewRoute = route;
     });
+    if (gps != null) _applyGpsPosition(gps);
   }
 
   void _clearDestination() {
+    _routeFollower.reset();
     setState(() {
       _selectedDestination = null;
       _previewRoute = RouteResult.empty;
@@ -454,6 +488,13 @@ class _MapScreenState extends State<MapScreen>
   // ===========================================================================
 
   DestinationTravelInfo? _travelInfoFor(Destination destination) {
+    if (_routeFollower.active && destination == _selectedDestination) {
+      final distance = _routeFollower.route.totalDistanceMeters;
+      return DestinationTravelInfo(
+        distanceMeters: distance,
+        minutes: _navigationService.etaMinutes(distance),
+      );
+    }
     String? startNodeId;
 
     double outsideDistance = 0.0;
@@ -644,6 +685,16 @@ class _MapScreenState extends State<MapScreen>
               ],
             ),
           ),
+          if (BcWaysMapConstants.showGpsDebug)
+            IconButton(
+              tooltip: 'Record walking path',
+              icon: const Icon(Icons.edit_location_alt_outlined),
+              onPressed: () => Navigator.of(context).push<void>(
+                MaterialPageRoute(
+                  builder: (_) => const WalkingRecorderScreen(),
+                ),
+              ),
+            ),
           Stack(
             clipBehavior: Clip.none,
             children: [
@@ -781,7 +832,9 @@ class _MapScreenState extends State<MapScreen>
               // Only actual movement/zoom/rotation
               // disables GPS following.
               onInteractionUpdate: _stopFollowingGps,
-              gpsAnimationDuration: const Duration(milliseconds: 600),
+              gpsAnimationDuration: _routeFollower.active
+                  ? Duration.zero
+                  : const Duration(milliseconds: 600),
 
               gpsAnimationCurve: Curves.easeOutCubic,
             ),

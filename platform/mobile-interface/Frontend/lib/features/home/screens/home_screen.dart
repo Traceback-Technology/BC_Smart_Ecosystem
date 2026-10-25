@@ -10,6 +10,7 @@ import '../../bc_ways/screens/map_screen.dart';
 import '../../bc_ways/widgets/bc_bottom_navigation_bar.dart';
 import '../../bc_eats/screens/bc_eats_shell.dart';
 import '../../profile/screens/profile_screen.dart';
+import '../widgets/route_history_section.dart';
 
 class CampusDashboardPage extends StatelessWidget {
   final AppSession session;
@@ -27,6 +28,18 @@ class CampusDashboardPage extends StatelessWidget {
 
   void _openBcEats(BuildContext context) {
     _onBottomNavTap(context, 2);
+  }
+
+  /// Reopen a past route: BC Ways opens with that destination selected,
+  /// ready to start navigating.
+  void _openRouteOnMap(BuildContext context, String destination) {
+    _showFeature(
+      context,
+      (_) => MapScreen(
+        initialDestinationQuery: destination,
+        onNavigate: (index) => _onBottomNavTap(context, index),
+      ),
+    );
   }
 
   void _showFeature(BuildContext context, WidgetBuilder builder) {
@@ -282,27 +295,9 @@ class CampusDashboardPage extends StatelessWidget {
 
                   const SizedBox(height: 24),
 
-                  const _SectionHeader(title: 'Upcoming'),
-
-                  const SizedBox(height: 12),
-
-                  const _ActivityCard(
-                    icon: Icons.calendar_month_outlined,
-                    color: Color(0xFF008579),
-                    title: 'Database Systems Lecture',
-                    subtitle: 'PSI-204 · 11:00 AM – 12:00 PM',
-                    detail: 'Synced with Microsoft Calendar',
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  const _ActivityCard(
-                    icon: Icons.airplanemode_on_outlined,
-                    color: Color(0xFF9A6700),
-                    title: 'Drone delivery',
-                    subtitle: 'Your order is on the way',
-                    time: '10:20 AM',
-                    detail: '30 min',
+                  RouteHistorySection(
+                    onOpenRoute: (destination) =>
+                        _openRouteOnMap(context, destination),
                   ),
 
                   const SizedBox(height: 24),

@@ -21,6 +21,7 @@ import '../widgets/campus_map.dart';
 import 'destination_search_screen.dart';
 import 'gps_calibration_screen.dart';
 import 'navigation_screen.dart';
+import '../services/route_history_service.dart';
 
 class MapScreen extends StatefulWidget {
   final String? initialDestinationQuery;
@@ -437,6 +438,20 @@ class _MapScreenState extends State<MapScreen>
 
     if (destination == null) {
       return;
+    }
+
+    // Save to route history (best effort; never blocks navigation).
+    final info = _travelInfoFor(destination);
+
+    if (info != null) {
+      RouteHistoryService.instance.recordStart(
+        origin: 'Current location',
+        destination: destination.name,
+        distanceMeters: info.distanceMeters,
+        estimatedMinutes: info.minutes,
+        originNodeId: _resolveCurrentStartNode(),
+        destinationNodeId: destination.nearestNode,
+      );
     }
 
     Navigator.of(context).push(

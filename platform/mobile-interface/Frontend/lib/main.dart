@@ -8,6 +8,7 @@ import 'features/auth/screens/student_name_screen.dart';
 import 'features/auth/screens/welcome_screen.dart';
 import 'features/bc_ways/constants/colors.dart';
 import 'features/home/screens/home_screen.dart';
+import 'features/bc_eats/services/notification_badge_controller.dart';
 
 class NoPageTransitionsBuilder extends PageTransitionsBuilder {
   const NoPageTransitionsBuilder();
@@ -65,6 +66,9 @@ class _BCSmartAppState extends State<BCSmartApp> {
     }
 
     BcApiClient.instance.setToken(session.accessToken);
+    if (!session.isGuest) {
+      NotificationBadgeController.instance.start();
+    }
     setState(() {
       _session = session;
     });
@@ -77,6 +81,7 @@ class _BCSmartAppState extends State<BCSmartApp> {
   }
 
   void _logout() {
+    NotificationBadgeController.instance.stop();
     BcApiClient.instance.setToken(null);
     setState(() {
       _session = null;

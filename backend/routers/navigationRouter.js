@@ -12,6 +12,12 @@ const { requireMapAccess } = require('../middlewares/mapAccess');
 
 router.use(identifier, requireMapAccess);
 router.post('/preview', controller.preview);
+
+// History routes must stay above '/:id' so 'history' is not read as an id.
+router.get('/history', controller.listHistory);
+router.post('/history', controller.recordHistory);
+router.patch('/history/:id/status', controller.updateHistoryStatus);
+
 router.patch('/:id/start', controller.start);
 router.get('/:id', controller.getRoute);
 

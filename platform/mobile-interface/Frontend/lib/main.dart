@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -8,6 +10,7 @@ import 'core/bc_api_client.dart';
 
 import 'features/auth/screens/welcome_screen.dart';
 import 'features/bc_ways/constants/colors.dart';
+import 'features/bc_ways/services/route_history_service.dart';
 import 'features/home/screens/home_screen.dart';
 
 class NoPageTransitionsBuilder extends PageTransitionsBuilder {
@@ -139,6 +142,35 @@ class _BCSmartAppState extends State<BCSmartApp> {
     setState(() {
       _session = const AppSession.guest();
     });
+
+    unawaited(_startGuestApiSession());
+  }
+
+  /// Guests browse without signing in, but the API still needs an anonymous
+  /// guest token so their BC Ways route history can be saved. Best effort:
+  /// if the server is unreachable the app works exactly as before.
+  Future<void> _startGuestApiSession() async {
+    try {
+      final response = await BcApiClient.instance.postJson(
+        '/api/guests/session',
+        {},
+      );
+      final token = response['token']?.toString();
+
+      if (!mounted || token == null || token.isEmpty) {
+        return;
+      }
+
+      // The guest may have gone back to the welcome screen meanwhile.
+      if (_session?.isGuest != true) {
+        return;
+      }
+
+      BcApiClient.instance.setToken(token);
+      RouteHistoryService.instance.refresh();
+    } catch (_) {
+      // History just stays unavailable until the next guest session.
+    }
   }
 
   bool _logoutBusy = false;

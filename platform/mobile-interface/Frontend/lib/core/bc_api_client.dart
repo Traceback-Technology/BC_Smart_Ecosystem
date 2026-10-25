@@ -33,7 +33,14 @@ class BcApiClient {
     Map<String, String>? query,
   }) async {
     final response = await _client
-        .get(_uri(path, query), headers: {'Accept': 'application/json'})
+        .get(
+          _uri(path, query),
+          headers: {
+            'Accept': 'application/json',
+            if (_token != null && _token!.isNotEmpty)
+              'Authorization': 'Bearer $_token',
+          },
+        )
         .timeout(const Duration(seconds: 8));
     return _decode(response);
   }

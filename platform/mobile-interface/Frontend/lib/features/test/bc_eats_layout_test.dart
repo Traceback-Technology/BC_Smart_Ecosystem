@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:fontend/features/bc_ways/widgets/bc_bottom_navigation_bar.dart';
+import 'package:frontend/features/bc_ways/widgets/bc_bottom_navigation_bar.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../auth/models/app_session.dart';
-import 'package:fontend/features/bc_eats/models/bc_eats_product.dart';
-import 'package:fontend/features/bc_eats/services/bc_eats_store.dart';
-import 'package:fontend/features/bc_eats/screens/bc_eats_cart_screen.dart';
-import 'package:fontend/features/bc_eats/screens/bc_eats_checkout_screen.dart';
-import 'package:fontend/features/bc_eats/screens/bc_eats_tracking_screen.dart';
-import 'package:fontend/features/bc_eats/screens/bc_eats_drone_screen.dart';
-import 'package:fontend/features/bc_eats/screens/bc_eats_shell.dart';
-import 'package:fontend/features/bc_eats/widgets/eats_order_widgets.dart';
+import 'package:frontend/features/bc_eats/models/bc_eats_product.dart';
+import 'package:frontend/features/bc_eats/services/bc_eats_store.dart';
+import 'package:frontend/features/bc_eats/screens/bc_eats_cart_screen.dart';
+import 'package:frontend/features/bc_eats/screens/bc_eats_checkout_screen.dart';
+import 'package:frontend/features/bc_eats/screens/bc_eats_tracking_screen.dart';
+import 'package:frontend/features/bc_eats/screens/bc_eats_drone_screen.dart';
+import 'package:frontend/features/bc_eats/screens/bc_eats_shell.dart';
+import 'package:frontend/features/bc_eats/widgets/eats_order_widgets.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

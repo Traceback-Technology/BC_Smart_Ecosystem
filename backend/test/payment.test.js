@@ -47,6 +47,28 @@ test('sandbox mode refuses to start with a live key', () => {
   assert.equal(checkConfig({ PAYMENT_MODE: 'stripe', STRIPE_SECRET_KEY: 'sk_live_abc' }).error, 'STRIPE_WEBHOOK_SECRET is required when Stripe is enabled');
 });
 
+test('the publishable key must come from the same sandbox as the secret key', () => {
+  const base = { PAYMENT_MODE: 'sandbox', STRIPE_SECRET_KEY: 'sk_test_51AccountAAAAAAAAsecret' };
+  assert.equal(checkConfig({ ...base, STRIPE_PUBLISHABLE_KEY: 'pk_test_51AccountAAAAAAAApublic' }).error, undefined);
+  assert.match(checkConfig({ ...base, STRIPE_PUBLISHABLE_KEY: 'pk_test_51AccountBBBBBBBBpublic' }).error, /same Stripe sandbox/);
+  assert.match(checkConfig({ ...base, STRIPE_PUBLISHABLE_KEY: 'pk_live_51AccountAAAAAAAApublic' }).error, /same Stripe sandbox/);
+  assert.match(checkConfig(base).notice, /STRIPE_PUBLISHABLE_KEY is not set/);
+});
+
+test('config serves the publishable key to the app', (t) => {
+  process.env.STRIPE_PUBLISHABLE_KEY = 'pk_test_unit';
+  t.after(() => { delete process.env.STRIPE_PUBLISHABLE_KEY; });
+  const res = fakeRes();
+  pay.getConfig({}, res);
+  assert.deepEqual(res.body.data, { enabled: true, publishableKey: 'pk_test_unit', currency: 'zar', sandbox: true });
+
+  delete process.env.STRIPE_PUBLISHABLE_KEY;
+  const off = fakeRes();
+  pay.getConfig({}, off);
+  assert.equal(off.body.data.enabled, false);
+  assert.equal(off.body.data.publishableKey, null);
+});
+
 test('sync marks the payment succeeded, confirms the order and notifies once', async (t) => {
   const { payment, order, notifications } = setup(t);
   t.mock.method(stripe.paymentIntents, 'retrieve', async () => intent({ status: 'succeeded' }));

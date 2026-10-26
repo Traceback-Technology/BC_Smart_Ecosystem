@@ -30,11 +30,23 @@ A succeeded or refunded payment is never downgraded by a late or out-of-order up
    ```env
    PAYMENT_MODE=sandbox
    STRIPE_SECRET_KEY=sk_test_...
+   STRIPE_PUBLISHABLE_KEY=pk_test_...
    STRIPE_CURRENCY=zar
    ```
 
 With `PAYMENT_MODE=sandbox` the server **refuses to start with a live key** (`sk_live_...`),
-so a copy/paste mistake cannot charge a real card. On startup it logs which Stripe mode it is in.
+so a copy/paste mistake cannot charge a real card. It also refuses to start if the two keys
+come from different accounts. On startup it logs which Stripe mode it is in.
+
+The app gets the publishable key from `GET /api/payments/config`, so it never has to be built
+with the key, and changing keys only needs a backend restart.
+
+### Render
+
+In the Render service, open **Environment** and add the same variables as above
+(`PAYMENT_MODE`, `STRIPE_SECRET_KEY`, `STRIPE_PUBLISHABLE_KEY`, `STRIPE_CURRENCY`), plus
+`STRIPE_WEBHOOK_SECRET` from the webhook endpoint described below. Save, and let Render redeploy.
+Check it with `https://<your-api>/api/payments/config`: it should return `"enabled": true`.
 
 ### Webhooks (optional in sandbox)
 
@@ -76,14 +88,9 @@ with another card. This endpoint returns 403 unless `PAYMENT_MODE=sandbox` and t
 
 ## Testing in the app
 
-Run the Flutter app with the sandbox **publishable** key (and your backend URL if it is not
-the deployed one):
-
-```sh
-flutter run --dart-define=STRIPE_PUBLISHABLE_KEY=pk_test_... --dart-define=API_BASE_URL=http://10.0.2.2:8000
-```
-
-(`10.0.2.2` is your PC as seen from the Android emulator.) Sign in, pay by card, and enter a
+A plain `flutter run` works: the app talks to the deployed backend and fetches the publishable
+key from it. To use a local backend instead, add `--dart-define=API_BASE_URL=http://10.0.2.2:8000`
+(`10.0.2.2` is your PC as seen from the Android emulator). Sign in, pay by card, and enter a
 [Stripe test card](https://docs.stripe.com/testing#cards) in the PaymentSheet:
 
 | Card number           | Result                       |
@@ -95,8 +102,9 @@ flutter run --dart-define=STRIPE_PUBLISHABLE_KEY=pk_test_... --dart-define=API_B
 
 Use any future expiry date, any 3-digit CVC and any postal code.
 
-The publishable key in the app and the secret key on the server **must come from the same
-sandbox**, otherwise the PaymentSheet fails with "No such payment_intent".
+If you pass `--dart-define=STRIPE_PUBLISHABLE_KEY=...` it overrides the server's key, and it
+**must come from the same sandbox** as the server's secret key, or the PaymentSheet fails
+with "No such payment_intent".
 
 ## Refunds
 
@@ -109,6 +117,8 @@ empty body for full). Refunds appear under **Payments** in the sandbox dashboard
 |---|---|
 | `PAYMENT_MODE=sandbox requires a Stripe sandbox secret key` on startup | `STRIPE_SECRET_KEY` is empty, a placeholder or a live key. Use the sandbox `sk_test_...`. |
 | `Stripe is not configured` (503) | `STRIPE_SECRET_KEY` is not set. |
+| App says "Card payments are unavailable" | `STRIPE_PUBLISHABLE_KEY` is not set on the backend (check `/api/payments/config`). |
+| `/api/payments/config` says "Authentication token required" | The server is running code from before this endpoint existed. Redeploy the latest branch. |
 | Order stays `pending` after paying | No webhook reached the server. Call **Sync payment with Stripe**, or run `stripe listen`. |
 | Webhook returns `400 Webhook Error` | `STRIPE_WEBHOOK_SECRET` doesn't match the `stripe listen` session or dashboard endpoint. |
 | `amount_too_small` from Stripe | The order total is under Stripe's minimum charge. Add more items. |

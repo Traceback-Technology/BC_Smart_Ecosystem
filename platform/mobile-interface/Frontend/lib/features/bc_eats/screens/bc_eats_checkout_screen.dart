@@ -496,6 +496,19 @@ class _BCEatsCheckoutScreenState extends State<BCEatsCheckoutScreen> {
           style: ThemeMode.system,
         ));
         await Stripe.instance.presentPaymentSheet();
+        // The webhook is the source of truth, but it cannot reach a local
+        // sandbox backend unless the Stripe CLI is forwarding, so ask the
+        // server to re-check with Stripe now. Best-effort: the sheet already
+        // succeeded, and failing here would invite a second payment.
+        String? paymentStatus;
+        final paymentId = (paymentResponse['data'] as Map<String, dynamic>?)?['_id']?.toString();
+        if (paymentId != null) {
+          try {
+            final sync = await api.postJson('/api/payments/$paymentId/sync', {});
+            paymentStatus = (sync['data'] as Map<String, dynamic>?)?['status']?.toString();
+          } catch (_) {}
+        }
+        if (paymentStatus == 'failed') throw const BcApiException('Stripe reported that this payment failed. You have not been charged.');
         if (!mounted) return;
         // Keep the existing local tracking presentation while the server order
         // and Stripe webhook remain the source of truth for payment/order state.

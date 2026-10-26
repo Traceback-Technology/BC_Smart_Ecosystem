@@ -5,10 +5,9 @@ const Activity = require('../models/activityModel');
 const Coupon = require('../models/couponModel');
 const Drone = require('../models/droneModel');
 // const Notification = require('../models/notificationModel');
-const {notificationOrderStatus, notifyOrderStatus} = require('../services/notificationService');
+const { notifyOrderStatus } = require('../services/notificationService');
 const Payment = require('../models/paymentModel');
-let stripe = null;
-try { if (process.env.STRIPE_SECRET_KEY) stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); } catch (_) {}
+const { stripe } = require('../services/stripeService');
 const { orderSchema } = require('../middlewares/validator');
 
 const orderNo = () => `BC-${Date.now().toString(36).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`;
@@ -78,7 +77,7 @@ exports.createOrder = async (req, res, next) => {
     await Promise.allSettled([
       Activity.create({ userId: req.user.userId, type: 'food', title: `Order ${order.orderNumber}`, amount: total, metadata: { orderId: order._id } }),
       // notify(req.user.userId, 'Order placed', `Your order ${order.orderNumber} has been placed.`),
-      notificationOrderStatus(order),
+      notifyOrderStatus(order),
     ]);
     res.status(201).json({ success: true, message: 'Order placed', data: order });
   } catch (error) { next(error); }
@@ -126,7 +125,7 @@ exports.updateStatus = async (req, res, next) => {
     if (order.droneId && ['drone_launched', 'out_for_delivery'].includes(status)) await Drone.findByIdAndUpdate(order.droneId, { status: 'in_flight' });
     if (status === 'delivered' && order.droneId) await Drone.findByIdAndUpdate(order.droneId, { status: 'available' });
     // await notify(order.userId, 'Order update', `Order ${order.orderNumber} is now ${order.status}.`, 'order', { orderId: order._id }).catch((error) => console.error('Order notification failed:', error.message));
-    await notificationOrderStatus(order).catch((error)=> console.error('Order notification failed', error.message));
+    await notifyOrderStatus(order).catch((error)=> console.error('Order notification failed', error.message));
     res.json({ success: true, data: order });
   } catch (error) { next(error); }
 };

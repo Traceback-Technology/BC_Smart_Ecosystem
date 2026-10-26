@@ -14,12 +14,14 @@ import '../models/filter_category.dart';
 import '../models/path_node.dart';
 import '../models/route_result.dart';
 import '../services/campus_gps_service.dart';
+import '../services/campus_navigation_geometry.dart';
 import '../services/dijkstra_service.dart';
 import '../services/graph_service.dart';
 import '../services/navigation_service.dart';
 import '../services/route_follow_service.dart';
 import '../widgets/bc_bottom_navigation_bar.dart';
 import '../widgets/campus_map.dart';
+import '../widgets/map_status_overlay.dart';
 import 'destination_search_screen.dart';
 import 'gps_calibration_screen.dart';
 import 'navigation_screen.dart';
@@ -99,9 +101,10 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
 
   CampusEntry? _nearestEntry;
 
-  String? _currentStartNodeId;
-
   bool _onNavigationNetwork = false;
+  final CampusBoundaryTracker _campusBoundary = CampusBoundaryTracker();
+  bool _insideCampus = false;
+  bool get _insideOffPath => _insideCampus && !_onNavigationNetwork;
 
   double _distanceToEntry = 0;
 
@@ -240,106 +243,70 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   // ===========================================================================
 
   void _applyGpsPosition(geo.Position gps) {
-    final mapPosition = _gpsService.toMapOffset(gps);
-
-    final insideSvg = _gpsService.isInsideMapCanvas(mapPosition);
-
-    // Always preserve actual GPS location.
-    _lastVisibleMapPosition = mapPosition;
-
-    // -------------------------------------------------------------------------
-    // WALKING NETWORK
-    // -------------------------------------------------------------------------
-
-    final selectedGoal = _selectedDestination;
-    if (!insideSvg || selectedGoal == null) _routeFollower.reset();
-    final following =
-        insideSvg &&
-        selectedGoal != null &&
-        _routeFollower.update(
-          _graphService.graph,
-          mapPosition,
-          selectedGoal.nearestNode,
-          accuracy: gps.accuracy,
-          timestamp: gps.timestamp,
-        );
-    final onNetwork = selectedGoal == null
-        ? insideSvg && _graphService.isWithinNavigationNetwork(mapPosition)
-        : following;
-
-    // -------------------------------------------------------------------------
-    // NEAREST ENTRY
-    // -------------------------------------------------------------------------
-
-    final nearestEntry = _gpsService.nearestEntry(
-      gps,
-      destinationYard: _selectedDestination?.yard,
-    );
-
-    // -------------------------------------------------------------------------
-    // ROUTING START
-    // -------------------------------------------------------------------------
-
-    String? startNodeId;
-
-    if (onNetwork) {
-      startNodeId = _graphService.nearestNodeIdTo(mapPosition);
-    } else {
-      startNodeId = nearestEntry.nodeId;
-    }
-
-    // -------------------------------------------------------------------------
-    // DISTANCE TO ENTRY
-    // -------------------------------------------------------------------------
-
-    final distanceToEntry = onNetwork
-        ? 0.0
-        : _gpsService.distanceToEntry(gps, nearestEntry);
-
-    // -------------------------------------------------------------------------
-    // ROUTE
-    // -------------------------------------------------------------------------
-
-    RouteResult route = _previewRoute;
-
-    if (_selectedDestination != null && startNodeId != null) {
-      final startChanged = startNodeId != _currentStartNodeId;
-
-      if (!following || startChanged || route.isEmpty) {
-        route = _dijkstra.findRoute(
-          startNodeId,
-          _selectedDestination!.nearestNode,
-        );
-      }
-    }
-
-    if (following) {
-      route = _routeFollower.route;
-      _lastVisibleMapPosition = _routeFollower.position;
-    }
-
     if (!mounted) {
       return;
     }
+    final destination = _selectedDestination;
 
+    final raw = _gpsService.toMapOffset(gps);
+    final insideCanvas = _gpsService.isInsideMapCanvas(raw);
+    final insideCampus = _campusBoundary.update(raw, accuracy: gps.accuracy);
+    if (!insideCanvas || destination == null) {
+      _routeFollower.reset();
+    }
+    final following =
+        insideCanvas &&
+        destination != null &&
+        _routeFollower.updateToAny(
+          _graphService.graph,
+          raw,
+          destination.entranceNodeIds,
+          accuracy: gps.accuracy,
+          timestamp: gps.timestamp,
+        );
+    final nearestEntry = _gpsService.nearestEntry(
+      gps,
+      destinationYard: destination?.yard,
+    );
+    // Campus membership and path matching are independent states.
+    final String? startNodeId = following
+        ? _graphService.nearestNodeIdTo(raw)
+        : insideCampus
+        ? null
+        : nearestEntry.nodeId;
+    final distanceToEntry = following || insideCampus
+        ? 0.0
+        : _gpsService.distanceToEntry(gps, nearestEntry);
+    RouteResult route = RouteResult.empty;
+    if (following) {
+      route = _routeFollower.route;
+    } else if (!insideCampus && destination != null && startNodeId != null) {
+      route = _dijkstra.findRouteToAny(
+        startNodeId,
+        destination.entranceNodeIds,
+      );
+    }
+    final visible = following
+        ? _routeFollower.position ?? raw
+        : SoftPathPosition.adjust(
+            _graphService.graph,
+            raw,
+            accuracy: gps.accuracy,
+          );
     setState(() {
       _gpsPosition = gps;
-      _mapPosition = mapPosition;
+      _mapPosition = raw;
+      _lastVisibleMapPosition = visible;
       _nearestEntry = nearestEntry;
-      _currentStartNodeId = startNodeId;
-      _onNavigationNetwork = onNetwork;
+      _insideCampus = insideCampus;
+      _onNavigationNetwork = following;
       _distanceToEntry = distanceToEntry;
       _previewRoute = route;
       _gpsError = null;
       _loading = false;
     });
-
-    // -------------------------------------------------------------------------
-    // SMOOTH GPS CAMERA FOLLOW
-    // -------------------------------------------------------------------------
-
     if (_followGps) {
-      _moveCameraToUser(_routeFollower.targetPosition ?? mapPosition);
+      _moveCameraToUser(_routeFollower.targetPosition ?? visible);
     }
   }
 
@@ -426,7 +393,10 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     RouteResult route = RouteResult.empty;
 
     if (startNodeId != null) {
-      route = _dijkstra.findRoute(startNodeId, destination.nearestNode);
+      route = _dijkstra.findRouteToAny(
+        startNodeId,
+        destination.entranceNodeIds,
+      );
     }
 
     setState(() {
@@ -449,6 +419,9 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   // ===========================================================================
 
   String? _resolveCurrentStartNode() {
+    if (_insideOffPath) {
+      return null;
+    }
     final position = _mapPosition;
 
     if (position != null && _onNavigationNetwork) {
@@ -488,6 +461,9 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   // ===========================================================================
 
   DestinationTravelInfo? _travelInfoFor(Destination destination) {
+    if (_insideOffPath) {
+      return null;
+    }
     if (_routeFollower.active && destination == _selectedDestination) {
       final distance = _routeFollower.route.totalDistanceMeters;
       return DestinationTravelInfo(
@@ -516,7 +492,10 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
       return null;
     }
 
-    final route = _dijkstra.findRoute(startNodeId, destination.nearestNode);
+    final route = _dijkstra.findRouteToAny(
+      startNodeId,
+      destination.entranceNodeIds,
+    );
 
     if (route.isEmpty) {
       return null;
@@ -610,14 +589,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
       body: SafeArea(
         bottom: false,
         child: AdaptiveMapLayout(
-          header: [
-            _buildTopBar(),
-            _buildSearchBar(),
-            _buildCategoryFilters(),
-            if (_gpsError != null) _buildGpsError(),
-            if (_gpsPosition != null && !_onNavigationNetwork)
-              _buildOutsideBanner(),
-          ],
+          header: [_buildTopBar(), _buildSearchBar(), _buildCategoryFilters()],
           map: _buildMap(),
           footer: [
             if (_selectedDestination != null) _buildDestinationPanel(),
@@ -839,16 +811,40 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
               gpsAnimationCurve: Curves.easeOutCubic,
             ),
 
-            // ---------------------------------------------------------------
-            // GPS DEBUG
-            // ---------------------------------------------------------------
-            if (BcWaysMapConstants.showGpsDebug)
-              Positioned(left: 12, top: 12, child: _buildGpsDebugCard()),
+            MapStatusOverlay(
+              viewportHeight: constraints.maxHeight,
+              pinnedChildren: [
+                if (!_insideCampus &&
+                    _gpsPosition != null &&
+                    !_onNavigationNetwork)
+                  _buildOutsideBanner(),
 
-            if (!_onNavigationNetwork &&
-                _gpsPosition != null &&
-                _nearestEntry != null)
-              Positioned(top: 14, right: 14, child: _buildEntranceIndicator()),
+                if (!_insideCampus &&
+                    !_onNavigationNetwork &&
+                    _gpsPosition != null &&
+                    _nearestEntry != null)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: _buildEntranceIndicator(),
+                  ),
+              ],
+              children: [
+                if (_gpsError != null) _buildGpsError(),
+                if (_insideOffPath && _selectedDestination != null)
+                  Material(
+                    color: context.cardBg.withValues(alpha: 0.96),
+                    borderRadius: BorderRadius.circular(14),
+                    child: const Padding(
+                      padding: EdgeInsets.all(12),
+                      child: Text(
+                        'Return to the nearby path to continue navigation.',
+                      ),
+                    ),
+                  ),
+
+                if (BcWaysMapConstants.showGpsDebug) _buildGpsDebugCard(),
+              ],
+            ),
 
             // ---------------------------------------------------------------
             // GPS FOLLOW BUTTON
@@ -1157,7 +1153,9 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
-              onPressed: info != null ? _startNavigation : null,
+              onPressed: info != null || _insideOffPath
+                  ? _startNavigation
+                  : null,
               icon: const Icon(Icons.navigation),
               label: const Text(
                 'Start Navigation',
@@ -1341,6 +1339,9 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   // ===========================================================================
 
   Widget _buildOutsideBanner() {
+    if (_insideCampus) {
+      return const SizedBox.shrink();
+    }
     final entry = _nearestEntry;
 
     if (entry == null) {
@@ -1348,7 +1349,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
     }
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(18, 3, 18, 3),
+      margin: EdgeInsets.zero,
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       decoration: BoxDecoration(
         color: context.bcColors.primaryContainer,
@@ -1383,6 +1384,9 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
   // ===========================================================================
 
   Widget _buildEntranceIndicator() {
+    if (_insideCampus) {
+      return const SizedBox.shrink();
+    }
     final gps = _gpsPosition;
 
     final entry = _nearestEntry;

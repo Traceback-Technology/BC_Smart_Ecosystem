@@ -7,6 +7,8 @@ import 'position.dart';
 /// - `entrance`
 /// - `gate`
 class GraphNode {
+  // Figma entrance/gate markers are 4 x 4 squares.
+  static const double entranceCentreOffset = 2.0;
   final String id;
   final String type;
   final Position position;
@@ -17,13 +19,20 @@ class GraphNode {
     required this.position,
   });
 
-  factory GraphNode.fromJson(
-    Map<String, dynamic> json,
-  ) {
+  factory GraphNode.fromJson(Map<String, dynamic> json) {
+    final type = json['type'] as String;
+    final rawPosition = Position.fromJson(json);
+    final isEntrance = type == 'entrance' || type == 'gate';
+
     return GraphNode(
       id: json['id'] as String,
-      type: json['type'] as String,
-      position: Position.fromJson(json),
+      type: type,
+      position: isEntrance
+          ? Position(
+              rawPosition.x + entranceCentreOffset,
+              rawPosition.y + entranceCentreOffset,
+            )
+          : rawPosition,
     );
   }
 
@@ -31,14 +40,7 @@ class GraphNode {
   ///
   /// Used by the navigation simulation to place the
   /// user's location between two graph nodes.
-  GraphNode copyWithPosition(
-    double x,
-    double y,
-  ) {
-    return GraphNode(
-      id: id,
-      type: type,
-      position: Position(x, y),
-    );
+  GraphNode copyWithPosition(double x, double y) {
+    return GraphNode(id: id, type: type, position: Position(x, y));
   }
 }

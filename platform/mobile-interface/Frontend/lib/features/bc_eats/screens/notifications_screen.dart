@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../bc_ways/constants/colors.dart';
 import '../constants/bc_eats_colors.dart';
 import '../models/app_notification.dart';
+import '../models/notification_display.dart';
 import '../services/notification_badge_controller.dart';
 import '../services/notification_service.dart';
 
@@ -92,30 +93,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
-  }
-
-  String _ago(DateTime t) {
-    final d = DateTime.now().difference(t);
-    if (d.inMinutes < 1) return 'Just now';
-    if (d.inMinutes < 60) return '${d.inMinutes} min ago';
-    if (d.inHours < 24) return '${d.inHours} h ago';
-    if (d.inDays < 7) return '${d.inDays} d ago';
-    return '${t.day}/${t.month}/${t.year}';
-  }
-
-  IconData _iconFor(String type) {
-    switch (type) {
-      case 'order':
-        return Icons.receipt_long_outlined;
-      case 'payment':
-        return Icons.payments_outlined;
-      case 'drone':
-        return Icons.flight_outlined;
-      case 'promotion':
-        return Icons.local_offer_outlined;
-      default:
-        return Icons.info_outline;
-    }
   }
 
   @override
@@ -223,7 +200,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             onTap: () => _open(n),
             leading: CircleAvatar(
               backgroundColor: BcEatsColors.red.withValues(alpha: 0.12),
-              child: Icon(_iconFor(n.type), color: BcEatsColors.red),
+              child: Icon(notificationIcon(n.type), color: BcEatsColors.red),
             ),
             title: Text(
               n.title,
@@ -238,7 +215,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 Text(n.message, style: TextStyle(color: context.textSecondary)),
                 const SizedBox(height: 4),
                 Text(
-                  _ago(n.createdAt),
+                  notificationTimeAgo(n.createdAt),
                   style: TextStyle(fontSize: 12, color: context.textSecondary),
                 ),
               ],

@@ -1,13 +1,68 @@
 const Payment = require('../models/paymentModel');
 const Order = require('../models/orderModel');
-let stripe = null;
-try { if (process.env.STRIPE_SECRET_KEY) stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); } catch (_) {}
+const { createNotification } = require('../services/notificationService');
+const { stripe, sandboxEnabled, publishableKey } = require('../services/stripeService');
 
 const toPaymentStatus = (stripeStatus) => {
   if (stripeStatus === 'succeeded') return 'succeeded';
   if (stripeStatus === 'requires_action' || stripeStatus === 'requires_confirmation') return 'requires_action';
   if (stripeStatus === 'canceled') return 'failed';
   return 'pending';
+};
+
+// Stripe's ready-made test PaymentMethods; they only exist in sandbox/test mode.
+// https://docs.stripe.com/testing#cards
+const SANDBOX_TEST_CARDS = {
+  visa: 'pm_card_visa',
+  mastercard: 'pm_card_mastercard',
+  declined: 'pm_card_chargeDeclined',
+  insufficient_funds: 'pm_card_chargeDeclinedInsufficientFunds',
+  expired_card: 'pm_card_chargeDeclinedExpiredCard',
+  '3ds': 'pm_card_authenticationRequired',
+};
+
+const PAYMENT_NOTIFICATIONS = {
+  succeeded: (o) => ({ title: 'Payment successful', message: `Payment received for order ${o.orderNumber}.` }),
+  failed: (o) => ({ title: 'Payment failed', message: `Payment for order ${o.orderNumber} did not go through. You have not been charged.` }),
+};
+
+// Copies a Stripe PaymentIntent's state onto our Payment and confirms the order
+// once it is paid. The webhook, sync and sandbox confirm all go through here so
+// they always agree. Returns { order }, or { mismatch: true } when Stripe's
+// amount/currency differs from what we charged (the payment is left untouched).
+async function applyIntent(payment, intent) {
+  const previous = payment.status;
+  // Stripe may deliver events out of order; never downgrade a settled payment.
+  const settled = previous === 'refunded' || (previous === 'succeeded' && intent.status !== 'succeeded');
+  if (!settled) {
+    if (intent.status === 'succeeded') {
+      if (intent.amount !== Math.round(payment.amount * 100) || intent.currency.toLowerCase() !== payment.currency.toLowerCase()) {
+        console.error(`Stripe amount/currency mismatch for payment ${payment._id}`);
+        return { mismatch: true };
+      }
+      payment.status = 'succeeded';
+    } else if (intent.status === 'canceled' || intent.last_payment_error) payment.status = 'failed';
+    else payment.status = toPaymentStatus(intent.status);
+    await payment.save();
+  }
+  const order = await Order.findById(payment.orderId);
+  if (order && payment.status === 'succeeded' && order.status === 'pending') {
+    order.status = 'confirmed';
+    await order.save();
+  }
+  if (order && payment.status !== previous && PAYMENT_NOTIFICATIONS[payment.status]) {
+    const { title, message } = PAYMENT_NOTIFICATIONS[payment.status](order);
+    await createNotification(payment.userId, title, message, 'payment', { orderId: order._id, paymentId: payment._id })
+      .catch((error) => console.error('Payment notification failed:', error.message));
+  }
+  return { order };
+}
+
+// Public: the publishable key is designed to be shipped to clients. The app
+// reads it here at checkout instead of having it baked in at build time.
+exports.getConfig = (req, res) => {
+  const key = stripe ? publishableKey() : '';
+  res.json({ success: true, data: { enabled: Boolean(key), publishableKey: key || null, currency: (process.env.STRIPE_CURRENCY || 'zar').toLowerCase(), sandbox: sandboxEnabled() } });
 };
 
 exports.createPaymentIntent = async (req, res, next) => {
@@ -56,6 +111,68 @@ exports.getPayment = async (req, res, next) => {
     res.json({ success: true, data: payment });
   } catch (error) { next(error); }
 };
+
+// Re-reads the PaymentIntent from Stripe. The app calls this straight after the
+// PaymentSheet closes, and it is the fallback when webhooks cannot reach the
+// server (e.g. local sandbox testing without the Stripe CLI).
+exports.syncPayment = async (req, res, next) => {
+  try {
+    if (!stripe) return res.status(503).json({ success: false, message: 'Stripe is not configured' });
+    const payment = await Payment.findOne({ _id: req.params.id, userId: req.user.userId });
+    if (!payment?.paymentIntentId) return res.status(404).json({ success: false, message: 'Payment not found' });
+    const intent = await stripe.paymentIntents.retrieve(payment.paymentIntentId);
+    const result = await applyIntent(payment, intent);
+    if (result.mismatch) return res.status(409).json({ success: false, message: 'Payment amount or currency does not match the order' });
+    res.json({ success: true, data: payment, orderStatus: result.order?.status });
+  } catch (error) { next(error); }
+};
+
+// SANDBOX ONLY: pays the PaymentIntent with one of Stripe's test cards so the
+// whole flow can be exercised from Postman without the mobile app.
+exports.sandboxConfirm = async (req, res, next) => {
+  try {
+    if (!sandboxEnabled()) return res.status(403).json({ success: false, message: 'Sandbox payments need PAYMENT_MODE=sandbox and a Stripe sandbox key (sk_test_...)' });
+    const testCard = req.body.testCard || 'visa';
+    if (!Object.prototype.hasOwnProperty.call(SANDBOX_TEST_CARDS, testCard)) return res.status(400).json({ success: false, message: `testCard must be one of: ${Object.keys(SANDBOX_TEST_CARDS).join(', ')}` });
+    const payment = await Payment.findOne({ _id: req.params.id, userId: req.user.userId });
+    if (!payment?.paymentIntentId) return res.status(404).json({ success: false, message: 'Payment not found' });
+    if (['succeeded', 'refunded'].includes(payment.status)) return res.status(409).json({ success: false, message: 'This payment has already been completed' });
+    let intent;
+    let declineMessage = null;
+    try {
+      intent = await stripe.paymentIntents.confirm(payment.paymentIntentId, {
+        payment_method: SANDBOX_TEST_CARDS[testCard],
+        // Required by Stripe for server-side confirms; only used by the 3DS card.
+        return_url: `${process.env.PUBLIC_API_URL || `${req.protocol}://${req.get('host')}`}/api/payments/sandbox/return`,
+      });
+    } catch (error) {
+      // Declined test cards throw; the intent itself records the failure.
+      if (error.type !== 'StripeCardError') throw error;
+      declineMessage = error.message;
+      intent = await stripe.paymentIntents.retrieve(payment.paymentIntentId);
+    }
+    const result = await applyIntent(payment, intent);
+    if (result.mismatch) return res.status(409).json({ success: false, message: 'Payment amount or currency does not match the order' });
+    const nextActionUrl = intent.next_action?.redirect_to_url?.url;
+    const message = declineMessage || (nextActionUrl ? 'Open nextActionUrl in a browser to complete 3D Secure.' : `Stripe status: ${intent.status}`);
+    res.status(declineMessage ? 402 : 200).json({ success: !declineMessage, message, testCard, data: payment, orderStatus: result.order?.status, ...(nextActionUrl ? { nextActionUrl } : {}) });
+  } catch (error) { next(error); }
+};
+
+// SANDBOX ONLY: where Stripe sends the browser after the 3D Secure test page.
+// Unauthenticated, but it only pulls the real status from Stripe.
+exports.sandboxReturn = async (req, res, next) => {
+  try {
+    if (!sandboxEnabled()) return res.status(403).json({ success: false, message: 'Sandbox payments are disabled' });
+    const payment = req.query.payment_intent && await Payment.findOne({ paymentIntentId: String(req.query.payment_intent) });
+    if (!payment) return res.status(404).json({ success: false, message: 'Payment not found' });
+    const intent = await stripe.paymentIntents.retrieve(payment.paymentIntentId);
+    const result = await applyIntent(payment, intent);
+    if (result.mismatch) return res.status(409).json({ success: false, message: 'Payment amount or currency does not match the order' });
+    res.json({ success: payment.status === 'succeeded', message: `3D Secure finished; payment is ${payment.status}. You can close this tab.`, orderStatus: result.order?.status });
+  } catch (error) { next(error); }
+};
+
 exports.refundPayment = async (req, res, next) => {
   try {
     if (!stripe) return res.status(503).json({ success: false, message: 'Stripe is not configured' });
@@ -84,26 +201,12 @@ exports.webhook = async (req, res) => {
     let event;
     try { event = stripe.webhooks.constructEvent(req.body, req.headers['stripe-signature'], process.env.STRIPE_WEBHOOK_SECRET); }
     catch (error) { return res.status(400).send(`Webhook Error: ${error.message}`); }
-    const intent = event.data.object;
     if (['payment_intent.succeeded', 'payment_intent.payment_failed', 'payment_intent.canceled'].includes(event.type)) {
+      const intent = event.data.object;
       const payment = await Payment.findOne({ paymentIntentId: intent.id });
       if (payment) {
-        // Stripe may deliver events out of order; never downgrade a successful payment.
-        if (payment.status === 'succeeded' && event.type !== 'payment_intent.succeeded') return res.json({ received: true });
-        if (event.type === 'payment_intent.succeeded') {
-          if (intent.amount !== Math.round(payment.amount * 100) || intent.currency.toLowerCase() !== payment.currency.toLowerCase()) {
-            console.error(`Stripe amount/currency mismatch for payment ${payment._id}`);
-            return res.status(400).json({ received: false, message: 'Payment amount or currency mismatch' });
-          }
-          payment.status = 'succeeded';
-        } else if (event.type === 'payment_intent.payment_failed') payment.status = 'failed';
-        else payment.status = 'failed';
-        await payment.save();
-        const order = await Order.findById(payment.orderId);
-        if (order && payment.status === 'succeeded' && order.status === 'pending') {
-          order.status = 'confirmed';
-          await order.save();
-        }
+        const result = await applyIntent(payment, intent);
+        if (result.mismatch) return res.status(400).json({ received: false, message: 'Payment amount or currency mismatch' });
       }
     }
     res.json({ received: true });

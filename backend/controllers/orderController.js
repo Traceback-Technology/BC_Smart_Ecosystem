@@ -7,8 +7,7 @@ const Drone = require('../models/droneModel');
 // const Notification = require('../models/notificationModel');
 const { notifyOrderStatus } = require('../services/notificationService');
 const Payment = require('../models/paymentModel');
-let stripe = null;
-try { if (process.env.STRIPE_SECRET_KEY) stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); } catch (_) {}
+const { stripe } = require('../services/stripeService');
 const { orderSchema } = require('../middlewares/validator');
 
 const orderNo = () => `BC-${Date.now().toString(36).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`;

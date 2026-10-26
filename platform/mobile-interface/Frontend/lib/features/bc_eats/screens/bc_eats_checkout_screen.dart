@@ -469,17 +469,36 @@ class _BCEatsCheckoutScreenState extends State<BCEatsCheckoutScreen> {
       ],
     ),
   );
+  // A --dart-define key is applied in main(); otherwise the key comes from the
+  // backend, so the app never needs rebuilding and always matches the server.
+  static bool _stripeReady = const String.fromEnvironment('STRIPE_PUBLISHABLE_KEY').isNotEmpty;
+
+  Future<bool> _ensureStripe(BcApiClient api) async {
+    if (_stripeReady) return true;
+    try {
+      final config = await api.getJson('/api/payments/config');
+      final key = (config['data'] as Map<String, dynamic>?)?['publishableKey']?.toString() ?? '';
+      if (key.isEmpty) return false;
+      Stripe.publishableKey = key;
+      await Stripe.instance.applySettings();
+      _stripeReady = true;
+    } catch (_) {}
+    return _stripeReady;
+  }
+
   Future<void> _submit() async {
     if (submitting || store.count == 0) return;
     setState(() => submitting = true);
     try {
       final api = BcApiClient.instance;
-      const publishableKey = String.fromEnvironment('STRIPE_PUBLISHABLE_KEY');
       final backendAvailable = await api.isBackendAvailable();
       if (backendAvailable && !api.hasToken) {
         throw const BcApiException('The backend is online, but this student session is not authenticated. Sign in with the connected student account before placing a live order.');
       }
-      if (backendAvailable && api.hasToken && payment == EatsPayment.card && publishableKey.isNotEmpty) {
+      // Set Stripe up before creating the order, so we never leave an order
+      // behind that cannot be paid.
+      final stripeReady = backendAvailable && api.hasToken && payment == EatsPayment.card && await _ensureStripe(api);
+      if (stripeReady) {
         final orderResponse = await api.postJson('/api/orders', {
           'items': store.cart.map((line) => {'foodId': line.product.id, 'quantity': line.quantity}).toList(),
           'deliveryAddress': store.fulfilment == Fulfilment.pickup ? 'Campus Tuck Shop' : store.landingPad,
@@ -496,6 +515,19 @@ class _BCEatsCheckoutScreenState extends State<BCEatsCheckoutScreen> {
           style: ThemeMode.system,
         ));
         await Stripe.instance.presentPaymentSheet();
+        // The webhook is the source of truth, but it cannot reach a local
+        // sandbox backend unless the Stripe CLI is forwarding, so ask the
+        // server to re-check with Stripe now. Best-effort: the sheet already
+        // succeeded, and failing here would invite a second payment.
+        String? paymentStatus;
+        final paymentId = (paymentResponse['data'] as Map<String, dynamic>?)?['_id']?.toString();
+        if (paymentId != null) {
+          try {
+            final sync = await api.postJson('/api/payments/$paymentId/sync', {});
+            paymentStatus = (sync['data'] as Map<String, dynamic>?)?['status']?.toString();
+          } catch (_) {}
+        }
+        if (paymentStatus == 'failed') throw const BcApiException('Stripe reported that this payment failed. You have not been charged.');
         if (!mounted) return;
         // Keep the existing local tracking presentation while the server order
         // and Stripe webhook remain the source of truth for payment/order state.
@@ -506,8 +538,8 @@ class _BCEatsCheckoutScreenState extends State<BCEatsCheckoutScreen> {
         ));
         return;
       }
-      if (backendAvailable && api.hasToken && payment == EatsPayment.card && publishableKey.isEmpty) {
-        throw const BcApiException('The backend is online, but STRIPE_PUBLISHABLE_KEY is not configured for the app.');
+      if (backendAvailable && api.hasToken && payment == EatsPayment.card) {
+        throw const BcApiException('Card payments are unavailable: the server has no STRIPE_PUBLISHABLE_KEY configured.');
       }
       if (backendAvailable && api.hasToken && payment != EatsPayment.card) {
         throw const BcApiException('Live checkout currently supports card payments through Stripe. Choose Card or disconnect the backend to use preview mode.');

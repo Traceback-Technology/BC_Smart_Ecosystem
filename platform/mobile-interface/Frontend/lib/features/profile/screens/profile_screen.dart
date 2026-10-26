@@ -7,6 +7,7 @@ import '../../auth/models/app_session.dart';
 import '../../bc_ways/constants/colors.dart';
 import '../../bc_ways/widgets/bc_bottom_navigation_bar.dart';
 import '../services/profile_local_store.dart';
+import '../../bc_eats/widgets/notification_bell.dart';
 
 class ProfileScreen extends StatefulWidget {
   final AppSession session;
@@ -807,33 +808,7 @@ class _ProfileTopBar extends StatelessWidget {
               ],
             ),
           ),
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              const Icon(Icons.notifications_none, size: 29),
-              Positioned(
-                right: -4,
-                top: -5,
-                child: Container(
-                  width: 18,
-                  height: 18,
-                  alignment: Alignment.center,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFE31B23),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Text(
-                    '3',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          const NotificationBell(),
         ],
       ),
     );

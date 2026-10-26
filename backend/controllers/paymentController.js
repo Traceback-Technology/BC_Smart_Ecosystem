@@ -1,7 +1,7 @@
 const Payment = require('../models/paymentModel');
 const Order = require('../models/orderModel');
 const { createNotification } = require('../services/notificationService');
-const { stripe, sandboxEnabled } = require('../services/stripeService');
+const { stripe, sandboxEnabled, publishableKey } = require('../services/stripeService');
 
 const toPaymentStatus = (stripeStatus) => {
   if (stripeStatus === 'succeeded') return 'succeeded';
@@ -57,6 +57,13 @@ async function applyIntent(payment, intent) {
   }
   return { order };
 }
+
+// Public: the publishable key is designed to be shipped to clients. The app
+// reads it here at checkout instead of having it baked in at build time.
+exports.getConfig = (req, res) => {
+  const key = stripe ? publishableKey() : '';
+  res.json({ success: true, data: { enabled: Boolean(key), publishableKey: key || null, currency: (process.env.STRIPE_CURRENCY || 'zar').toLowerCase(), sandbox: sandboxEnabled() } });
+};
 
 exports.createPaymentIntent = async (req, res, next) => {
   try {

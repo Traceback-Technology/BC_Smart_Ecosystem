@@ -1,135 +1,167 @@
-# BC-SmartLifestyle
+# BC Smart Ecosystem (BC-SmartLifestyle)
 
-**Smart-campus software platform | Web applications | Robotics | Connected services**
+**Campus navigation and tuck-shop ordering for Belgium Campus, delivered as a Flutter web app / PWA with a Node.js API.**
 
-BC-SmartLifestyle is a modular smart-campus platform designed to bring campus navigation, food ordering, visitor access, notifications, operational analytics and robotics-enabled delivery into one coherent ecosystem. The project is maintained as a monorepo so that application, backend, domain, security, infrastructure and robotics work can evolve together while keeping clear boundaries.
+BC Smart Ecosystem brings two student-facing products together in one app:
 
-> **Current delivery direction:** the primary user experience is a web application hosted on Cloudflare. The existing Flutter application is being prepared for web delivery; its Android/iOS project files are retained as a possible future distribution path, not as a commitment to app-store release.
+- **BC Ways** – campus navigation: shortest-route pathfinding over a campus graph, destination search and GPS-aware guidance.
+- **BC Eats** – tuck-shop ordering: menu, cart, checkout (cash or card), order tracking, plus staff tools (live order queue, inventory, sales dashboard).
 
-## Product areas
+The repository is a monorepo containing the Flutter client, the Express/MongoDB backend, and the project documentation.
 
-| Area | Purpose | Main location |
-|---|---|---|
-| BC Ways | Campus navigation, pathfinding and GPS-aware route guidance | `core/bc-ways/` |
-| BC Eats | Menus, orders, payment integration and delivery management | `core/bc-eats/` |
-| Authentication | User identity and access decisions | `core/authentication/`, `security/` |
-| Notifications | User-facing and operational event notifications | `core/notifications/` |
-| Robotics | Drone control, telemetry, navigation and simulation | `robotics/` |
+## Project status
 
+| Area | Status |
+|---|---|
+| Student sign-in, menu, cart, checkout (cash pickup and placeholder payment), tracking, order history | Working |
+| Staff live-orders queue, inventory with image upload, admin analytics | Working |
+| BC Ways routing (Dijkstra), destination search, GPS calibration, blocked-path rerouting | Working |
+| Stripe card payments | Implemented; needs live/test-mode keys and verification |
+| Order tracking updates | Working via polling (student ~8 s, staff ~10 s); not push-based |
+| Drone delivery | Backend assignment logic only; no hardware integration (see ADR 0004, status *Proposed*) |
+| WebSockets / MQTT | Planned (see ADR 0005); not implemented |
 
-## Architecture at a glance
+Treat anything not in the "Working" rows as in progress until verified by tests and deployment.
+
+## Architecture
 
 ```text
-Browser / Installable PWA
+Browser / installable PWA  (Flutter web)
           |
           v
-Cloudflare Pages (web delivery)
-          |
+Cloudflare (static web assets, SPA routing)
+          |  HTTPS / JSON
           v
-Backend API (MVC: routes -> controllers -> services/models)
+Express API  (routes -> controllers -> services / models)
           |
-   +------+------+----------------+
-   |             |                |
-Domain core   Database       Real-time / MQTT
-   |                              |
-   +----------- Robotics ----------+
-          |
-     Telemetry / control
+          +--> MongoDB
+          +--> Stripe (card payments, webhook)
+          +--> Microsoft Entra ID (token verification)
 ```
 
-The diagram is a conceptual boundary map, not a claim that every integration is already implemented. The backend is organised around **Model–View–Controller (MVC)** responsibilities. For an API backend, the “View” is generally the HTTP/JSON response layer rather than server-rendered pages; controllers coordinate requests, services contain business use cases, and models/data-access modules handle persistence.
-
-## Technology direction
-
-- **Web client:** Flutter with Flutter Web support; assess browser compatibility for plugins and device APIs.
-- **Web hosting:** Cloudflare Pages for static web assets and SPA routing.
-- **Backend:** Node.js/Express-style API using MVC separation, subject to the actual backend package and runtime configuration.
-- **Data:** MongoDB documentation and infrastructure are present in this repository; confirm the deployed database and connection strategy in environment-specific configuration before release.
-- **Real-time / robotics messaging:** WebSockets and MQTT, where required by the implemented feature.
-- **Robotics:** drone firmware, navigation, telemetry, control API and simulation remain first-class project areas.
-- **Quality and collaboration:** GitHub Issues, Pull Requests, code review, automated checks and documented architecture decisions.
-
-Do not assume a technology is production-ready solely because a directory or workflow exists. The module README and deployment configuration should describe the implemented state and known gaps.
+The backend follows an MVC-style layout with a small service layer (`services/paymentService.js` is the single place that decides whether an order counts as paid). Authentication uses stateless JWTs for registered users and guests; role checks for staff actions re-read the user's role from the database.
 
 ## Repository map
 
 ```text
-.github/                  Issue templates, PR template, ownership and CI workflows
-docs/                     Architecture, ADRs, API specifications, testing and deployment docs
-platform/                 User-facing web experiences and visitor-access entry points
-backend/                  API implementation using MVC boundaries
-diagrams/                 Architecture, flowcharts and ERDs
+backend/                 Express API (routers, controllers, models, middlewares, services, seed script, tests, Postman collection)
+platform/
+  mobile-interface/
+    Frontend/            Flutter app (BC Ways + BC Eats), web PWA assets, Android/iOS projects
+  web-platform/          Placeholder for a future dedicated web platform
+shared/                  API / WebSocket / MQTT contract documents, constants and utility notes
+docs/                    Architecture notes, ADRs, API specification docs
+diagrams/                Architecture, flowchart and ERD placeholders
+routers/                 Stray file (orderRoutes.js) - not used by the backend; safe to remove
+.github/                 Issue/PR templates, CODEOWNERS, CI workflows
+wrangler.toml            Cloudflare deployment config (serves the Flutter web build)
 ```
 
-See [`docs/architecture/repo-structure.md`](docs/architecture/repo-structure.md) for the detailed map.
+Inside `platform/mobile-interface/Frontend/lib/`:
+
+```text
+core/                    API client (base URL set at build time)
+features/auth/           Welcome and student sign-in, session model
+features/home/           Home screen
+features/bc_ways/        Graph, Dijkstra, GPS, navigation and map screens
+features/bc_eats/        Menu, cart, checkout, tracking, staff screens, repositories (API + mock)
+features/profile/        Profile screen and local store
+shared/widgets/          Reusable widgets
+```
+
+Backend route groups live under `backend/routers/` and are mounted in `backend/index.js` (users, foods, categories, orders, payments, drones, tracking, notifications, analytics, coupons and more). See `docs/API-specification-docs/` and `backend/POSTMAN_GUIDE.md`.
 
 ## Getting started
 
 ### Prerequisites
 
-Install the tools required for the module you are working on. The web client currently uses Flutter/Dart. Backend and robotics prerequisites should be taken from their module READMEs and package manifests. You will also need Git and access to the project repository.
+- Node.js 20.6 or newer (the dev script uses `node --env-file`)
+- A MongoDB database (local or Atlas)
+- Flutter SDK (Dart ^3.8.1) for the client
+- Git
 
-### Clone for the first time
+### Run the backend
 
 ```bash
-git clone <REPOSITORY-URL>
-cd BC-SmartLifestyle
-git switch configuration
-git pull origin configuration
+cd backend
+npm install
+cp .env.example .env      # then fill in the values (see below)
+node seed.js              # optional: loads demo categories, foods, coupons and test accounts
+npm run dev               # API on http://localhost:8000 (or the PORT you set)
 ```
 
-### Update an existing checkout
+Check it is running: `GET http://localhost:8000/api/health` should report `database: connected`.
+
+The `seed.js` script prints the development test accounts (student, restaurant, admin, drone operator) when it finishes. They are for local testing only.
+
+### Run the Flutter client
 
 ```bash
-cd BC-SmartLifestyle
-git status
-git switch configuration
-git pull origin configuration
-```
-
-If `git status` reports uncommitted work, commit or stash it before switching branches or pulling. Never discard work just to update the branch.
-
-### Run the Flutter web client
-
-From the current client directory:
-
-```bash
-cd platform/web-app/frontend
+cd platform/mobile-interface/Frontend
 flutter pub get
-flutter run -d chrome
+flutter run -d chrome --dart-define=API_BASE_URL=http://localhost:8000
 ```
 
-To build the static web bundle for deployment:
+Other targets: Android emulator uses `API_BASE_URL=http://10.0.2.2:8000`; a physical device needs your computer's LAN address or the deployed HTTPS URL. To enable card checkout, also pass `--dart-define=STRIPE_PUBLISHABLE_KEY=...`. See `platform/mobile-interface/Frontend/BACKEND_INTEGRATION.md` for behaviour when the API is offline or the user is not signed in.
+
+### Run the tests
 
 ```bash
-flutter build web --release
+cd backend
+node --test test/
 ```
 
-The default Flutter output is `build/web`. Verify that all plugins used by the application support web before treating the build as release-ready. Backend and robotics setup steps are documented in their respective READMEs.
+The backend tests stub the database, so no MongoDB is needed. Flutter tests: `flutter test` from the Frontend folder.
 
-## Deployment and app-like installation
+## Configuration
 
-The intended first release is a responsive web app on Cloudflare Pages. A Progressive Web App (PWA) can add an install/home-screen experience where supported by the browser and operating system. PWA capability must be configured and tested; it is not guaranteed merely by deploying a website.
+Set these in `backend/.env` (never commit this file; `.env.example` lists the keys):
 
-A separately downloadable Android APK is a different deliverable: it must be built, signed, versioned, security-reviewed and distributed from a trusted download page. Direct website installation is not generally equivalent to installing an arbitrary iOS app; iOS distribution is subject to Apple's supported distribution routes and eligibility rules.
+| Variable | Purpose |
+|---|---|
+| `MONGO_URI` | MongoDB connection string (required) |
+| `TOKEN_SECRET` | JWT signing secret, at least 32 random characters (required). Generate with `node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"` |
+| `JWT_EXPIRES_IN`, `JWT_GUEST_EXPIRES_IN` | Token lifetimes (defaults 8h and 7d) |
+| `CLIENT_ORIGIN` | Comma-separated allowed browser origins for CORS |
+| `PUBLIC_API_URL` | Public base URL of the API (used for uploaded image URLs) |
+| `MICROSOFT_CLIENT_ID`, `MICROSOFT_AUTHORITY` | Microsoft Entra ID sign-in verification |
+| `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_CURRENCY` | Card payments; the webhook secret is required whenever a Stripe key is set |
+| `PAYMENT_MODE` | `stripe` (default), `placeholder` (auto-paid, **demo only**) or `sandbox` (reserved, behaves like `stripe`). Not listed in `.env.example`; add it if you need demo mode |
+| `SERVICE_FEE`, `DRONE_DELIVERY_FEE` | Per-order fees (code defaults 5 and 15) |
 
-See [`docs/deployment/cloudflare-pages.md`](docs/deployment/cloudflare-pages.md) and [`docs/deployment/application-distribution.md`](docs/deployment/application-distribution.md).
+Uploaded food images are stored on local disk under `backend/uploads/`. On hosts with ephemeral storage they are lost on redeploy; use object storage or image URLs in production.
+
+## Deployment
+
+- **Client:** build the Flutter web bundle, then deploy from the repository root with Wrangler (serves `platform/mobile-interface/Frontend/build/web` as a single-page app):
+
+  ```bash
+  cd platform/mobile-interface/Frontend
+  flutter build web --release
+  cd ../../..
+  npx wrangler deploy
+  ```
+
+- **PWA install pop-up:** HTTPS is required. Android/desktop Chrome and Edge show the native install dialog; iPhone Safari users add the app via Share > Add to Home Screen. Details are in `platform/mobile-interface/Frontend/README.md`.
+- **API:** deploy `backend/` to any Node host (the project has used Render's free tier, which sleeps when idle). Set all environment variables, and add the deployed client origin to `CLIENT_ORIGIN`.
 
 ## Engineering standards
 
-- Work from short-lived branches created from `configuration`.
-- Submit normal feature/fix/documentation Pull Requests into `configuration`; promote reviewed, tested changes from `configuration` to `main` through a separate Pull Request.
-- Do not commit secrets, credentials, local `.env` files, generated build output or dependencies.
+- Work on short-lived branches created from `configuration`; open feature/fix/docs Pull Requests into `configuration`, and promote reviewed, tested changes to `main` through a separate Pull Request.
+- Never commit secrets, `.env` files, build output or dependencies. Do not zip or share a project folder that contains a populated `.env`.
 - Add tests for new behaviour and update documentation when interfaces or architecture change.
-- Use an ADR for significant architectural choices.
-- Keep robotics control and telemetry interfaces explicit, authenticated where appropriate, and observable.
+- Record significant architectural decisions as ADRs in `docs/adr/`.
 
-See [`Git_workflow.md`](Git_workflow.md), [`CONTRIBUTING.md`](CONTRIBUTING.md), and the templates under `.github/`.
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) and the templates under `.github/`.
 
-## Project status
+## Documentation
 
-This repository contains working application assets and documentation alongside planned module boundaries. Treat individual feature status as **in progress until verified** by implementation, tests and deployment. Do not store production credentials in the repository.
+- Architecture notes: `docs/architecture/`
+- Architecture decisions: `docs/adr/`
+- API specifications: `docs/API-specification-docs/`
+- Ordering MVP notes and payment modes: `STEP1_ORDERING_NOTES.md`
+- Backend change log: `backend/FIXES_APPLIED.md`; frontend change log: `platform/mobile-interface/Frontend/FIXES_APPLIED.md`
 
 ## License
 
-See [`LICENSE`](LICENSE) for the terms that apply to this repository.
+See [`LICENSE`](LICENSE).

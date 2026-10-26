@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../shared/widgets/campus_logo.dart';
 import '../../bc_ways/constants/colors.dart';
 import '../constants/bc_eats_colors.dart';
+import 'notification_bell.dart';
 
 /// Exact copy of the existing Eats top bar, reused by the order flow.
 class EatsTopBar extends StatelessWidget {
@@ -71,37 +72,9 @@ class EatsTopBar extends StatelessWidget {
             ),
           ),
 
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              const Icon(Icons.notifications_none, size: 29),
-
-              Positioned(
-                right: -4,
-                top: -5,
-                child: Container(
-                  width: 18,
-                  height: 18,
-                  alignment: Alignment.center,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFE31B23),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Text(
-                    '3',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          const NotificationBell(),
         ],
       ),
     );
   }
-
 }

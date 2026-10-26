@@ -4,7 +4,8 @@ const Food = require('../models/foodModel');
 const Activity = require('../models/activityModel');
 const Coupon = require('../models/couponModel');
 const Drone = require('../models/droneModel');
-const Notification = require('../models/notificationModel');
+// const Notification = require('../models/notificationModel');
+const {notificationOrderStatus, notifyOrderStatus} = require('../services/notificationService');
 const Payment = require('../models/paymentModel');
 let stripe = null;
 try { if (process.env.STRIPE_SECRET_KEY) stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); } catch (_) {}
@@ -12,7 +13,7 @@ const { orderSchema } = require('../middlewares/validator');
 
 const orderNo = () => `BC-${Date.now().toString(36).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`;
 const money = (value) => Math.round((Number(value) + Number.EPSILON) * 100) / 100;
-const notify = async (userId, title, message, type = 'order', metadata = {}) => Notification.create({ userId, title, message, type, metadata });
+// const notify = async (userId, title, message, type = 'order', metadata = {}) => Notification.create({ userId, title, message, type, metadata });
 const statusTransitions = {
   pending: ['confirmed', 'cancelled'],
   confirmed: ['preparing', 'cancelled'],
@@ -76,7 +77,8 @@ exports.createOrder = async (req, res, next) => {
     // apparent checkout failure that could cause duplicate submissions.
     await Promise.allSettled([
       Activity.create({ userId: req.user.userId, type: 'food', title: `Order ${order.orderNumber}`, amount: total, metadata: { orderId: order._id } }),
-      notify(req.user.userId, 'Order placed', `Your order ${order.orderNumber} has been placed.`),
+      // notify(req.user.userId, 'Order placed', `Your order ${order.orderNumber} has been placed.`),
+      notificationOrderStatus(order),
     ]);
     res.status(201).json({ success: true, message: 'Order placed', data: order });
   } catch (error) { next(error); }
@@ -123,7 +125,8 @@ exports.updateStatus = async (req, res, next) => {
     await order.save();
     if (order.droneId && ['drone_launched', 'out_for_delivery'].includes(status)) await Drone.findByIdAndUpdate(order.droneId, { status: 'in_flight' });
     if (status === 'delivered' && order.droneId) await Drone.findByIdAndUpdate(order.droneId, { status: 'available' });
-    await notify(order.userId, 'Order update', `Order ${order.orderNumber} is now ${order.status}.`, 'order', { orderId: order._id }).catch((error) => console.error('Order notification failed:', error.message));
+    // await notify(order.userId, 'Order update', `Order ${order.orderNumber} is now ${order.status}.`, 'order', { orderId: order._id }).catch((error) => console.error('Order notification failed:', error.message));
+    await notificationOrderStatus(order).catch((error)=> console.error('Order notification failed', error.message));
     res.json({ success: true, data: order });
   } catch (error) { next(error); }
 };
@@ -197,7 +200,8 @@ exports.cancelOrder = async (req, res, next) => {
     await order.save();
     if (order.couponCode) await Coupon.updateOne({ code: order.couponCode, usedCount: { $gt: 0 } }, { $inc: { usedCount: -1 } });
     if (order.droneId) await Drone.findByIdAndUpdate(order.droneId, { status: 'available' });
-    await notify(order.userId, 'Order cancelled', `Order ${order.orderNumber} was cancelled.`).catch((error) => console.error('Cancellation notification failed:', error.message));
+    // await notify(order.userId, 'Order cancelled', `Order ${order.orderNumber} was cancelled.`).catch((error) => console.error('Cancellation notification failed:', error.message));
+    await notifyOrderStatus(order).catch((error)=> console.error('Cancellation notification failed:', error.message))
     res.json({ success: true, message: 'Order cancelled', data: order });
   } catch (error) { next(error); }
 };

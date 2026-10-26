@@ -11,6 +11,12 @@ import '../../bc_ways/widgets/bc_bottom_navigation_bar.dart';
 import '../../bc_eats/screens/bc_eats_shell.dart';
 import '../../profile/screens/profile_screen.dart';
 import '../widgets/route_history_section.dart';
+import '../../bc_eats/widgets/notification_bell.dart';
+import '../../bc_eats/models/app_notification.dart';
+import '../../bc_eats/models/notification_display.dart';
+import '../../bc_eats/screens/notifications_screen.dart';
+import '../../bc_eats/services/notification_badge_controller.dart';
+import '../../bc_eats/services/notification_service.dart';
 
 class CampusDashboardPage extends StatelessWidget {
   final AppSession session;
@@ -157,33 +163,7 @@ class CampusDashboardPage extends StatelessWidget {
                           ),
                         ),
 
-                      Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          const Icon(Icons.notifications_none, size: 29),
-                          Positioned(
-                            right: -4,
-                            top: -5,
-                            child: Container(
-                              width: 18,
-                              height: 18,
-                              alignment: Alignment.center,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFE31B23),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Text(
-                                '3',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      const NotificationBell(),
                     ],
                   ),
 
@@ -304,17 +284,7 @@ class CampusDashboardPage extends StatelessWidget {
 
                   const SizedBox(height: 24),
 
-                  const _SectionHeader(title: 'Notifications'),
-
-                  const SizedBox(height: 12),
-
-                  const _ActivityCard(
-                    icon: Icons.report_problem_outlined,
-                    color: BcColors.danger,
-                    title: 'Path blocked ahead',
-                    subtitle: 'Rerouting to fastest route',
-                    time: '2 min ago',
-                  ),
+                  const _RecentNotificationsSection(),
 
                   const SizedBox(height: 12),
                 ],
@@ -441,8 +411,9 @@ class _FeatureCard extends StatelessWidget {
 
 class _SectionHeader extends StatelessWidget {
   final String title;
+  final VoidCallback? onSeeAll;
 
-  const _SectionHeader({required this.title});
+  const _SectionHeader({required this.title, this.onSeeAll});
 
   @override
   Widget build(BuildContext context) {
@@ -460,13 +431,21 @@ class _SectionHeader extends StatelessWidget {
             color: context.textPrimary,
           ),
         ),
-        Text(
-          'See all',
-          style: TextStyle(
-            fontWeight: FontWeight.w700,
-            color: context.bcColors.error,
+        if (onSeeAll != null)
+          InkWell(
+            onTap: onSeeAll,
+            borderRadius: BorderRadius.circular(6),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+              child: Text(
+                'See all',
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  color: context.bcColors.error,
+                ),
+              ),
+            ),
           ),
-        ),
       ],
     );
   }
@@ -479,6 +458,8 @@ class _ActivityCard extends StatelessWidget {
   final String subtitle;
   final String? detail;
   final String? time;
+  final VoidCallback? onTap;
+  final bool showChevron;
 
   const _ActivityCard({
     required this.icon,
@@ -487,13 +468,15 @@ class _ActivityCard extends StatelessWidget {
     required this.subtitle,
     this.detail,
     this.time,
+    this.onTap,
+    this.showChevron = true,
   });
 
   @override
   Widget build(BuildContext context) {
     final accent = context.readableAccent(color);
 
-    return Container(
+    final card = Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: context.cardBg,
@@ -531,6 +514,8 @@ class _ActivityCard extends StatelessWidget {
 
                 Text(
                   subtitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(color: context.textSecondary, fontSize: 13),
                 ),
 
@@ -561,9 +546,164 @@ class _ActivityCard extends StatelessWidget {
             ),
           ),
 
-          Icon(Icons.chevron_right, color: context.textSecondary),
+          if (showChevron)
+            Icon(Icons.chevron_right, color: context.textSecondary),
         ],
       ),
+    );
+
+    if (onTap == null) return card;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: card,
+      ),
+    );
+  }
+}
+
+/// Home-screen preview of the latest notifications from /api/notifications.
+/// Hidden for guests (the notification API is registered-users-only), and
+/// refreshed whenever the bell's unread count changes.
+class _RecentNotificationsSection extends StatefulWidget {
+  const _RecentNotificationsSection();
+
+  @override
+  State<_RecentNotificationsSection> createState() =>
+      _RecentNotificationsSectionState();
+}
+
+class _RecentNotificationsSectionState
+    extends State<_RecentNotificationsSection> {
+  static const int _previewCount = 2;
+
+  final _badge = NotificationBadgeController.instance;
+  List<AppNotification> _items = const [];
+  bool _loading = true;
+  bool _failed = false;
+  int _lastSeenCount = -1;
+
+  @override
+  void initState() {
+    super.initState();
+    _badge.addListener(_onBadgeChanged);
+    _lastSeenCount = _badge.unreadCount;
+    if (_badge.isActive) _load();
+  }
+
+  @override
+  void dispose() {
+    _badge.removeListener(_onBadgeChanged);
+    super.dispose();
+  }
+
+  // A different unread count means something changed on the server: reload.
+  void _onBadgeChanged() {
+    if (!mounted) return;
+    if (!_badge.isActive) {
+      setState(() => _items = const []);
+      return;
+    }
+    if (_badge.unreadCount != _lastSeenCount) {
+      _lastSeenCount = _badge.unreadCount;
+      _load();
+    } else {
+      setState(() {});
+    }
+  }
+
+  Future<void> _load() async {
+    setState(() {
+      _loading = _items.isEmpty;
+      _failed = false;
+    });
+    try {
+      final items = await NotificationService.instance.fetchNotifications(
+        limit: _previewCount,
+      );
+      if (!mounted) return;
+      setState(() {
+        _items = items;
+        _loading = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _loading = false;
+        _failed = _items.isEmpty;
+      });
+    }
+  }
+
+  Future<void> _openAll() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const NotificationsScreen()),
+    );
+    if (mounted && _badge.isActive) _load();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_badge.isActive) return const SizedBox.shrink();
+
+    final List<Widget> cards;
+    if (_loading) {
+      cards = const [
+        _ActivityCard(
+          icon: Icons.notifications_none,
+          color: BcColors.danger,
+          title: 'Loading notifications…',
+          subtitle: 'Fetching your latest updates',
+          showChevron: false,
+        ),
+      ];
+    } else if (_failed) {
+      cards = [
+        _ActivityCard(
+          icon: Icons.cloud_off_outlined,
+          color: BcColors.danger,
+          title: 'Could not load notifications',
+          subtitle: 'Tap to try again',
+          showChevron: false,
+          onTap: _load,
+        ),
+      ];
+    } else if (_items.isEmpty) {
+      cards = const [
+        _ActivityCard(
+          icon: Icons.notifications_none,
+          color: BcColors.danger,
+          title: "You're all caught up",
+          subtitle: 'New updates will show up here',
+          showChevron: false,
+        ),
+      ];
+    } else {
+      cards = [
+        for (var i = 0; i < _items.length; i++) ...[
+          if (i > 0) const SizedBox(height: 12),
+          _ActivityCard(
+            icon: notificationIcon(_items[i].type),
+            color: BcColors.danger,
+            title: _items[i].title,
+            subtitle: _items[i].message,
+            time: notificationTimeAgo(_items[i].createdAt),
+            detail: _items[i].isRead ? null : 'New',
+            onTap: _openAll,
+          ),
+        ],
+      ];
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _SectionHeader(title: 'Notifications', onSeeAll: _openAll),
+        const SizedBox(height: 12),
+        ...cards,
+      ],
     );
   }
 }

@@ -13,6 +13,14 @@ class MicrosoftAuthService {
   static const tenantId = 'ea1a909b-6600-4a25-82a5-0c6ed7d0513b';
   static const redirectUri = 'com.example.frontend://oauthredirect';
 
+  /// Admin portal (separate Cloudflare Pages app). Set at build time:
+  /// --dart-define=ADMIN_PORTAL_URL=https://<admin-portal>.pages.dev
+  /// When empty, admins simply continue into this app.
+  static const adminPortalUrl = String.fromEnvironment('ADMIN_PORTAL_URL');
+
+  /// Database roles that are sent to the admin portal instead of this app.
+  static const _adminPortalRoles = {'admin', 'restaurant'};
+
   static const discoveryUrl =
       'https://login.microsoftonline.com/$tenantId/v2.0/'
       '.well-known/openid-configuration';
@@ -102,7 +110,7 @@ class MicrosoftAuthService {
     }
   }
 
-  Future<AppSession> _exchangeWithBackend(String idToken) async {
+  Future<AppSession?> _exchangeWithBackend(String idToken) async {
     final response = await BcApiClient.instance.postJson(
       '/api/users/microsoft-login',
       <String, dynamic>{},
@@ -125,6 +133,23 @@ class MicrosoftAuthService {
       throw const BcApiException(
         'The server did not return your profile name.',
       );
+    }
+
+    // Role-based redirect: the backend has verified the Microsoft token and
+    // read this user's role from the database. Admin/restaurant users are
+    // handed to the admin portal with the backend token in the URL fragment
+    // (#...), which browsers never send to any server. The portal stores the
+    // token and re-checks the role with GET /api/users/me before showing
+    // anything; the backend checks the role again on every admin request.
+    final role = user['role']?.toString().toLowerCase();
+    if (kIsWeb &&
+        adminPortalUrl.isNotEmpty &&
+        _adminPortalRoles.contains(role)) {
+      final base = adminPortalUrl.endsWith('/')
+          ? adminPortalUrl
+          : '$adminPortalUrl/';
+      web.redirectBrowserTo('$base#token=${Uri.encodeComponent(token)}');
+      return null; // the page is being replaced; don't open this app
     }
 
     return AppSession.microsoft(

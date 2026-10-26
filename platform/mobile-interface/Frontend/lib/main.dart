@@ -9,6 +9,7 @@ import 'features/auth/services/microsoft_auth_service.dart';
 import 'core/bc_api_client.dart';
 
 import 'features/auth/screens/welcome_screen.dart';
+import 'features/bc_eats/services/notification_badge_controller.dart';
 import 'features/bc_ways/constants/colors.dart';
 import 'features/bc_ways/services/route_history_service.dart';
 import 'features/home/screens/home_screen.dart';
@@ -76,6 +77,11 @@ class _BCSmartAppState extends State<BCSmartApp> {
 
       if (session != null) {
         BcApiClient.instance.setToken(session.accessToken);
+        // Notifications: a restored (page reload) registered session needs
+        // the unread badge too, not only a fresh sign-in.
+        if (!session.isGuest) {
+          NotificationBadgeController.instance.start();
+        }
         _session = session;
       }
     } catch (_) {
@@ -114,6 +120,11 @@ class _BCSmartAppState extends State<BCSmartApp> {
       }
 
       BcApiClient.instance.setToken(session.accessToken);
+      // Notifications: the token must be set first, because start() fetches
+      // the unread count straight away. Guests never start it (403 on the API).
+      if (!session.isGuest) {
+        NotificationBadgeController.instance.start();
+      }
       setState(() {
         _session = session;
       });
@@ -186,6 +197,9 @@ class _BCSmartAppState extends State<BCSmartApp> {
         await MicrosoftAuthService().signOut();
       }
 
+      // Notifications: stop polling before the token is cleared, so no
+      // refresh can fire with the token already gone.
+      NotificationBadgeController.instance.stop();
       BcApiClient.instance.setToken(null);
 
       if (!mounted) {

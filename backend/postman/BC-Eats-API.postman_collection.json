@@ -1843,6 +1843,65 @@
           }
         },
         {
+          "name": "Sandbox: pay with a test card",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/{{paymentId}}/sandbox/confirm",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "{{paymentId}}",
+                "sandbox",
+                "confirm"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"testCard\": \"visa\"\n}"
+            },
+            "description": "PAYMENT_MODE=sandbox with an sk_test_ key only. testCard: visa | mastercard | declined | insufficient_funds | expired_card | 3ds. For 3ds, open the returned nextActionUrl in a browser. See STRIPE_SANDBOX.md."
+          }
+        },
+        {
+          "name": "Sync payment with Stripe",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/payments/{{paymentId}}/sync",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "{{paymentId}}",
+                "sync"
+              ]
+            },
+            "description": "Re-reads the PaymentIntent from Stripe and confirms the order if paid. Use when webhooks cannot reach your machine."
+          }
+        },
+        {
           "name": "Refund payment",
           "request": {
             "method": "POST",

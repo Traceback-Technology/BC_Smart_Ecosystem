@@ -12,8 +12,9 @@
  *   placeholder  MVP/dev only. Every non-cash order is auto-paid with a
  *                simulated Payment so the kitchen flow can be demoed with no
  *                gateway. NEVER use in production.
- *   sandbox      STEP 2 (not built yet). Behaves like `stripe`: order waits as
- *                `pending` until the sandbox "confirm payment" call succeeds.
+ *   sandbox      The `stripe` flow against a Stripe Sandbox (sk_test_ keys).
+ *                Live keys are refused at startup and test-card helpers are
+ *                enabled; see stripeService.js and STRIPE_SANDBOX.md.
  *
  * Cash (pickup only) works in every mode: confirmed immediately, with a
  * `pending` cash Payment that is settled when the order is handed over.
@@ -57,11 +58,6 @@ async function applyPaymentPolicy(order) {
       return order;
 
     case 'sandbox':
-      // STEP 2: create a sandbox payment session here and leave the order
-      // `pending`. The sandbox confirm endpoint then sets Payment `succeeded`
-      // and moves the order to `confirmed` (same as the Stripe webhook does).
-      return order;
-
     case 'stripe':
     default:
       // Customer pays via POST /api/payments/intent; the webhook confirms.

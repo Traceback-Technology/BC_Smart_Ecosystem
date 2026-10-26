@@ -11,6 +11,7 @@ import '../constants/map_constants.dart';
 import '../models/destination.dart';
 import '../models/route_result.dart';
 import '../services/campus_gps_service.dart';
+import '../services/campus_navigation_geometry.dart';
 import '../services/dijkstra_service.dart';
 import '../services/graph_service.dart';
 import '../services/navigation_service.dart';
@@ -18,6 +19,7 @@ import '../services/route_history_service.dart';
 import '../services/route_follow_service.dart';
 import '../widgets/bc_bottom_navigation_bar.dart';
 import '../widgets/campus_map.dart';
+import '../widgets/map_status_overlay.dart';
 import '../widgets/navigation_card.dart';
 import '../../bc_eats/widgets/notification_bell.dart';
 
@@ -101,6 +103,9 @@ class _NavigationScreenState extends State<NavigationScreen>
   CampusEntry? _nearestEntry;
 
   bool _onNavigationNetwork = false;
+  final CampusBoundaryTracker _campusBoundary = CampusBoundaryTracker();
+  bool _insideCampus = false;
+  bool get _insideOffPath => _insideCampus && !_onNavigationNetwork;
 
   double _distanceToEntry = 0;
 
@@ -113,8 +118,6 @@ class _NavigationScreenState extends State<NavigationScreen>
   Destination? _destination;
 
   RouteResult _route = RouteResult.empty;
-
-  String? _currentStartNodeId;
 
   // ===========================================================================
   // STATE
@@ -129,13 +132,16 @@ class _NavigationScreenState extends State<NavigationScreen>
   @override
   void initState() {
     super.initState();
-    _routeFollower = RouteFollowService(vsync: this, onChanged: () {
-      if (!mounted || !_routeFollower.active) return;
-      setState(() {
-        _route = _routeFollower.route;
-        _lastVisibleMapPosition = _routeFollower.position;
-      });
-    });
+    _routeFollower = RouteFollowService(
+      vsync: this,
+      onChanged: () {
+        if (!mounted || !_routeFollower.active) return;
+        setState(() {
+          _route = _routeFollower.route;
+          _lastVisibleMapPosition = _routeFollower.position;
+        });
+      },
+    );
 
     _cameraAnimationController = AnimationController(
       vsync: this,
@@ -231,85 +237,71 @@ class _NavigationScreenState extends State<NavigationScreen>
   // ===========================================================================
 
   void _applyGpsPosition(geo.Position gps) {
+    if (!mounted) {
+      return;
+    }
     final destination = _destination;
-
     if (destination == null) {
       return;
     }
-
-    final mapPosition = _gpsService.toMapOffset(gps);
-
-    final insideSvg = _gpsService.isInsideMapCanvas(mapPosition);
-
-    // Keep the real location even when it lies
-    // beyond the campus SVG.
-    _lastVisibleMapPosition = mapPosition;
-
-    final selectedGoal = _destination;
-    if (!insideSvg || selectedGoal == null) _routeFollower.reset();
-    final following = insideSvg && selectedGoal != null &&
-        _routeFollower.update(_graphService.graph, mapPosition,
-            selectedGoal.nearestNode, accuracy: gps.accuracy,
-            timestamp: gps.timestamp);
-    final onNetwork = selectedGoal == null
-        ? insideSvg && _graphService.isWithinNavigationNetwork(mapPosition)
-        : following;
-
+    final raw = _gpsService.toMapOffset(gps);
+    final insideCanvas = _gpsService.isInsideMapCanvas(raw);
+    final insideCampus = _campusBoundary.update(raw, accuracy: gps.accuracy);
+    if (!insideCanvas) {
+      _routeFollower.reset();
+    }
+    final following =
+        insideCanvas &&
+        _routeFollower.updateToAny(
+          _graphService.graph,
+          raw,
+          destination.entranceNodeIds,
+          accuracy: gps.accuracy,
+          timestamp: gps.timestamp,
+        );
     final nearestEntry = _gpsService.nearestEntry(
       gps,
       destinationYard: destination.yard,
     );
-
-    String? startNodeId;
-
-    if (onNetwork) {
-      startNodeId = _graphService.nearestNodeIdTo(mapPosition);
-    } else {
-      startNodeId = nearestEntry.nodeId;
-    }
-
-    final distanceToEntry = onNetwork
+    // Campus membership and path matching are independent states.
+    final String? startNodeId = following
+        ? _graphService.nearestNodeIdTo(raw)
+        : insideCampus
+        ? null
+        : nearestEntry.nodeId;
+    final distanceToEntry = following || insideCampus
         ? 0.0
         : _gpsService.distanceToEntry(gps, nearestEntry);
-
-    RouteResult route = _route;
-
-    if (startNodeId != null) {
-      final startChanged = startNodeId != _currentStartNodeId;
-
-      if (!following || startChanged || route.isEmpty) {
-        route = _dijkstra.findRoute(startNodeId, destination.nearestNode);
-      }
-    }
-
+    RouteResult route = RouteResult.empty;
     if (following) {
       route = _routeFollower.route;
-      _lastVisibleMapPosition = _routeFollower.position;
+    } else if (!insideCampus && startNodeId != null) {
+      route = _dijkstra.findRouteToAny(
+        startNodeId,
+        destination.entranceNodeIds,
+      );
     }
-
-    if (!mounted) {
-      return;
-    }
-
+    final visible = following
+        ? _routeFollower.position ?? raw
+        : SoftPathPosition.adjust(
+            _graphService.graph,
+            raw,
+            accuracy: gps.accuracy,
+          );
     setState(() {
       _gpsPosition = gps;
+
+      _lastVisibleMapPosition = visible;
       _nearestEntry = nearestEntry;
-      _onNavigationNetwork = onNetwork;
+      _insideCampus = insideCampus;
+      _onNavigationNetwork = following;
       _distanceToEntry = distanceToEntry;
-      _currentStartNodeId = startNodeId;
       _route = route;
       _gpsError = null;
       _loading = false;
     });
-
-    // Standing on the destination node means the route is finished.
-    if (onNetwork && route.path.length == 1) {
-      unawaited(RouteHistoryService.instance.markCompleted());
-    }
-
-    // Smoothly follow and rotate automatically.
     if (_followGps) {
-      _moveNavigationCamera(_routeFollower.targetPosition ?? mapPosition);
+      _moveNavigationCamera(_routeFollower.targetPosition ?? visible);
     }
   }
 
@@ -435,7 +427,7 @@ class _NavigationScreenState extends State<NavigationScreen>
     // NO ROUTE
     // -------------------------------------------------------------------------
 
-    if (_route.isEmpty) {
+    if (_route.isEmpty && !_insideOffPath) {
       return Scaffold(
         backgroundColor: context.cardBg,
         bottomNavigationBar: const BcBottomNavigationBar(selectedIndex: 1),
@@ -496,19 +488,7 @@ class _NavigationScreenState extends State<NavigationScreen>
       body: SafeArea(
         bottom: false,
         child: AdaptiveMapLayout(
-          header: [
-            _buildTopBar(),
-            NavigationCard(
-              instruction: instruction,
-              destinationName: _destination!.name,
-              etaMinutes: eta,
-              remainingMeters: totalRemaining,
-              arrival: arrival,
-              onExit: _endNavigation,
-            ),
-            if (!_onNavigationNetwork && _nearestEntry != null)
-              _buildOutsideBanner(),
-          ],
+          header: [_buildTopBar()],
           map: LayoutBuilder(
             builder: (context, constraints) {
               _mapViewportSize = constraints.biggest;
@@ -538,22 +518,70 @@ class _NavigationScreenState extends State<NavigationScreen>
                     // pauses automatic navigation.
                     onInteractionUpdate: _stopFollowingGps,
                     gpsAnimationDuration: _routeFollower.active
-                        ? Duration.zero : const Duration(milliseconds: 600),
+                        ? Duration.zero
+                        : const Duration(milliseconds: 600),
 
                     gpsAnimationCurve: Curves.easeOutCubic,
                   ),
 
-                  // -----------------------------------------------------------
-                  // ENTRANCE DIRECTION
-                  // -----------------------------------------------------------
-                  if (!_onNavigationNetwork &&
-                      _gpsPosition != null &&
-                      _nearestEntry != null)
-                    Positioned(
-                      top: 14,
-                      right: 14,
-                      child: _buildEntranceIndicator(),
-                    ),
+                  MapStatusOverlay(
+                    viewportHeight: constraints.maxHeight,
+                    pinnedChildren: [
+                      if (!_insideCampus &&
+                          !_onNavigationNetwork &&
+                          _nearestEntry != null)
+                        _buildOutsideBanner(),
+
+                      if (!_insideCampus &&
+                          !_onNavigationNetwork &&
+                          _gpsPosition != null &&
+                          _nearestEntry != null)
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: _buildEntranceIndicator(),
+                        ),
+                    ],
+                    children: [
+                      if (_insideOffPath)
+                        Material(
+                          color: context.cardBg.withValues(alpha: 0.96),
+                          borderRadius: BorderRadius.circular(16),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Return to the nearby path',
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.titleMedium,
+                                ),
+                                const SizedBox(height: 6),
+                                Text(
+                                  'Navigation to ${_destination!.name} will resume '
+                                  'when your position reconnects to a path.',
+                                  textAlign: TextAlign.center,
+                                ),
+                                TextButton(
+                                  onPressed: _endNavigation,
+                                  child: const Text('End navigation'),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      else
+                        NavigationCard(
+                          instruction: instruction,
+                          destinationName: _destination!.name,
+                          etaMinutes: eta,
+                          remainingMeters: totalRemaining,
+                          arrival: arrival,
+                          onExit: _endNavigation,
+                        ),
+                    ],
+                  ),
 
                   // -----------------------------------------------------------
                   // FOLLOW GPS
@@ -581,7 +609,17 @@ class _NavigationScreenState extends State<NavigationScreen>
               );
             },
           ),
-          footer: [_buildBottomSummary(totalRemaining, eta, arrival)],
+          footer: [
+            if (_insideOffPath)
+              const Padding(
+                padding: EdgeInsets.all(16),
+                child: Text(
+                  'Distance and ETA will update when you rejoin a path.',
+                ),
+              )
+            else
+              _buildBottomSummary(totalRemaining, eta, arrival),
+          ],
         ),
       ),
     );
@@ -648,6 +686,13 @@ class _NavigationScreenState extends State<NavigationScreen>
   // ===========================================================================
 
   NavInstruction _currentInstruction() {
+    if (_insideOffPath) {
+      return const NavInstruction(
+        type: TurnType.straight,
+        label: 'Return to the nearby path',
+        distanceMetersToTurn: 0,
+      );
+    }
     if (!_onNavigationNetwork && _nearestEntry != null) {
       return NavInstruction(
         type: TurnType.straight,
@@ -655,7 +700,28 @@ class _NavigationScreenState extends State<NavigationScreen>
         distanceMetersToTurn: _distanceToEntry,
       );
     }
-
+    if (_routeFollower.hasArrived) {
+      return const NavInstruction(
+        type: TurnType.arrive,
+        label: 'You have arrived',
+        distanceMetersToTurn: 0,
+      );
+    }
+    if (!_routeFollower.latestFixMatched) {
+      return NavInstruction(
+        type: TurnType.straight,
+        label: 'Checking your position...',
+        distanceMetersToTurn: _route.totalDistanceMeters,
+      );
+    }
+    // A one-node route alone does not prove physical arrival.
+    if (_route.path.length <= 1) {
+      return NavInstruction(
+        type: TurnType.straight,
+        label: 'Continue to destination',
+        distanceMetersToTurn: _routeFollower.distanceToGoal,
+      );
+    }
     return _navigationService.currentInstruction(_route, 0);
   }
 
@@ -691,49 +757,13 @@ class _NavigationScreenState extends State<NavigationScreen>
   // NAVIGATION DIRECTION
   // ===========================================================================
 
-  Offset? _navigationTarget(Offset userPosition) {
-    // Outside walking network:
-    // face the relevant campus entrance.
-    if (!_onNavigationNetwork && _nearestEntry != null) {
-      return _graphService.graph.nodesById[_nearestEntry!.nodeId]?.position
-          .toOffset();
-    }
-
-    // On the route:
-    // path[1] is the next segment ahead.
-    if (_route.path.length >= 2) {
-      return _route.path[1].node.position.toOffset();
-    }
-
-    if (_destination != null) {
-      return _destination!.position.toOffset();
-    }
-
-    return null;
-  }
-
   double? _navigationRotationFor(Offset userPosition) {
-    final target = _navigationTarget(userPosition);
-
-    if (target == null) {
+    if (!_onNavigationNetwork || !_routeFollower.active) {
       return null;
     }
 
-    final dx = target.dx - userPosition.dx;
-
-    final dy = target.dy - userPosition.dy;
-
-    if (dx.abs() < 0.001 && dy.abs() < 0.001) {
-      return null;
-    }
-
-    final directionAngle = math.atan2(dy, dx);
-
-    // Screen Y grows downward.
-    // -pi/2 therefore points upwards.
-    return -math.pi / 2 - directionAngle;
+    return _routeFollower.cameraRotation;
   }
-
   // ===========================================================================
   // SMOOTH CAMERA HELPERS
   // ===========================================================================
@@ -957,6 +987,9 @@ class _NavigationScreenState extends State<NavigationScreen>
   // ===========================================================================
 
   Widget _buildOutsideBanner() {
+    if (_insideCampus) {
+      return const SizedBox.shrink();
+    }
     final entry = _nearestEntry;
 
     if (entry == null) {
@@ -964,7 +997,7 @@ class _NavigationScreenState extends State<NavigationScreen>
     }
 
     return Container(
-      margin: const EdgeInsets.fromLTRB(18, 4, 18, 4),
+      margin: EdgeInsets.zero,
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       decoration: BoxDecoration(
         color: context.bcColors.primaryContainer,
@@ -999,6 +1032,9 @@ class _NavigationScreenState extends State<NavigationScreen>
   // ===========================================================================
 
   Widget _buildEntranceIndicator() {
+    if (_insideCampus) {
+      return const SizedBox.shrink();
+    }
     final gps = _gpsPosition;
 
     final entry = _nearestEntry;

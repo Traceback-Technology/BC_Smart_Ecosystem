@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math' as math;
 import 'package:flutter/animation.dart';
 
@@ -7,6 +8,7 @@ import '../models/path_node.dart';
 import '../models/route_result.dart';
 import 'dijkstra_service.dart';
 import 'campus_gps_service.dart';
+import 'campus_navigation_geometry.dart';
 
 /// Position along an edge, not a replacement node in the campus graph.
 class RouteProjection {
@@ -119,8 +121,9 @@ class RouteGeometry {
     Graph graph,
     Offset point,
     String goal,
-    double radius,
-  ) {
+    double radius, {
+    Iterable<String>? goalIds,
+  }) {
     GraphNode? first;
     GraphNode? second;
     RouteProjection? nearest;
@@ -147,7 +150,7 @@ class RouteGeometry {
       final node = side == 0 ? first! : second!;
       final partial =
           edgeLength * (side == 0 ? nearest.fraction : 1 - nearest.fraction);
-      final tail = dijkstra.findRoute(node.id, goal);
+      final tail = dijkstra.findRouteToAny(node.id, goalIds ?? [goal]);
       if (tail.isEmpty) continue;
       final total = partial + tail.totalDistanceMeters;
       if (!best.isEmpty && total >= best.totalDistanceMeters) continue;
@@ -181,6 +184,20 @@ class RouteFollowService {
   int _misses = 0;
   DateTime? _timestamp;
   bool active = false;
+  bool latestFixMatched = false;
+  Offset? _arrivalPosition;
+  double _arrivalRemaining = double.infinity;
+  double get distanceToGoal => _arrivalPosition == null || _full.isEmpty
+      ? double.infinity
+      : CampusGpsService.mapDistanceMeters(
+          _arrivalPosition!,
+          _full.path.last.node.position.toOffset(),
+        );
+  bool get hasArrived => NavigationArrival.isArrived(
+    matched: active && latestFixMatched,
+    remainingMeters: _arrivalRemaining,
+    distanceToGoal: distanceToGoal,
+  );
 
   RouteFollowService({required TickerProvider vsync, required this.onChanged})
     : _animation = AnimationController(
@@ -193,6 +210,38 @@ class RouteFollowService {
     });
   }
   RouteResult get route => RouteGeometry.remaining(_full, _display);
+
+  /// Camera direction comes entirely from matched route geometry.
+  /// Never calculate it between raw GPS and an animated route node.
+  double? get cameraRotation {
+    if (!active || _full.path.length < 2) {
+      return null;
+    }
+
+    final remaining = _full.totalDistanceMeters - _target;
+    if (remaining < 3.0) {
+      return null;
+    }
+
+    final start = RouteGeometry.remaining(
+      _full,
+      _target,
+    ).path.first.node.position.toOffset();
+
+    // A short look-ahead smooths the transition through corners.
+    final ahead = RouteGeometry.remaining(
+      _full,
+      math.min(_target + 3.0, _full.totalDistanceMeters),
+    ).path.first.node.position.toOffset();
+
+    final direction = ahead - start;
+    if (direction.distanceSquared < 0.000001) {
+      return null;
+    }
+
+    return -math.pi / 2 - math.atan2(direction.dy, direction.dx);
+  }
+
   Offset? get position => active && !route.isEmpty
       ? route.path.first.node.position.toOffset()
       : null;
@@ -204,6 +253,9 @@ class RouteFollowService {
       : null;
 
   void reset() {
+    latestFixMatched = false;
+    _arrivalPosition = null;
+    _arrivalRemaining = double.infinity;
     _animation.stop();
     active = false;
     _full = RouteResult.empty;
@@ -215,14 +267,41 @@ class RouteFollowService {
     _target = 0;
   }
 
+  bool updateToAny(
+    Graph graph,
+    Offset point,
+    Iterable<String> goals, {
+    required double accuracy,
+    required DateTime timestamp,
+  }) {
+    final ids = goals.toSet().toList()..sort();
+    if (ids.isEmpty) {
+      reset();
+      return false;
+    }
+
+    return update(
+      graph,
+      point,
+      ids.first,
+      accuracy: accuracy,
+      timestamp: timestamp,
+      goalIds: ids,
+    );
+  }
+
   bool update(
     Graph graph,
     Offset point,
     String goal, {
     required double accuracy,
     required DateTime timestamp,
+    Iterable<String>? goalIds,
   }) {
-    if (_goal != goal) reset();
+    latestFixMatched = false;
+    final ids = (goalIds ?? [goal]).toSet().toList()..sort();
+    final goalKey = jsonEncode(ids);
+    if (_goal != goalKey) reset();
     // A rejected/stale GPS sample must not count as another off-route fix.
     if (_timestamp != null && !timestamp.isAfter(_timestamp!)) return active;
     final elapsed = _timestamp == null
@@ -234,6 +313,7 @@ class RouteFollowService {
         .clamp(6.0, 15.0)
         .toDouble();
     if (!goodAccuracy) return active;
+    _arrivalPosition = point;
     if (active) {
       final q = RouteGeometry.match(
         _full,
@@ -249,6 +329,11 @@ class RouteFollowService {
             )
           : double.infinity;
       if ((q != null && q.distanceMeters <= radius) || endDistance <= radius) {
+        latestFixMatched = true;
+        _arrivalRemaining = math.max(
+          0.0,
+          _full.totalDistanceMeters - (q?.progressMeters ?? 0.0),
+        );
         _misses = 0;
         final next = q?.progressMeters ?? 0.0;
         // Small backwards GPS jitter is ignored; genuine backtracking is allowed.
@@ -264,13 +349,21 @@ class RouteFollowService {
       _animation.stop();
       active = false;
     }
-    _full = RouteGeometry.fromPosition(graph, point, goal, radius);
-    _goal = goal;
+    _full = RouteGeometry.fromPosition(
+      graph,
+      point,
+      goal,
+      radius,
+      goalIds: ids,
+    );
+    _goal = goalKey;
     _display = 0;
     _from = 0;
     _target = 0;
     _misses = 0;
     active = !_full.isEmpty;
+    latestFixMatched = active;
+    _arrivalRemaining = active ? _full.totalDistanceMeters : double.infinity;
     return active;
   }
 

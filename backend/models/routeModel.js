@@ -47,6 +47,13 @@ const routeSchema = new mongoose.Schema({
   origin: String,
   destination: String,
 
+  // BC Ways campus-graph node ids, kept so a past route can be reopened exactly.
+  originNodeId: String,
+  destinationNodeId: String,
+
+  // Set when a navigation session finishes (completed or cancelled).
+  endedAt: Date,
+
   estimatedMinutes: {
     type: Number,
     required: true
@@ -68,6 +75,20 @@ const routeSchema = new mongoose.Schema({
     default: 'preview'
   }
 }, { timestamps: true });
+
+// History queries: newest routes first, per owner.
+routeSchema.index({ userId: 1, createdAt: -1 });
+routeSchema.index({ guestId: 1, createdAt: -1 });
+
+// Guest routes expire with the guest session retention window (see guestModel).
+const guestRetentionSeconds = Number(process.env.GUEST_RETENTION_DAYS || 7) * 24 * 60 * 60;
+routeSchema.index(
+  { createdAt: 1 },
+  {
+    expireAfterSeconds: guestRetentionSeconds,
+    partialFilterExpression: { guestId: { $exists: true } }
+  }
+);
 
 // A route must belong to a registered user or a guest, never neither.
 routeSchema.pre('validate', function validateOwner(next) {

@@ -14,6 +14,7 @@ import '../services/campus_gps_service.dart';
 import '../services/dijkstra_service.dart';
 import '../services/graph_service.dart';
 import '../services/navigation_service.dart';
+import '../services/route_history_service.dart';
 import '../services/route_follow_service.dart';
 import '../widgets/bc_bottom_navigation_bar.dart';
 import '../widgets/campus_map.dart';
@@ -160,6 +161,10 @@ class _NavigationScreenState extends State<NavigationScreen>
 
     _transformController.dispose();
 
+    // Leaving before arrival (back button, bottom nav) ends the route as
+    // cancelled. A no-op if it was already completed or cancelled.
+    unawaited(RouteHistoryService.instance.markCancelled());
+
     super.dispose();
   }
 
@@ -296,6 +301,11 @@ class _NavigationScreenState extends State<NavigationScreen>
       _loading = false;
     });
 
+    // Standing on the destination node means the route is finished.
+    if (onNetwork && route.path.length == 1) {
+      unawaited(RouteHistoryService.instance.markCompleted());
+    }
+
     // Smoothly follow and rotate automatically.
     if (_followGps) {
       _moveNavigationCamera(_routeFollower.targetPosition ?? mapPosition);
@@ -308,6 +318,8 @@ class _NavigationScreenState extends State<NavigationScreen>
 
   void _endNavigation() {
     _gpsSubscription?.cancel();
+
+    unawaited(RouteHistoryService.instance.markCancelled());
 
     unawaited(_navigationService.stopLocationTracking());
 

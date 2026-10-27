@@ -1,4 +1,18 @@
+import 'dart:js_interop';
+
 import 'package:flutter_openid_web/flutter_openid_web.dart';
+
+// Browser `window.location`, used to send admins to the admin portal.
+@JS('location')
+external _Location get _browserLocation;
+
+extension type _Location(JSObject _) implements JSObject {
+  external void replace(JSString url);
+}
+
+/// Leaves this app and opens [url]. `replace` (not `assign`) keeps the
+/// URL carrying the token out of this tab's back-button history.
+void redirectBrowserTo(String url) => _browserLocation.replace(url.toJS);
 
 const _allowedOrigins = <String>{
   'http://localhost:7357',

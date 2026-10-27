@@ -16,6 +16,11 @@ Stripe; only the keys differ.
    - **Webhook** `POST /api/payments/webhook` (signature-verified), or
    - **Sync** `POST /api/payments/:id/sync`, which the app calls after the sheet closes.
 
+**Cash** (`"paymentMethod": "cash"` on `POST /api/orders`) skips Stripe entirely. It is
+pickup-only (400 for drone orders). The order is `confirmed` immediately with a `pending`
+cash payment that becomes `succeeded` when staff mark the order `delivered`, or `failed` if
+it is cancelled. Orders default to `card`.
+
 The payment is only marked `succeeded` if Stripe's amount and currency match the order.
 A succeeded or refunded payment is never downgraded by a late or out-of-order update.
 

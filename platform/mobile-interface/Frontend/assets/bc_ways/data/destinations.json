@@ -4,8 +4,8 @@
         "name": "Chi",
         "category": "Classroom",
         "position": {
-            "x": 574,
-            "y": 1216
+            "x": 554,
+            "y": 1227
         },
         "nearestNode": "chi_entrance",
         "yard": "north"
@@ -15,8 +15,8 @@
         "name": "Psi",
         "category": "Classroom",
         "position": {
-            "x": 789,
-            "y": 1026
+            "x": 768,
+            "y": 1029
         },
         "nearestNode": "psi_entrance",
         "yard": "north"
@@ -26,8 +26,8 @@
         "name": "Iota Phi",
         "category": "Classroom",
         "position": {
-            "x": 989,
-            "y": 1054
+            "x": 974,
+            "y": 1035
         },
         "nearestNode": "iota-phi_entrance",
         "yard": "north"
@@ -37,8 +37,8 @@
         "name": "Kappa",
         "category": "Classroom",
         "position": {
-            "x": 1063,
-            "y": 1367
+            "x": 1068,
+            "y": 1369
         },
         "nearestNode": "kappa_entrance",
         "yard": "north"
@@ -48,8 +48,8 @@
         "name": "Ypsilon",
         "category": "Classroom",
         "position": {
-            "x": 1398,
-            "y": 2114
+            "x": 1399,
+            "y": 2129
         },
         "nearestNode": "ypsilon_entrance",
         "yard": "main"
@@ -59,8 +59,8 @@
         "name": "Omega",
         "category": "Classroom",
         "position": {
-            "x": 1473,
-            "y": 2125
+            "x": 1474,
+            "y": 2140
         },
         "nearestNode": "omega_entrance",
         "yard": "main"
@@ -70,8 +70,8 @@
         "name": "Sigma",
         "category": "Classroom",
         "position": {
-            "x": 1468,
-            "y": 2158
+            "x": 1469,
+            "y": 2174
         },
         "nearestNode": "sigma_entrance",
         "yard": "main"
@@ -81,8 +81,8 @@
         "name": "Pi",
         "category": "Classroom",
         "position": {
-            "x": 1556,
-            "y": 2232
+            "x": 1562,
+            "y": 2249
         },
         "nearestNode": "pi_entrance",
         "yard": "main"
@@ -103,8 +103,8 @@
         "name": "Zeta",
         "category": "Classroom",
         "position": {
-            "x": 1235,
-            "y": 2532
+            "x": 1243,
+            "y": 2534
         },
         "nearestNode": "zeta_entrance",
         "yard": "main"
@@ -114,8 +114,8 @@
         "name": "Omnikron",
         "category": "Classroom",
         "position": {
-            "x": 1222,
-            "y": 2562
+            "x": 1229,
+            "y": 2566
         },
         "nearestNode": "omnikron_entrance",
         "yard": "main"
@@ -125,8 +125,8 @@
         "name": "Lambda",
         "category": "Classroom",
         "position": {
-            "x": 1182,
-            "y": 2523
+            "x": 1204,
+            "y": 2533
         },
         "nearestNode": "lambda_entrance",
         "yard": "main"
@@ -136,8 +136,8 @@
         "name": "Delta",
         "category": "Classroom",
         "position": {
-            "x": 1429,
-            "y": 2648
+            "x": 1423,
+            "y": 2637
         },
         "nearestNode": "delta_entrance",
         "yard": "main"
@@ -147,8 +147,8 @@
         "name": "Theta",
         "category": "Classroom",
         "position": {
-            "x": 1479,
-            "y": 2651
+            "x": 1473,
+            "y": 2640
         },
         "nearestNode": "theta_entrance",
         "yard": "main"
@@ -158,8 +158,8 @@
         "name": "Alpha",
         "category": "Classroom",
         "position": {
-            "x": 1479,
-            "y": 2725
+            "x": 1473,
+            "y": 2726
         },
         "nearestNode": "alpha_entrance",
         "yard": "main"
@@ -169,8 +169,8 @@
         "name": "Beta",
         "category": "Classroom",
         "position": {
-            "x": 1322,
-            "y": 2768
+            "x": 1332,
+            "y": 2758
         },
         "nearestNode": "beta_entrance",
         "yard": "main"
@@ -193,8 +193,8 @@
         "name": "Lier",
         "category": "Residence",
         "position": {
-            "x": 579,
-            "y": 1509
+            "x": 511,
+            "y": 1534
         },
         "nearestNode": "lier_entrance",
         "yard": "north"
@@ -205,7 +205,7 @@
         "category": "Residence",
         "position": {
             "x": 968,
-            "y": 1314
+            "y": 1315
         },
         "nearestNode": "turnhout_entrance",
         "yard": "north"
@@ -215,8 +215,8 @@
         "name": "Tienen",
         "category": "Residence",
         "position": {
-            "x": 962,
-            "y": 1370
+            "x": 926,
+            "y": 1392
         },
         "nearestNode": "tienen_entrance",
         "yard": "north"
@@ -226,8 +226,8 @@
         "name": "Namur",
         "category": "Residence",
         "position": {
-            "x": 1071,
-            "y": 1647
+            "x": 1043,
+            "y": 1649
         },
         "nearestNode": "namur_entrance",
         "yard": "north"
@@ -259,8 +259,8 @@
         "name": "Oostende",
         "category": "Residence",
         "position": {
-            "x": 2301,
-            "y": 1525
+            "x": 2279,
+            "y": 1534
         },
         "nearestNode": "oostende_entrance",
         "yard": "north"
@@ -270,10 +270,10 @@
         "name": "Florenville",
         "category": "Residence",
         "position": {
-            "x": 2340,
-            "y": 1169
+            "x": 2331,
+            "y": 1175
         },
-        "nearestNode": "florenville_entrance",
+        "nearestNode": ["florenville_entrance-1", "florenville_entrance-2"],
         "yard": "north"
     },
     {
@@ -281,8 +281,8 @@
         "name": "Ekklo",
         "category": "Residence",
         "position": {
-            "x": 1568,
-            "y": 2187
+            "x": 1576,
+            "y": 2203
         },
         "nearestNode": "ekklo_entrance",
         "yard": "main"
@@ -292,8 +292,8 @@
         "name": "Genk",
         "category": "Residence",
         "position": {
-            "x": 1250,
-            "y": 2259
+            "x": 1271,
+            "y": 2255
         },
         "nearestNode": "genk_entrance",
         "yard": "main"
@@ -303,8 +303,8 @@
         "name": "Leuven",
         "category": "Residence",
         "position": {
-            "x": 1313,
-            "y": 2458
+            "x": 1316,
+            "y": 2455
         },
         "nearestNode": "leuven_entrance",
         "yard": "main"
@@ -314,8 +314,8 @@
         "name": "Brussels",
         "category": "Residence",
         "position": {
-            "x": 1505,
-            "y": 2573
+            "x": 1506,
+            "y": 2574
         },
         "nearestNode": "brussels_entrance",
         "yard": "main"
@@ -325,8 +325,8 @@
         "name": "Hasselt",
         "category": "Residence",
         "position": {
-            "x": 1365,
-            "y": 2787
+            "x": 1375,
+            "y": 2776
         },
         "nearestNode": "hasselt_entrance",
         "yard": "main"
@@ -336,8 +336,8 @@
         "name": "Antwerp",
         "category": "Residence",
         "position": {
-            "x": 1454,
-            "y": 2804
+            "x": 1466,
+            "y": 2793
         },
         "nearestNode": "antwerp_entrance",
         "yard": "main"
@@ -360,8 +360,8 @@
         "name": "Chi Study",
         "category": "Study Room",
         "position": {
-            "x": 636,
-            "y": 1216
+            "x": 612,
+            "y": 1229
         },
         "nearestNode": "chi-study_entrance",
         "yard": "north"
@@ -371,8 +371,8 @@
         "name": "Learning Factory",
         "category": "Student Building",
         "position": {
-            "x": 901,
-            "y": 1189
+            "x": 874,
+            "y": 1169
         },
         "nearestNode": "learning-factory_entrance",
         "yard": "north"
@@ -382,8 +382,8 @@
         "name": "Smart City",
         "category": "Student Building",
         "position": {
-            "x": 1020,
-            "y": 1214
+            "x": 990,
+            "y": 1178
         },
         "nearestNode": "smart-city_entrance",
         "yard": "north"
@@ -394,7 +394,7 @@
         "category": "Laundry",
         "position": {
             "x": 1350,
-            "y": 1510
+            "y": 1512
         },
         "nearestNode": "north-laundry_entrance",
         "yard": "north"
@@ -404,10 +404,10 @@
         "name": "Cafeteria",
         "category": "Cafeteria",
         "position": {
-            "x": 1864,
-            "y": 1615
+            "x": 1854,
+            "y": 1627
         },
-        "nearestNode": "cafeteria_entrance",
+        "nearestNode": ["cafeteria_entrance-1", "cafeteria_entrance-2"],
         "yard": "north"
     },
     {
@@ -415,8 +415,8 @@
         "name": "Tuck Shop",
         "category": "Tuck Shop",
         "position": {
-            "x": 1146,
-            "y": 2196
+            "x": 1147,
+            "y": 2197
         },
         "nearestNode": "tuck-shop_entrance",
         "yard": "main"
@@ -426,8 +426,8 @@
         "name": "Main Study",
         "category": "Study Room",
         "position": {
-            "x": 1551,
-            "y": 2275
+            "x": 1558,
+            "y": 2291
         },
         "nearestNode": "main-study_entrance",
         "yard": "main"
@@ -437,8 +437,8 @@
         "name": "Library",
         "category": "Library",
         "position": {
-            "x": 1311,
-            "y": 2632
+            "x": 1322,
+            "y": 2644
         },
         "nearestNode": "main-library_entrance",
         "yard": "main"
@@ -461,8 +461,8 @@
         "name": "Volleyball",
         "category": "Outdoor Areas",
         "position": {
-            "x": 1298,
-            "y": 1250
+            "x": 1274,
+            "y": 1270
         },
         "nearestNode": "volleyball_entrance",
         "yard": "north"
@@ -472,10 +472,10 @@
         "name": "Sports Fields",
         "category": "Outdoor Areas",
         "position": {
-            "x": 1874,
-            "y": 1406
+            "x": 1846,
+            "y": 1404
         },
-        "nearestNode": "sports-fields_entrance",
+        "nearestNode": ["sports-fields_entrance-1", "sports-fields_entrance-2"],
         "yard": "north"
     },
     {
@@ -483,8 +483,8 @@
         "name": "Basketball",
         "category": "Outdoor Areas",
         "position": {
-            "x": 1238,
-            "y": 2484
+            "x": 1246,
+            "y": 2487
         },
         "nearestNode": "basketball_entrance",
         "yard": "main"
@@ -495,7 +495,7 @@
         "category": "Outdoor Areas",
         "position": {
             "x": 1363,
-            "y": 2548
+            "y": 2547
         },
         "nearestNode": "chess_entrance",
         "yard": "main"
@@ -521,7 +521,7 @@
             "x": 1615,
             "y": 1676
         },
-        "nearestNode": "student-parking_entrance",
+        "nearestNode": ["student-parking_entrance", "student-parking_entrance-1", "student-parking_entrance-2", "student-parking_entrance-3"],
         "yard": "north"
     },
     {
@@ -529,10 +529,10 @@
         "name": "Staff Parking 1",
         "category": "Parking",
         "position": {
-            "x": 1450,
-            "y": 2027
+            "x": 1457,
+            "y": 2037
         },
-        "nearestNode": "staff-parking-1_entrance",
+        "nearestNode": ["staff-parking-1_entrance-1", "staff-parking-1_entrance-2"],
         "yard": "main"
     },
     {
@@ -540,10 +540,10 @@
         "name": "Staff Parking 2",
         "category": "Parking",
         "position": {
-            "x": 1228,
-            "y": 2338
+            "x": 1227,
+            "y": 2346
         },
-        "nearestNode": "staff-parking-2_entrance",
+        "nearestNode": ["staff-parking-2_entrance-1", "staff-parking-2_entrance-2"],
         "yard": "main"
     },
     {
@@ -551,10 +551,10 @@
         "name": "Visitors Parking",
         "category": "Parking",
         "position": {
-            "x": 1104,
-            "y": 2481
+            "x": 1109,
+            "y": 2462
         },
-        "nearestNode": "visitors-parking_entrance",
+        "nearestNode": ["visitors-parking_entrance-1", "visitors-parking_entrance-2"],
         "yard": "main"
     },
 
@@ -575,8 +575,8 @@
         "name": "Toilets",
         "category": "Toilets",
         "position": {
-            "x": 606,
-            "y": 1176
+            "x": 560,
+            "y": 1188
         },
         "nearestNode": "chi-classroom-toilets_entrance",
         "yard": "north"
@@ -586,8 +586,8 @@
         "name": "Toilets",
         "category": "Toilets",
         "position": {
-            "x": 806,
-            "y": 986
+            "x": 782,
+            "y": 989
         },
         "nearestNode": "psi-classroom-toilets_entrance",
         "yard": "north"
@@ -597,8 +597,8 @@
         "name": "Toilets",
         "category": "Toilets",
         "position": {
-            "x": 1085,
-            "y": 1075
+            "x": 1072,
+            "y": 1062
         },
         "nearestNode": "iota-phi-classroom-toilets_entrance",
         "yard": "north"
@@ -608,8 +608,8 @@
         "name": "IT Department",
         "category": "Office",
         "position": {
-            "x": 812,
-            "y": 1552
+            "x": 810,
+            "y": 1557
         },
         "nearestNode": "it-department_entrance",
         "yard": "north"
@@ -620,7 +620,7 @@
         "category": "Office",
         "position": {
             "x": 1442,
-            "y": 2116
+            "y": 2132
         },
         "nearestNode": "counsel-offices_entrance",
         "yard": "main"
@@ -630,8 +630,8 @@
         "name": "Private Toilets",
         "category": "Toilets",
         "position": {
-            "x": 1390,
-            "y": 2144
+            "x": 1392,
+            "y": 2165
         },
         "nearestNode": "private-toilets_entrance",
         "yard": "main"
@@ -641,8 +641,8 @@
         "name": "Residence Manager",
         "category": "Office",
         "position": {
-            "x": 1417,
-            "y": 2199
+            "x": 1435,
+            "y": 2208
         },
         "nearestNode": "residence-manager_entrance",
         "yard": "main"
@@ -652,8 +652,8 @@
         "name": "Health & Safety",
         "category": "Office",
         "position": {
-            "x": 1434,
-            "y": 2203
+            "x": 1452,
+            "y": 2216
         },
         "nearestNode": "health-and-safety_entrance",
         "yard": "main"
@@ -663,8 +663,8 @@
         "name": "Store Room",
         "category": "Office",
         "position": {
-            "x": 1478,
-            "y": 2214
+            "x": 1493,
+            "y": 2225
         },
         "nearestNode": "store-room_entrance",
         "yard": "main"
@@ -674,8 +674,8 @@
         "name": "Public Toilets",
         "category": "Toilets",
         "position": {
-            "x": 1558,
-            "y": 2323
+            "x": 1566,
+            "y": 2338
         },
         "nearestNode": "public-toilets_entrance",
         "yard": "main"
@@ -685,8 +685,8 @@
         "name": "Administration",
         "category": "Office",
         "position": {
-            "x": 1042,
-            "y": 2504
+            "x": 1065,
+            "y": 2502
         },
         "nearestNode": "administration_entrance",
         "yard": "main"
@@ -696,8 +696,8 @@
         "name": "Sales",
         "category": "Office",
         "position": {
-            "x": 1001,
-            "y": 2568
+            "x": 1002,
+            "y": 2507
         },
         "nearestNode": "sales_entrance",
         "yard": "main"
@@ -707,8 +707,8 @@
         "name": "Reception",
         "category": "Office",
         "position": {
-            "x": 1045,
-            "y": 2619
+            "x": 1085,
+            "y": 2622
         },
         "nearestNode": "reception_entrance",
         "yard": "main"
@@ -718,8 +718,8 @@
         "name": "Finance",
         "category": "Office",
         "position": {
-            "x": 1016,
-            "y": 2612
+            "x": 1027,
+            "y": 2613
         },
         "nearestNode": "reception_entrance",
         "yard": "main"
@@ -729,7 +729,7 @@
         "name": "Academics",
         "category": "Office",
         "position": {
-            "x": 1245,
+            "x": 1250,
             "y": 2672
         },
         "nearestNode": "academics_entrance",
@@ -740,8 +740,8 @@
         "name": "Toilets",
         "category": "Toilets",
         "position": {
-            "x": 1279,
-            "y": 2548
+            "x": 1276,
+            "y": 2546
         },
         "nearestNode": "zeta-classroom-toilets_entrance",
         "yard": "main"
@@ -751,8 +751,8 @@
         "name": "Procurement",
         "category": "Office",
         "position": {
-            "x": 1316,
-            "y": 2575
+            "x": 1312,
+            "y": 2591
         },
         "nearestNode": "procurement_entrance",
         "yard": "main"

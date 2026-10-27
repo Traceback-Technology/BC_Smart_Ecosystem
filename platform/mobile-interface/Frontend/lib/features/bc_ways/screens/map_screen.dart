@@ -288,13 +288,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
         destination.entranceNodeIds,
       );
     }
-    final visible = following
-        ? _routeFollower.position ?? raw
-        : SoftPathPosition.adjust(
-            _graphService.graph,
-            raw,
-            accuracy: gps.accuracy,
-          );
+    final visible = following ? _routeFollower.position ?? raw : raw;
     setState(() {
       _gpsPosition = gps;
       _mapPosition = raw;

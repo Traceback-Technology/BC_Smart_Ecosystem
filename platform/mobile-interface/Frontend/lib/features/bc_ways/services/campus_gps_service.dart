@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:geolocator/geolocator.dart' as geo;
 import '../models/destination.dart';
+import '../models/node.dart';
 import '../constants/map_constants.dart';
 
 /// A real-world campus entry point.
@@ -67,13 +68,85 @@ class CampusGpsService {
     longitude: 28.131993722434874,
   );
 
-  static const List<CampusEntry> entries = [
+  // Estimated GPS positions derived from the updated map nodes.
+  // Verify these four entry locations during the next campus test.
+  static final CampusEntry westEntrance = _entryFromMap(
+    'west_entrance',
+    'West Entrance',
+    379,
+    1261,
+  );
+
+  static final CampusEntry oostendeMainEntrance = _entryFromMap(
+    'oostende-main_gate',
+    'Oostende Main Entrance',
+    2653,
+    1572,
+  );
+
+  static final CampusEntry florenvilleMainGate = _entryFromMap(
+    'florenville-main_gate',
+    'Florenville Main Gate',
+    2626,
+    1035,
+  );
+
+  static final CampusEntry florenvilleMainEntrance = _entryFromMap(
+    'florenville-main_entrance',
+    'Florenville Main Entrance',
+    2546,
+    888,
+  );
+
+  static final List<CampusEntry> entries = List<CampusEntry>.unmodifiable([
     mainGate,
     mainEntrance,
     northGate,
     northEntrance,
     studentParkingEntrance,
-  ];
+    westEntrance,
+    oostendeMainEntrance,
+    florenvilleMainGate,
+    florenvilleMainEntrance,
+  ]);
+
+  static CampusEntry _entryFromMap(
+    String nodeId,
+    String label,
+    double x,
+    double y,
+  ) {
+    // Inverse of toMapOffset, including the current GPS fine offsets.
+    // Inputs are the top-left positions of 4 x 4 entrance squares.
+    final dx =
+        x +
+        GraphNode.entranceCentreOffset -
+        _xOffset -
+        BcWaysMapConstants.gpsOffsetX;
+    final dy =
+        y +
+        GraphNode.entranceCentreOffset -
+        _yOffset -
+        BcWaysMapConstants.gpsOffsetY;
+    final determinant = _xEast * _yNorth - _xNorth * _yEast;
+
+    if (determinant.abs() < 1e-12) {
+      throw StateError('GPS/map calibration cannot be inverted.');
+    }
+
+    final east = (dx * _yNorth - dy * _xNorth) / determinant;
+    final north = (_xEast * dy - _yEast * dx) / determinant;
+    final latitudeRadians = _originLatitude * math.pi / 180.0;
+
+    return CampusEntry(
+      nodeId: nodeId,
+      label: label,
+      latitude: _originLatitude + north / _earthRadius * 180.0 / math.pi,
+      longitude:
+          _originLongitude +
+          east / (_earthRadius * math.cos(latitudeRadians)) * 180.0 / math.pi,
+    );
+  }
 
   // ---------------------------------------------------------------------------
   // GPS -> SVG CALIBRATION
@@ -117,11 +190,17 @@ class CampusGpsService {
 
   /// Stored with a survey so its map coordinates can be reproduced later.
   static Map<String, dynamic> get recordingCalibration => {
-    'width': 3000, 'height': 3000,
-    'originLatitude': _originLatitude, 'originLongitude': _originLongitude,
+    'width': 3000,
+    'height': 3000,
+    'originLatitude': _originLatitude,
+    'originLongitude': _originLongitude,
     'earthRadius': _earthRadius,
-    'xEast': _xEast, 'xNorth': _xNorth, 'xOffset': _xOffset,
-    'yEast': _yEast, 'yNorth': _yNorth, 'yOffset': _yOffset,
+    'xEast': _xEast,
+    'xNorth': _xNorth,
+    'xOffset': _xOffset,
+    'yEast': _yEast,
+    'yNorth': _yNorth,
+    'yOffset': _yOffset,
     'gpsOffsetX': BcWaysMapConstants.gpsOffsetX,
     'gpsOffsetY': BcWaysMapConstants.gpsOffsetY,
   };
@@ -191,7 +270,11 @@ class CampusGpsService {
         (entry) =>
             entry.nodeId == 'north_gate' ||
             entry.nodeId == 'north_entrance' ||
-            entry.nodeId == 'student-parking_entrance',
+            entry.nodeId == 'student-parking_entrance' ||
+            entry.nodeId == 'west_entrance' ||
+            entry.nodeId == 'oostende-main_gate' ||
+            entry.nodeId == 'florenville-main_gate' ||
+            entry.nodeId == 'florenville-main_entrance',
       )
       .toList();
 

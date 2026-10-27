@@ -24,21 +24,14 @@ class NavigationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isArrived =
-        instruction.type ==
-            TurnType.arrive;
+    final isArrived = instruction.type == TurnType.arrive;
 
     return Container(
-      margin:
-          const EdgeInsets.symmetric(
-        horizontal: 16,
-      ),
-      padding:
-          const EdgeInsets.all(16),
+      margin: EdgeInsets.zero,
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: context.cardBg,
-        borderRadius:
-            BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
             color: Colors.black12,
@@ -48,49 +41,41 @@ class NavigationCard extends StatelessWidget {
         ],
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             children: [
               Icon(
-                _iconFor(
-                  instruction.type,
-                ),
+                _iconFor(instruction.type),
                 size: 34,
-                color:
-                    context.textPrimary,
+                color: context.textPrimary,
               ),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       instruction.label,
                       style: TextStyle(
                         fontSize: 14,
-                        color:
-                            context.textPrimary,
+                        color: context.textPrimary,
                       ),
                     ),
                     if (!isArrived)
                       Text(
                         '${instruction.distanceMetersToTurn.round()} m',
-                        style:
-                            TextStyle(
+                        style: TextStyle(
                           fontSize: 22,
-                          fontWeight:
-                              FontWeight.w800,
-                          color:
-                              context.readableAccent(BcColors.primary),
+                          fontWeight: FontWeight.w800,
+                          color: context.readableAccent(BcColors.primary),
                         ),
                       ),
                     Text(
                       'Towards $destinationName',
                       style: TextStyle(
                         fontSize: 13,
-                        color:
-                            context.textSecondary,
+                        color: context.textSecondary,
                       ),
                     ),
                   ],
@@ -99,68 +84,35 @@ class NavigationCard extends StatelessWidget {
             ],
           ),
 
-          Divider(
-            height: 24,
-            color:
-                context.subtleBorder,
-          ),
+          Divider(height: 24, color: context.subtleBorder),
 
           Wrap(
             spacing: 20,
             runSpacing: 12,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              const Icon(
-                Icons.directions_walk,
-                color: BcColors.teal,
-                size: 20,
-              ),
+              const Icon(Icons.directions_walk, color: BcColors.teal, size: 20),
 
+              _stat(context, 'ETA', '$etaMinutes min'),
 
-              _stat(
-                context,
-                'ETA',
-                '$etaMinutes min',
-              ),
+              _stat(context, 'Distance', '${remainingMeters.round()} m'),
 
-
-              _stat(
-                context,
-                'Distance',
-                '${remainingMeters.round()} m',
-              ),
-
-
-              _stat(
-                context,
-                'Arrival',
-                arrival.format(context),
-              ),
-
+              _stat(context, 'Arrival', arrival.format(context)),
 
               ElevatedButton(
                 onPressed: onExit,
-                style:
-                    ElevatedButton.styleFrom(
-                  backgroundColor:
-                      BcColors.danger,
-                  foregroundColor:
-                      Colors.white,
-                  shape:
-                      RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(
-                      10,
-                    ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: BcColors.danger,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  padding:
-                      const EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                     horizontal: 22,
                     vertical: 12,
                   ),
                 ),
-                child:
-                    const Text('Exit'),
+                child: const Text('Exit'),
               ),
             ],
           ),
@@ -169,40 +121,27 @@ class NavigationCard extends StatelessWidget {
     );
   }
 
-  Widget _stat(
-    BuildContext context,
-    String label,
-    String value,
-  ) {
+  Widget _stat(BuildContext context, String label, String value) {
     return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: TextStyle(
-            fontSize: 11,
-            color:
-                context.textSecondary,
-          ),
+          style: TextStyle(fontSize: 11, color: context.textSecondary),
         ),
         Text(
           value,
           style: TextStyle(
             fontSize: 14,
-            fontWeight:
-                FontWeight.w700,
-            color:
-                context.textPrimary,
+            fontWeight: FontWeight.w700,
+            color: context.textPrimary,
           ),
         ),
       ],
     );
   }
 
-  IconData _iconFor(
-    TurnType type,
-  ) {
+  IconData _iconFor(TurnType type) {
     switch (type) {
       case TurnType.left:
       case TurnType.sharpLeft:

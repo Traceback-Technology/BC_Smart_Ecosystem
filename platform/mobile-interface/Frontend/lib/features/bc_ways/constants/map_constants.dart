@@ -9,7 +9,7 @@ class BcWaysMapConstants {
   static const double gpsOffsetY = 0.0;
 
   // Arrival
-  static const double arrivalRadiusMeters = 5.0;
+  static const double arrivalRadiusMeters = 3.0;
 
   // ---------------------------------------------------------------------------
   // GPS DEBUG

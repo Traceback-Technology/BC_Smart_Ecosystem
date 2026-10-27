@@ -7,11 +7,47 @@ class DijkstraService {
   final Graph graph;
   const DijkstraService(this.graph);
 
+  RouteResult findRouteToAny(
+    String startId,
+    Iterable<String> endIds, {
+    Set<String> blockedEdges = const {},
+  }) {
+    if (!graph.nodesById.containsKey(startId)) {
+      return RouteResult.empty;
+    }
+
+    final distances = _run(startId, blockedEdges: blockedEdges).distances;
+    String? bestId;
+    var bestDistance = double.infinity;
+
+    for (final id in endIds.toSet()) {
+      if (!graph.nodesById.containsKey(id)) {
+        continue;
+      }
+      final distance = distances[id];
+      if (distance != null && distance < bestDistance) {
+        bestId = id;
+        bestDistance = distance;
+      }
+    }
+
+    if (bestId == null) {
+      return RouteResult.empty;
+    }
+
+    return findRoute(startId, bestId, blockedEdges: blockedEdges);
+  }
+
   /// Full route (with reconstructed path) from [startId] to [endId].
   /// [blockedEdges] excludes `"a|b"` (and `"b|a"`) edge keys — used to
   /// simulate a "path blocked ahead" reroute.
-  RouteResult findRoute(String startId, String endId, {Set<String> blockedEdges = const {}}) {
-    if (!graph.nodesById.containsKey(startId) || !graph.nodesById.containsKey(endId)) {
+  RouteResult findRoute(
+    String startId,
+    String endId, {
+    Set<String> blockedEdges = const {},
+  }) {
+    if (!graph.nodesById.containsKey(startId) ||
+        !graph.nodesById.containsKey(endId)) {
       return RouteResult.empty;
     }
     final result = _run(startId, blockedEdges: blockedEdges, target: endId);
@@ -25,7 +61,12 @@ class DijkstraService {
     }
     final orderedIds = ids.reversed.toList();
     final path = orderedIds
-        .map((id) => PathNode(node: graph.nodesById[id]!, cumulativeDistance: result.distances[id]!))
+        .map(
+          (id) => PathNode(
+            node: graph.nodesById[id]!,
+            cumulativeDistance: result.distances[id]!,
+          ),
+        )
         .toList();
 
     return RouteResult(
@@ -41,7 +82,11 @@ class DijkstraService {
   /// per destination.
   Map<String, double> distancesFrom(String startId) => _run(startId).distances;
 
-  _SearchResult _run(String startId, {Set<String> blockedEdges = const {}, String? target}) {
+  _SearchResult _run(
+    String startId, {
+    Set<String> blockedEdges = const {},
+    String? target,
+  }) {
     final distances = <String, double>{startId: 0};
     final previous = <String, String>{};
     final visited = <String>{};
@@ -57,7 +102,8 @@ class DijkstraService {
       for (final neighbor in graph.neighborsOf(current.id)) {
         final key = '${current.id}|${neighbor.nodeId}';
         final keyRev = '${neighbor.nodeId}|${current.id}';
-        if (blockedEdges.contains(key) || blockedEdges.contains(keyRev)) continue;
+        if (blockedEdges.contains(key) || blockedEdges.contains(keyRev))
+          continue;
         final newDist = current.dist + neighbor.distance;
         if (newDist < (distances[neighbor.nodeId] ?? double.infinity)) {
           distances[neighbor.nodeId] = newDist;

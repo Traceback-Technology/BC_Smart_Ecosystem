@@ -495,42 +495,25 @@ class _BCEatsCheckoutScreenState extends State<BCEatsCheckoutScreen> {
       if (backendAvailable && !api.hasToken) {
         throw const BcApiException('The backend is online, but this student session is not authenticated. Sign in with the connected student account before placing a live order.');
       }
+      // Cash (pickup only) is confirmed by the server and paid at collection,
+      // so it never touches Stripe.
+      final cashPickup = backendAvailable && api.hasToken && payment == EatsPayment.cash && store.fulfilment == Fulfilment.pickup;
       // Set Stripe up before creating the order, so we never leave an order
       // behind that cannot be paid.
       final stripeReady = backendAvailable && api.hasToken && payment == EatsPayment.card && await _ensureStripe(api);
-      if (stripeReady) {
+      if (cashPickup || stripeReady) {
         final orderResponse = await api.postJson('/api/orders', {
           'items': store.cart.map((line) => {'foodId': line.product.id, 'quantity': line.quantity}).toList(),
           'deliveryAddress': store.fulfilment == Fulfilment.pickup ? 'Campus Tuck Shop' : store.landingPad,
           'deliveryNotes': store.notes,
           'deliveryType': store.fulfilment == Fulfilment.pickup ? 'pickup' : 'drone',
+          'paymentMethod': cashPickup ? 'cash' : 'card',
         });
         final order = orderResponse['data'] as Map<String, dynamic>;
-        final paymentResponse = await api.postJson('/api/payments/intent', {'orderId': order['_id'].toString()});
-        final clientSecret = paymentResponse['clientSecret']?.toString();
-        if (clientSecret == null || clientSecret.isEmpty) throw const BcApiException('Payment provider did not return a client secret.');
-        await Stripe.instance.initPaymentSheet(paymentSheetParameters: SetupPaymentSheetParameters(
-          paymentIntentClientSecret: clientSecret,
-          merchantDisplayName: 'BC Eats',
-          style: ThemeMode.system,
-        ));
-        await Stripe.instance.presentPaymentSheet();
-        // The webhook is the source of truth, but it cannot reach a local
-        // sandbox backend unless the Stripe CLI is forwarding, so ask the
-        // server to re-check with Stripe now. Best-effort: the sheet already
-        // succeeded, and failing here would invite a second payment.
-        String? paymentStatus;
-        final paymentId = (paymentResponse['data'] as Map<String, dynamic>?)?['_id']?.toString();
-        if (paymentId != null) {
-          try {
-            final sync = await api.postJson('/api/payments/$paymentId/sync', {});
-            paymentStatus = (sync['data'] as Map<String, dynamic>?)?['status']?.toString();
-          } catch (_) {}
-        }
-        if (paymentStatus == 'failed') throw const BcApiException('Stripe reported that this payment failed. You have not been charged.');
+        if (stripeReady) await _payWithStripe(api, order);
         if (!mounted) return;
         // Keep the existing local tracking presentation while the server order
-        // and Stripe webhook remain the source of truth for payment/order state.
+        // (and, for card, the Stripe webhook) is the source of truth.
         final localOrder = store.placeDemoOrder(payment, store.phone);
         Navigator.pushReplacement(context, MaterialPageRoute<void>(
           settings: const RouteSettings(name: '/confirmation'),
@@ -541,8 +524,8 @@ class _BCEatsCheckoutScreenState extends State<BCEatsCheckoutScreen> {
       if (backendAvailable && api.hasToken && payment == EatsPayment.card) {
         throw const BcApiException('Card payments are unavailable: the server has no STRIPE_PUBLISHABLE_KEY configured.');
       }
-      if (backendAvailable && api.hasToken && payment != EatsPayment.card) {
-        throw const BcApiException('Live checkout currently supports card payments through Stripe. Choose Card or disconnect the backend to use preview mode.');
+      if (backendAvailable && api.hasToken) {
+        throw const BcApiException('Live checkout supports Card, or Cash for pickup orders. Choose one of those to continue.');
       }
       // No backend connection: explicitly use the existing local preview.
       final order = store.placeDemoOrder(payment, store.phone);
@@ -558,6 +541,31 @@ class _BCEatsCheckoutScreenState extends State<BCEatsCheckoutScreen> {
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString())));
       if (mounted) setState(() => submitting = false);
     }
+  }
+
+  Future<void> _payWithStripe(BcApiClient api, Map<String, dynamic> order) async {
+    final paymentResponse = await api.postJson('/api/payments/intent', {'orderId': order['_id'].toString()});
+    final clientSecret = paymentResponse['clientSecret']?.toString();
+    if (clientSecret == null || clientSecret.isEmpty) throw const BcApiException('Payment provider did not return a client secret.');
+    await Stripe.instance.initPaymentSheet(paymentSheetParameters: SetupPaymentSheetParameters(
+      paymentIntentClientSecret: clientSecret,
+      merchantDisplayName: 'BC Eats',
+      style: ThemeMode.system,
+    ));
+    await Stripe.instance.presentPaymentSheet();
+    // The webhook is the source of truth, but it cannot reach a local
+    // sandbox backend unless the Stripe CLI is forwarding, so ask the
+    // server to re-check with Stripe now. Best-effort: the sheet already
+    // succeeded, and failing here would invite a second payment.
+    String? paymentStatus;
+    final paymentId = (paymentResponse['data'] as Map<String, dynamic>?)?['_id']?.toString();
+    if (paymentId != null) {
+      try {
+        final sync = await api.postJson('/api/payments/$paymentId/sync', {});
+        paymentStatus = (sync['data'] as Map<String, dynamic>?)?['status']?.toString();
+      } catch (_) {}
+    }
+    if (paymentStatus == 'failed') throw const BcApiException('Stripe reported that this payment failed. You have not been charged.');
   }
 
 }

@@ -6,6 +6,7 @@ const orderSchema=new mongoose.Schema({
   subtotal:{type:Number,required:true},serviceFee:{type:Number,default:0},deliveryFee:{type:Number,default:0},discount:{type:Number,default:0},
   total:{type:Number,required:true},paymentId:{type:mongoose.Schema.Types.ObjectId,ref:'Payment'},
   stripePaymentIntentId:String,
+  paymentMethod:{type:String,enum:['card','cash'],default:'card'},
   deliveryType:{type:String,enum:['pickup','drone'],default:'pickup',index:true},
   deliveryAddress:{type:String,required:true},deliveryNotes:String,
   couponCode:String,routeId:{type:mongoose.Schema.Types.ObjectId,ref:'Route'},

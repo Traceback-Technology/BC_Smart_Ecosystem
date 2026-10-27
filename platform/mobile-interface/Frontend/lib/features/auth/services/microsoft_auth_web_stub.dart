@@ -15,3 +15,6 @@ Future<void> endMicrosoftWebSession({
   required String clientId,
   required String discoveryUrl,
 }) async {}
+
+/// Admin-portal redirect only exists on web; other platforms ignore it.
+void redirectBrowserTo(String url) {}

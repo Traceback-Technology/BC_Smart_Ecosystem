@@ -96,9 +96,17 @@ class BcApiClient {
   }
 
   Future<Map<String, dynamic>> _decode(http.Response response) {
-    final dynamic decoded = response.body.isEmpty
-        ? <String, dynamic>{}
-        : jsonDecode(response.body);
+    dynamic decoded;
+    try {
+      decoded = response.body.isEmpty
+          ? <String, dynamic>{}
+          : jsonDecode(response.body);
+    } on FormatException {
+      // Server sent HTML/plain text (e.g. a proxy or cold-start page).
+      throw BcApiException(
+        'Unexpected response from server (${response.statusCode})',
+      );
+    }
     final data = decoded is Map<String, dynamic>
         ? decoded
         : <String, dynamic>{};

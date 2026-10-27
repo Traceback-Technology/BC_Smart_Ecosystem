@@ -473,17 +473,17 @@ class _BCEatsCheckoutScreenState extends State<BCEatsCheckoutScreen> {
   // backend, so the app never needs rebuilding and always matches the server.
   static bool _stripeReady = const String.fromEnvironment('STRIPE_PUBLISHABLE_KEY').isNotEmpty;
 
+  // Returns false only when the server has no key; any other failure (network,
+  // Stripe SDK setup) is thrown so checkout shows the real reason.
   Future<bool> _ensureStripe(BcApiClient api) async {
     if (_stripeReady) return true;
-    try {
-      final config = await api.getJson('/api/payments/config');
-      final key = (config['data'] as Map<String, dynamic>?)?['publishableKey']?.toString() ?? '';
-      if (key.isEmpty) return false;
-      Stripe.publishableKey = key;
-      await Stripe.instance.applySettings();
-      _stripeReady = true;
-    } catch (_) {}
-    return _stripeReady;
+    final config = await api.getJson('/api/payments/config');
+    final key = (config['data'] as Map<String, dynamic>?)?['publishableKey']?.toString() ?? '';
+    if (key.isEmpty) return false;
+    Stripe.publishableKey = key;
+    await Stripe.instance.applySettings();
+    _stripeReady = true;
+    return true;
   }
 
   Future<void> _submit() async {

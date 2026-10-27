@@ -12,7 +12,7 @@ class NotificationService {
 
   Future<List<AppNotification>> fetchNotifications({int limit = 30}) async {
     final res = await _api.getJson(
-      'api/notification',
+      '/api/notifications',
       query: {'limit': '$limit'},
     );
     final list = res['data'] as List? ?? const [];
@@ -24,7 +24,7 @@ class NotificationService {
 
   Future<int> fetchUnreadCount() async {
     final res = await _api.getJson('/api/notifications/unread-count');
-    return (res['count'] as num?)?.toInt() ?? 0; // 0;
+    return (res['count'] as num?)?.toInt() ?? 0;
   }
 
   Future<void> markRead(String id) async {

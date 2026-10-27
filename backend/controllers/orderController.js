@@ -8,6 +8,7 @@ const Drone = require('../models/droneModel');
 const { notifyOrderStatus } = require('../services/notificationService');
 const Payment = require('../models/paymentModel');
 const { stripe } = require('../services/stripeService');
+const { applyPaymentPolicy, settleCashPayment } = require('../services/paymentService');
 const { orderSchema } = require('../middlewares/validator');
 
 const orderNo = () => `BC-${Date.now().toString(36).toUpperCase()}-${Math.floor(100 + Math.random() * 900)}`;
@@ -29,6 +30,7 @@ exports.createOrder = async (req, res, next) => {
   try {
     const { error, value } = orderSchema.validate(req.body, { abortEarly: true, stripUnknown: true });
     if (error) return res.status(400).json({ success: false, message: error.details[0].message });
+    if (value.paymentMethod === 'cash' && value.deliveryType !== 'pickup') return res.status(400).json({ success: false, message: 'Cash is only available for pickup orders' });
     if (value.items.some((item) => !mongoose.isValidObjectId(item.foodId))) {
       return res.status(400).json({ success: false, message: 'Each item must contain a valid foodId' });
     }
@@ -62,7 +64,7 @@ exports.createOrder = async (req, res, next) => {
     const order = await Order.create({
       orderNumber: orderNo(), userId: req.user.userId, items, subtotal, serviceFee, deliveryFee, discount, total,
       deliveryAddress: value.deliveryAddress.trim(), deliveryNotes: value.deliveryNotes || '', deliveryType: value.deliveryType,
-      couponCode: coupon?.code, estimatedArrival: new Date(Date.now() + (value.deliveryType === 'drone' ? 25 : 30) * 60000),
+      paymentMethod: value.paymentMethod, couponCode: coupon?.code, estimatedArrival: new Date(Date.now() + (value.deliveryType === 'drone' ? 25 : 30) * 60000),
     });
     if (coupon) {
       const usageFilter = { _id: coupon._id, active: true, ...(coupon.usageLimit ? { usedCount: { $lt: coupon.usageLimit } } : {}) };
@@ -71,6 +73,16 @@ exports.createOrder = async (req, res, next) => {
         await Order.findByIdAndDelete(order._id);
         return res.status(409).json({ success: false, message: 'Coupon usage limit reached; please retry without the coupon' });
       }
+    }
+    // Cash pickup is confirmed now and paid at collection; card stays pending
+    // until Stripe confirms. On failure, roll back so no ghost order remains.
+    try {
+      await applyPaymentPolicy(order);
+    } catch (policyError) {
+      await Payment.deleteOne({ orderId: order._id });
+      await Order.findByIdAndDelete(order._id);
+      if (coupon) await Coupon.updateOne({ _id: coupon._id, usedCount: { $gt: 0 } }, { $inc: { usedCount: -1 } });
+      throw policyError;
     }
     // Notification/activity failures must not turn a persisted order into an
     // apparent checkout failure that could cause duplicate submissions.
@@ -124,6 +136,7 @@ exports.updateStatus = async (req, res, next) => {
     await order.save();
     if (order.droneId && ['drone_launched', 'out_for_delivery'].includes(status)) await Drone.findByIdAndUpdate(order.droneId, { status: 'in_flight' });
     if (status === 'delivered' && order.droneId) await Drone.findByIdAndUpdate(order.droneId, { status: 'available' });
+    if (status === 'delivered') await settleCashPayment(order);
     // await notify(order.userId, 'Order update', `Order ${order.orderNumber} is now ${order.status}.`, 'order', { orderId: order._id }).catch((error) => console.error('Order notification failed:', error.message));
     await notifyOrderStatus(order).catch((error)=> console.error('Order notification failed', error.message));
     res.json({ success: true, data: order });
@@ -192,6 +205,10 @@ exports.cancelOrder = async (req, res, next) => {
       } else if (intent.status !== 'canceled') {
         return res.status(409).json({ success: false, message: 'Payment is still processing; the order cannot safely be cancelled yet.' });
       }
+      payment.status = 'failed';
+      await payment.save();
+    } else if (payment?.provider === 'cash' && payment.status === 'pending') {
+      // Nothing was collected; close the pay-on-collection record.
       payment.status = 'failed';
       await payment.save();
     }

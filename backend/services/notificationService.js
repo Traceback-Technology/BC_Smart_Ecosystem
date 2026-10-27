@@ -30,6 +30,14 @@ const ORDER_STATUS_NOTIFICATIONS = {
     title: 'Order received',
     message: `We have received your order ${o.orderNumber}.`,
   }),
+  // Cash pickup orders start out confirmed (card orders are announced by the
+  // payment notification instead).
+  confirmed: (o) => ({
+    title: 'Order confirmed',
+    message: o.paymentMethod === 'cash'
+      ? `Your order ${o.orderNumber} is confirmed. Pay with cash when you collect it.`
+      : `Your order ${o.orderNumber} is confirmed.`,
+  }),
   preparing: (o) => ({
     title: 'Order being prepared',
     message: `Your order ${o.orderNumber} is being prepared.`,

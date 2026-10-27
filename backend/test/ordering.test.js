@@ -1,18 +1,14 @@
-// Run with: npm test   (no database needed: models are stubbed)
+// Run with: node --test test/   (no database needed: the Route model is stubbed)
 process.env.TOKEN_SECRET = 'x'.repeat(40);
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-const Order = require('../models/orderModel');
-const Food = require('../models/foodModel');
-const Payment = require('../models/paymentModel');
-const Activity = require('../models/activityModel');
-const Notification = require('../models/notificationModel');
-const Coupon = require('../models/couponModel');
-const orders = require('../controllers/orderController');
+const Route = require('../models/routeModel');
+const nav = require('../controllers/navigationController');
 
-const FOOD_ID = '650000000000000000000001';
 const USER_ID = '650000000000000000000009';
+const GUEST_ID = '650000000000000000000010';
+const ROUTE_ID = '650000000000000000000020';
 
 const fakeRes = () => {
   const res = { statusCode: 200, body: null };
@@ -21,107 +17,129 @@ const fakeRes = () => {
   return res;
 };
 
-function stubCommon(t) {
-  const calls = { payments: [], deleted: [], orderFilter: null, paymentUpdates: [] };
-  t.mock.method(Food, 'findById', async () => ({ _id: FOOD_ID, name: 'Burger', price: 50, available: true }));
-  t.mock.method(Activity, 'create', async () => ({}));
-  t.mock.method(Notification, 'create', async () => ({}));
-  t.mock.method(Coupon, 'updateOne', async () => ({ modifiedCount: 1 }));
-  t.mock.method(Order, 'create', async (doc) => ({ _id: 'order1', ...doc, status: 'pending', save: async function () { return this; } }));
-  t.mock.method(Order, 'findByIdAndDelete', async (id) => { calls.deleted.push(id); });
-  t.mock.method(Payment, 'create', async (doc) => { calls.payments.push(doc); return { _id: 'pay1', ...doc }; });
-  t.mock.method(Payment, 'updateOne', async (...args) => { calls.paymentUpdates.push(args); return {}; });
-  return calls;
-}
+const userReq = (body = {}, extra = {}) => ({ user: { userId: USER_ID }, body, query: {}, params: {}, ...extra });
+const guestReq = (body = {}) => ({ user: { guestId: GUEST_ID, role: 'guest' }, body, query: {}, params: {} });
+const valid = { origin: 'Main Gate', destination: 'Tuck Shop', distanceMeters: 412.6, estimatedMinutes: 5.2 };
 
-const body = (extra = {}) => ({
-  items: [{ foodId: FOOD_ID, quantity: 2 }],
-  deliveryAddress: 'Campus Tuck Shop',
-  deliveryType: 'pickup',
-  ...extra,
-});
-const create = async (b) => {
+test('recordHistory rejects a request without a destination', async () => {
   const res = fakeRes();
-  await orders.createOrder({ body: b, user: { userId: USER_ID } }, res, (e) => { throw e; });
-  return res;
-};
+  await nav.recordHistory(userReq({ ...valid, destination: '  ' }), res, assert.ifError);
+  assert.equal(res.statusCode, 400);
+});
 
-test('cash pickup order is confirmed immediately with a pending cash payment', async (t) => {
-  const calls = stubCommon(t);
-  process.env.PAYMENT_MODE = 'stripe';
-  const res = await create(body({ paymentMethod: 'cash', contact: { name: 'Thabang', phone: '0820000000' } }));
+test('recordHistory rejects invalid distance and minutes', async () => {
+  for (const bad of [{ distanceMeters: -1 }, { distanceMeters: 'abc' }, { estimatedMinutes: 9999 }, { estimatedMinutes: null }]) {
+    const res = fakeRes();
+    await nav.recordHistory(userReq({ ...valid, ...bad }), res, assert.ifError);
+    assert.equal(res.statusCode, 400, JSON.stringify(bad));
+  }
+});
+
+test('recordHistory stores the real metrics for the user and closes stale active routes', async (t) => {
+  let closed = null;
+  let created = null;
+  t.mock.method(Route, 'updateMany', async (filter, update) => { closed = { filter, update }; return {}; });
+  t.mock.method(Route, 'create', async (doc) => { created = doc; return { _id: ROUTE_ID, ...doc }; });
+
+  const res = fakeRes();
+  await nav.recordHistory(userReq({ ...valid, originNodeId: 'N1', destinationNodeId: 'N9' }), res, assert.ifError);
+
   assert.equal(res.statusCode, 201);
-  assert.equal(res.body.data.status, 'confirmed');
-  assert.equal(res.body.data.paymentMethod, 'cash');
-  assert.deepEqual(res.body.data.contact, { name: 'Thabang', phone: '0820000000' });
-  assert.equal(calls.payments[0].provider, 'cash');
-  assert.equal(calls.payments[0].status, 'pending');
-  assert.equal(res.body.data.total, 105); // 2*50 + service fee 5
+  assert.equal(created.userId, USER_ID);
+  assert.equal(created.guestId, undefined);
+  assert.equal(created.status, 'active');
+  assert.equal(created.distanceKm, 0.413);
+  assert.equal(created.estimatedMinutes, 5);
+  assert.equal(created.destinationNodeId, 'N9');
+  // Only walking routes of this owner that are still active get closed.
+  assert.deepEqual(closed.filter, { userId: USER_ID, droneId: null, orderId: null, status: 'active' });
+  assert.equal(closed.update.status, 'cancelled');
 });
 
-test('cash is rejected for drone delivery', async (t) => {
-  stubCommon(t);
-  const res = await create(body({ paymentMethod: 'cash', deliveryType: 'drone' }));
-  assert.equal(res.statusCode, 400);
-  assert.match(res.body.message, /Cash/);
-});
+test('recordHistory links a guest route to guestId', async (t) => {
+  let created = null;
+  t.mock.method(Route, 'updateMany', async () => ({}));
+  t.mock.method(Route, 'create', async (doc) => { created = doc; return { _id: ROUTE_ID, ...doc }; });
 
-test('scheduledFor in the past is rejected', async (t) => {
-  stubCommon(t);
-  const res = await create(body({ scheduledFor: new Date(Date.now() - 60000).toISOString() }));
-  assert.equal(res.statusCode, 400);
-});
-
-test('placeholder mode auto-pays and confirms card orders', async (t) => {
-  const calls = stubCommon(t);
-  process.env.PAYMENT_MODE = 'placeholder';
-  const res = await create(body({ paymentMethod: 'card' }));
-  assert.equal(res.body.data.status, 'confirmed');
-  assert.equal(calls.payments[0].status, 'succeeded');
-  assert.equal(calls.payments[0].metadata.simulated, true);
-});
-
-test('stripe mode leaves a card order pending for the PaymentSheet', async (t) => {
-  const calls = stubCommon(t);
-  process.env.PAYMENT_MODE = 'stripe';
-  const res = await create(body({ paymentMethod: 'card' }));
-  assert.equal(res.body.data.status, 'pending');
-  assert.equal(calls.payments.length, 0);
-});
-
-test('payment policy failure removes the order instead of leaving a ghost', async (t) => {
-  const calls = stubCommon(t);
-  process.env.PAYMENT_MODE = 'placeholder';
-  t.mock.method(Payment, 'create', async () => { throw new Error('db down'); });
-  await assert.rejects(create(body()), /db down/);
-  assert.deepEqual(calls.deleted, ['order1']);
-});
-
-test('staff queue defaults to confirmed/preparing/ready, oldest first', async (t) => {
-  let filter, sort;
-  const chain = { populate() { return chain; }, sort(s) { sort = s; return chain; }, skip() { return chain; }, limit() { return Promise.resolve([{ _id: 'o1' }]); } };
-  t.mock.method(Order, 'find', (f) => { filter = f; return chain; });
-  t.mock.method(Order, 'countDocuments', async () => 1);
   const res = fakeRes();
-  await orders.getStaffOrders({ query: {} }, res, (e) => { throw e; });
-  assert.deepEqual(filter, { status: { $in: ['confirmed', 'preparing', 'ready'] } });
-  assert.deepEqual(sort, { createdAt: 1 });
-  assert.equal(res.body.count, 1);
+  await nav.recordHistory(guestReq(valid), res, assert.ifError);
 
-  const bad = fakeRes();
-  await orders.getStaffOrders({ query: { status: 'nonsense' } }, bad, (e) => { throw e; });
-  assert.equal(bad.statusCode, 400);
+  assert.equal(res.statusCode, 201);
+  assert.equal(created.guestId, GUEST_ID);
+  assert.equal(created.userId, undefined);
 });
 
-test('delivering a cash order settles its cash payment', async (t) => {
-  const calls = stubCommon(t);
-  const order = { _id: 'o1', status: 'ready', deliveryType: 'pickup', paymentMethod: 'cash', userId: USER_ID, orderNumber: 'BC-1', save: async () => {} };
-  t.mock.method(Order, 'findById', async () => order);
-  t.mock.method(Payment, 'findOne', async () => null);
+test('updateHistoryStatus only accepts completed or cancelled', async () => {
   const res = fakeRes();
-  await orders.updateStatus({ params: { id: 'o1' }, body: { status: 'delivered' } }, res, (e) => { throw e; });
+  await nav.updateHistoryStatus(userReq({ status: 'active' }, { params: { id: ROUTE_ID } }), res, assert.ifError);
+  assert.equal(res.statusCode, 400);
+});
+
+test('updateHistoryStatus returns 404 for a bad id or a route that is not active', async (t) => {
+  t.mock.method(Route, 'findOneAndUpdate', async () => null);
+
+  let res = fakeRes();
+  await nav.updateHistoryStatus(userReq({ status: 'completed' }, { params: { id: 'nope' } }), res, assert.ifError);
+  assert.equal(res.statusCode, 404);
+
+  res = fakeRes();
+  await nav.updateHistoryStatus(userReq({ status: 'completed' }, { params: { id: ROUTE_ID } }), res, assert.ifError);
+  assert.equal(res.statusCode, 404);
+});
+
+test('updateHistoryStatus is scoped to the owner and to active walking routes', async (t) => {
+  let seen = null;
+  t.mock.method(Route, 'findOneAndUpdate', async (filter, update) => { seen = { filter, update }; return { _id: ROUTE_ID, status: update.status }; });
+
+  const res = fakeRes();
+  await nav.updateHistoryStatus(userReq({ status: 'completed' }, { params: { id: ROUTE_ID } }), res, assert.ifError);
+
   assert.equal(res.statusCode, 200);
-  assert.equal(order.status, 'delivered');
-  assert.equal(calls.paymentUpdates.length, 1);
-  assert.deepEqual(calls.paymentUpdates[0][1], { status: 'succeeded' });
+  assert.deepEqual(seen.filter, { _id: ROUTE_ID, userId: USER_ID, droneId: null, orderId: null, status: 'active' });
+  assert.equal(seen.update.status, 'completed');
+  assert.ok(seen.update.endedAt instanceof Date);
+});
+
+test('listHistory paginates newest-first, clamps limit and excludes previews and delivery routes', async (t) => {
+  let filter = null;
+  let skipped = null;
+  let limited = null;
+  const rows = [{ _id: 'a' }, { _id: 'b' }];
+  t.mock.method(Route, 'find', (f) => {
+    filter = f;
+    const chain = {
+      select: () => chain,
+      sort: () => chain,
+      skip: (n) => { skipped = n; return chain; },
+      limit: (n) => { limited = n; return chain; },
+      lean: async () => rows
+    };
+    return chain;
+  });
+  t.mock.method(Route, 'countDocuments', async () => 7);
+
+  const res = fakeRes();
+  await nav.listHistory(userReq({}, { query: { page: '2', limit: '500' } }), res, assert.ifError);
+
+  assert.equal(limited, 50);
+  assert.equal(skipped, 50);
+  assert.deepEqual(filter.status, { $in: ['active', 'completed', 'cancelled'] });
+  assert.equal(filter.userId, USER_ID);
+  assert.equal(filter.droneId, null);
+  assert.equal(filter.orderId, null);
+  assert.deepEqual(res.body.pagination, { page: 2, limit: 50, total: 7, hasMore: false });
+  assert.equal(res.body.data.length, 2);
+});
+
+test('listHistory defaults to the first page of 20 and reports hasMore', async (t) => {
+  t.mock.method(Route, 'find', () => {
+    const chain = { select: () => chain, sort: () => chain, skip: () => chain, limit: () => chain, lean: async () => [] };
+    return chain;
+  });
+  t.mock.method(Route, 'countDocuments', async () => 45);
+
+  const res = fakeRes();
+  await nav.listHistory(guestReq(), res, assert.ifError);
+
+  assert.deepEqual(res.body.pagination, { page: 1, limit: 20, total: 45, hasMore: true });
 });

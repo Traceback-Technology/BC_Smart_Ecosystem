@@ -33,7 +33,14 @@ class BcApiClient {
     Map<String, String>? query,
   }) async {
     final response = await _client
-        .get(_uri(path, query), headers: {'Accept': 'application/json'})
+        .get(
+          _uri(path, query),
+          headers: {
+            'Accept': 'application/json',
+            if (_token != null && _token!.isNotEmpty)
+              'Authorization': 'Bearer $_token',
+          },
+        )
         .timeout(const Duration(seconds: 8));
     return _decode(response);
   }
@@ -89,9 +96,17 @@ class BcApiClient {
   }
 
   Future<Map<String, dynamic>> _decode(http.Response response) {
-    final dynamic decoded = response.body.isEmpty
-        ? <String, dynamic>{}
-        : jsonDecode(response.body);
+    dynamic decoded;
+    try {
+      decoded = response.body.isEmpty
+          ? <String, dynamic>{}
+          : jsonDecode(response.body);
+    } on FormatException {
+      // Server sent HTML/plain text (e.g. a proxy or cold-start page).
+      throw BcApiException(
+        'Unexpected response from server (${response.statusCode})',
+      );
+    }
     final data = decoded is Map<String, dynamic>
         ? decoded
         : <String, dynamic>{};

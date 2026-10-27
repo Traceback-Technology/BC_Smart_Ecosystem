@@ -1,2 +1,14 @@
-const router=require('express').Router(),c=require('../controllers/notificationController'),{identifier}=require('../middlewares/identification');
-router.use(identifier);router.get('/',c.getNotifications);router.patch('/:id/read',c.markRead);router.patch('/read-all',c.markAllRead);module.exports=router;
+const router = require('express').Router();
+const c = require('../controllers/notificationController');
+const { identifier, requireRegisteredUser } = require('../middlewares/identification');
+
+// Notifications belong to registered users only; guests get a clean 403.
+router.use(identifier, requireRegisteredUser);
+
+router.get('/', c.getNotifications);
+router.get('/unread-count', c.getUnreadCount);
+// '/read-all' is declared before '/:id/read' so it can never be mistaken for an id.
+router.patch('/read-all', c.markAllRead);
+router.patch('/:id/read', c.markRead);
+
+module.exports = router;

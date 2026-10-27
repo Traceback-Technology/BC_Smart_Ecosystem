@@ -25,6 +25,8 @@ import '../widgets/map_status_overlay.dart';
 import 'destination_search_screen.dart';
 import 'gps_calibration_screen.dart';
 import 'navigation_screen.dart';
+import '../services/route_history_service.dart';
+import '../../bc_eats/widgets/notification_bell.dart';
 
 class MapScreen extends StatefulWidget {
   final String? initialDestinationQuery;
@@ -446,6 +448,20 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
       return;
     }
 
+    // Save to route history (best effort; never blocks navigation).
+    final info = _travelInfoFor(destination);
+
+    if (info != null) {
+      RouteHistoryService.instance.recordStart(
+        origin: 'Current location',
+        destination: destination.name,
+        distanceMeters: info.distanceMeters,
+        estimatedMinutes: info.minutes,
+        originNodeId: _resolveCurrentStartNode(),
+        destinationNodeId: destination.nearestNode,
+      );
+    }
+
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => NavigationScreen(
@@ -667,33 +683,7 @@ class _MapScreenState extends State<MapScreen> with TickerProviderStateMixin {
                 ),
               ),
             ),
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              const Icon(Icons.notifications_none, size: 29),
-              Positioned(
-                right: -4,
-                top: -5,
-                child: Container(
-                  width: 18,
-                  height: 18,
-                  alignment: Alignment.center,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFE31B23),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Text(
-                    '3',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          const NotificationBell(),
         ],
       ),
     );

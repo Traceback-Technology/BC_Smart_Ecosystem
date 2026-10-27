@@ -15,11 +15,13 @@ import '../services/campus_navigation_geometry.dart';
 import '../services/dijkstra_service.dart';
 import '../services/graph_service.dart';
 import '../services/navigation_service.dart';
+import '../services/route_history_service.dart';
 import '../services/route_follow_service.dart';
 import '../widgets/bc_bottom_navigation_bar.dart';
 import '../widgets/campus_map.dart';
 import '../widgets/map_status_overlay.dart';
 import '../widgets/navigation_card.dart';
+import '../../bc_eats/widgets/notification_bell.dart';
 
 class NavigationScreen extends StatefulWidget {
   final String destinationQuery;
@@ -166,6 +168,10 @@ class _NavigationScreenState extends State<NavigationScreen>
 
     _transformController.dispose();
 
+    // Leaving before arrival (back button, bottom nav) ends the route as
+    // cancelled. A no-op if it was already completed or cancelled.
+    unawaited(RouteHistoryService.instance.markCancelled());
+
     super.dispose();
   }
 
@@ -294,6 +300,12 @@ class _NavigationScreenState extends State<NavigationScreen>
       _gpsError = null;
       _loading = false;
     });
+
+    // Save completion using the current navigation arrival rules.
+    if (_routeFollower.hasArrived) {
+      unawaited(RouteHistoryService.instance.markCompleted());
+    }
+
     if (_followGps) {
       _moveNavigationCamera(_routeFollower.targetPosition ?? visible);
     }
@@ -305,6 +317,8 @@ class _NavigationScreenState extends State<NavigationScreen>
 
   void _endNavigation() {
     _gpsSubscription?.cancel();
+
+    unawaited(RouteHistoryService.instance.markCancelled());
 
     unawaited(_navigationService.stopLocationTracking());
 
@@ -667,33 +681,7 @@ class _NavigationScreenState extends State<NavigationScreen>
               ],
             ),
           ),
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              const Icon(Icons.notifications_none, size: 29),
-              Positioned(
-                right: -4,
-                top: -5,
-                child: Container(
-                  width: 18,
-                  height: 18,
-                  alignment: Alignment.center,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFE31B23),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Text(
-                    '3',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          const NotificationBell(),
         ],
       ),
     );
